@@ -10,7 +10,8 @@
       </li>
 
       <li class="nav-item">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#tasks-collapse" aria-expanded="false">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                data-bs-target="#tasks-collapse" aria-expanded="false">
           Boards
         </button>
         <div class="collapse" id="tasks-collapse">
@@ -23,8 +24,34 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/boards', 'create']" [routerLinkActive]="'active'">
+              <a class="nav-link" aria-current="page" [routerLink]="['/boards', 'create']"
+                 [routerLinkActive]="'active'">
                 New Board
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                data-bs-target="#knowledgebases-collapse" aria-expanded="false">
+          KnowledgeBases
+        </button>
+        <div class="collapse" id="knowledgebases-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" [routerLink]="['/knowledgebase']" [routerLinkActive]="'active'">
+                Knowledgebase Categories
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" [routerLink]="['/knowledgebase','categories', 'create']"
+                 [routerLinkActive]="'active'">
+                New Category
               </a>
             </li>
 
@@ -73,7 +100,7 @@
 
     <ul>
       <li class="nav-item nav-item-bottom">
-        <a class="nav-link bg-danger" [routerLink]="['/user', 'logout']">
+        <a class="nav-link" [routerLink]="['/user', 'logout']">
           <span class="fa fa-sign-out-alt"></span>
           Log Out
         </a>

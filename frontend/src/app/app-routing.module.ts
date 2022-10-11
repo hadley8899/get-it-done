@@ -29,6 +29,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'knowledgebase',
+    loadChildren: () => import('./modules/knowledgebase/knowledgebase.module').then(m => m.KnowledgebaseModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'settings',
     loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
     canActivate: [AuthGuard],

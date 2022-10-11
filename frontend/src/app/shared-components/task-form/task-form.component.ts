@@ -40,7 +40,7 @@ export class TaskFormComponent implements OnInit {
   constructor(
     private taskService: TasksService,
     private workspaceMembersService: WorkspaceMembersService,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
   ) {
   }
 
@@ -67,6 +67,8 @@ export class TaskFormComponent implements OnInit {
       description: new FormControl(this.taskDetails.description),
       assigned_to: new FormControl(this.taskDetails.assigned_to?.uuid)
     });
+
+    console.log(this.taskDetailsForm.get('assigned_to')?.value);
 
     this.loadingTaskDetailsForm = false;
   }

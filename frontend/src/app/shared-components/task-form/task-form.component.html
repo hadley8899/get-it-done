@@ -42,8 +42,8 @@
 
   <div class="mb-3">
     <label for="taskAssignedUser" class="form-label">Assigned</label>
+
     <select class="form-control" id="taskAssignedUser" formControlName="assigned_to">
-      <option value="current user">Current User</option>
       <option
         *ngFor="let member of workspaceMembers"
         [value]="member.user.uuid"

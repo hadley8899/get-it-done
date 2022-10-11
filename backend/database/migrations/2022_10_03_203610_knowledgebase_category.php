@@ -11,15 +11,17 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('workspace_invites', static function (Blueprint $table) {
+        Schema::create('knowledgebase_categories', static function (Blueprint $table) {
             $table->id();
             $table->uuid();
-            $table->string('email');
             $table->unsignedBigInteger('workspace_id');
-            $table->string('token');
-            $table->timestamp('expires_at');
+            $table->integer('position')->default(0);
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('workspace_invites');
+        Schema::dropIfExists('knowledgebase_categories');
     }
 };

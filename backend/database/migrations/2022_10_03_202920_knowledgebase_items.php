@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('workspace_invites', static function (Blueprint $table) {
+        Schema::create('knowledgebase_items', static function (Blueprint $table) {
             $table->id();
             $table->uuid();
-            $table->string('email');
-            $table->unsignedBigInteger('workspace_id');
-            $table->string('token');
-            $table->timestamp('expires_at');
+            $table->unsignedBigInteger('knowledgebase_id');
+            $table->string('name');
+            $table->text('contents')->nullable()->default(null);
+            $table->unsignedBigInteger('position')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('workspace_invites');
+        Schema::dropIfExists('knowledgebase_items');
     }
 };

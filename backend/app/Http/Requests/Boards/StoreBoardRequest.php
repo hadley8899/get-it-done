@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Boards;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBoardListRequest extends FormRequest
+class StoreBoardRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,6 +25,9 @@ class StoreBoardListRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'color' => ['nullable', 'string', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

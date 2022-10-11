@@ -10,16 +10,16 @@ use App\Core\Services\BoardList\BoardListStoreService;
 use App\Core\Services\BoardList\BoardListsWithTasksService;
 use App\Core\Services\BoardList\BoardListUpdateService;
 use App\Exceptions\WorkspaceException;
-use App\Http\Requests\StoreBoardListRequest;
-use App\Http\Requests\UpdateBoardListRequest;
+use App\Http\Requests\Boards\StoreBoardListRequest;
+use App\Http\Requests\Boards\UpdateBoardListRequest;
 use App\Http\Resources\BoardListResource;
 use App\Http\Resources\BoardLists\BoardListWithTasksResource;
 use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\Workspace;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Throwable;
 
 class BoardListController extends Controller

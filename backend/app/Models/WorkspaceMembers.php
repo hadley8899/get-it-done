@@ -11,6 +11,11 @@ class WorkspaceMembers extends Model
 {
     use HasFactory, TableUUID;
 
+    protected $fillable = [
+        'user_id',
+        'workspace_id',
+    ];
+
     /**
      * @return BelongsTo
      */

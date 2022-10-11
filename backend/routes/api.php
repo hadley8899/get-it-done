@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
+use App\Http\Controllers\KnowledgebaseController;
+use App\Http\Controllers\KnowledgebaseItemsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMembersController;
@@ -67,14 +69,40 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('{workspace:uuid}/members', [WorkspaceMembersController::class, 'index'])->name('workspace-members.index');
     });
 
-    Route::prefix('tasks')->group(function () {
-        Route::get('{task:uuid}', [TaskController::class, 'show'])->name('tasks.show');
-        Route::put('{task:uuid}', [TaskController::class, 'update'])->name('tasks.update');
-        Route::delete('{task:uuid}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::prefix('tasks/{task:uuid}')->group(function () {
+        Route::get('', [TaskController::class, 'show'])->name('tasks.show');
+        Route::put('', [TaskController::class, 'update'])->name('tasks.update');
+        Route::delete('', [TaskController::class, 'destroy'])->name('tasks.destroy');
     });
 
     Route::prefix('workspace-members')->group(function () {
         Route::post('invite', [WorkspaceMembersController::class, 'invite'])->name('workspace-members.invite');
         Route::get('accept/{workspaceInvite:token}', [WorkspaceMembersController::class, 'accept'])->name('workspace-members.accept');
+    });
+
+    Route::prefix('knowledgebase/{workspace:uuid}')->group(function () {
+        Route::prefix('categories')->group(function () {
+            Route::get('', [KnowledgebaseController::class, 'categories'])->name('knowledgebase.categories');
+            Route::get('{knowledgebaseCategory:uuid}', [KnowledgebaseController::class, 'category'])->name('knowledgebase.category');
+            Route::put('{knowledgebaseCategory:uuid}', [KnowledgebaseController::class, 'updateCategory'])->name('knowledgebase.category.update');
+            Route::post('', [KnowledgebaseController::class, 'storeCategory'])->name('knowledgebase.category.store');
+            Route::get('{knowledgebaseCategory:uuid}/children', [KnowledgebaseController::class, 'categoryChildren'])->name('knowledgebase.categories.children');
+        });
+
+        Route::prefix('{knowledgebaseCategory:uuid}/knowledgebases')->group(function () {
+            Route::get('', [KnowledgebaseController::class, 'knowledgebases'])->name('knowledgebase.knowledgebases');
+            Route::get('{knowledgebase:uuid}', [KnowledgebaseController::class, 'knowledgebase'])->name('knowledgebase.knowledgebase');
+            Route::post('', [KnowledgebaseController::class, 'storeKnowledgebase'])->name('knowledgebase.knowledgebase.store');
+            Route::put('{knowledgebase:uuid}', [KnowledgebaseController::class, 'updateKnowledgebase'])->name('knowledgebase.knowledgebase.update');
+            Route::delete('{knowledgebase:uuid}', [KnowledgebaseController::class, 'destroyKnowledgebase'])->name('knowledgebase.knowledgebase.destroy');
+
+            Route::prefix('{knowledgebase:uuid}/items')->group(function () {
+                Route::get('', [KnowledgebaseItemsController::class, 'items'])->name('knowledgebase.items');
+                Route::get('{knowledgebaseItem:uuid}', [KnowledgebaseItemsController::class, 'item'])->name('knowledgebase.item');
+                Route::post('', [KnowledgebaseItemsController::class, 'storeItem'])->name('knowledgebase.item.store');
+                Route::put('{knowledgebaseItem:uuid}', [KnowledgebaseItemsController::class, 'updateItem'])->name('knowledgebase.item.update');
+                Route::delete('{knowledgebaseItem:uuid}', [KnowledgebaseItemsController::class, 'destroyItem'])->name('knowledgebase.item.destroy');
+            });
+        });
     });
 });

@@ -61,6 +61,13 @@ class WorkspaceMembersController extends Controller
             ->where('workspace_id', '=', $workspace->id)
             ->get();
 
+        $ownerWorkspaceMember = new WorkspaceMembers([
+            'uuid' => null,
+            'user_id' => $workspace->user()->firstOrFail()->id,
+        ]);
+
+        $workspaceMembers->push($ownerWorkspaceMember);
+
         return response()->json(WorkspaceMemberResource::collection($workspaceMembers));
     }
 

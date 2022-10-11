@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~bootstrap";
+@import "node_modules/bootstrap";
+@import "node_modules/pace-js/themes/blue/pace-theme-minimal";
+@import "node_modules/@fortawesome/fontawesome-free/css/all.min";
+@import "node_modules/prismjs/themes/prism-okaidia";
+@import "node_modules/prismjs/plugins/line-numbers/prism-line-numbers";
+@import "node_modules/ngx-toastr/toastr";
 @import "src/assets/scss/login-page";
 @import "src/assets/scss/sidebar";
 @import "src/assets/scss/navbar";
