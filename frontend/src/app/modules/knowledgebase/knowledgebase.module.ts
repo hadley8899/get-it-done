@@ -2,18 +2,32 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
   KnowledgeBaseCategoriesHomeComponent
-} from './components/knowledge-base-categories-home/knowledge-base-categories-home.component';
+} from './components/knowledgebase-categories/knowledge-base-categories-home/knowledge-base-categories-home.component';
 import {KnowledgebaseRoutingModule} from './knowledgebase-routing/knowledgebase-routing.module';
 import {SharedModule} from '../shared/shared.module';
+import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
+import { KnowledgebaseCategoryCreateComponent } from './components/knowledgebase-categories/knowledgebase-category-create/knowledgebase-category-create.component';
+import { KnowledgebaseCategoryFormComponent } from './components/knowledgebase-categories/knowledgebase-category-form/knowledgebase-category-form.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import { KnowledgebaseCategoryUpdateComponent } from './components/knowledgebase-categories/knowledgebase-category-update/knowledgebase-category-update.component';
+import { KnowledgebaseCategoryComponent } from './components/knowledgebase-categories/knowledgebase-category/knowledgebase-category.component';
+import { KnowledgebaseFormComponent } from './components/knowledgebase-form/knowledgebase-form.component';
 
 @NgModule({
   declarations: [
-    KnowledgeBaseCategoriesHomeComponent
+    KnowledgeBaseCategoriesHomeComponent,
+    KnowledgebaseCategoryCreateComponent,
+    KnowledgebaseCategoryFormComponent,
+    KnowledgebaseCategoryUpdateComponent,
+    KnowledgebaseCategoryComponent,
+    KnowledgebaseFormComponent
   ],
   imports: [
     CommonModule,
     KnowledgebaseRoutingModule,
     SharedModule,
+    SweetAlert2Module,
+    ReactiveFormsModule,
   ]
 })
 export class KnowledgebaseModule {

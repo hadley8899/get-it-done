@@ -274,6 +274,11 @@ class KnowledgebaseController extends Controller
      */
     public function destroyKnowledgebase(Workspace $workspace, KnowledgebaseCategory $knowledgebaseCategory, Knowledgebase $knowledgebase): JsonResponse
     {
+        // Make sure user has access to thisd workspace
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
+            throw WorkspaceException::noAccessToWorkspace();
+        }
+
         // Make sure this knowledgebase belongs to this category
         if ($knowledgebase->category_id !== $knowledgebaseCategory->id) {
             throw KnowledgebaseException::knowledgebaseDoesNotBelongToCategory();
@@ -289,6 +294,36 @@ class KnowledgebaseController extends Controller
         }
 
         $knowledgebase->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function destroyCategory(Workspace $workspace, KnowledgebaseCategory $knowledgebaseCategory): JsonResponse
+    {
+        // Make sure user has access to thisd workspace
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
+            throw WorkspaceException::noAccessToWorkspace();
+        }
+
+        // Delete all knowledgebases
+        $knowledgebases = Knowledgebase::query()
+            ->where('category_id', '=', $knowledgebaseCategory->id)
+            ->get();
+
+        foreach ($knowledgebases as $knowledgebase) {
+            // Delete all the knowledgebase items
+            $knowledgebaseItems = KnowledgebaseItem::query()
+                ->where('knowledgebase_id', '=', $knowledgebase->id)
+                ->get();
+
+            foreach ($knowledgebaseItems as $knowledgebaseItem) {
+                $knowledgebaseItem->delete();
+            }
+
+            $knowledgebase->delete();
+        }
+
+        $knowledgebaseCategory->delete();
 
         return response()->json(['success' => true]);
     }

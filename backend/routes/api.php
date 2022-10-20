@@ -87,6 +87,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('{knowledgebaseCategory:uuid}', [KnowledgebaseController::class, 'updateCategory'])->name('knowledgebase.category.update');
             Route::post('', [KnowledgebaseController::class, 'storeCategory'])->name('knowledgebase.category.store');
             Route::get('{knowledgebaseCategory:uuid}/children', [KnowledgebaseController::class, 'categoryChildren'])->name('knowledgebase.categories.children');
+            Route::delete('{knowledgebaseCategory:uuid}', [KnowledgebaseController::class, 'destroyCategory'])->name('knowledgebase.category.destroy');
         });
 
         Route::prefix('{knowledgebaseCategory:uuid}/knowledgebases')->group(function () {

@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {KnowledgebaseService} from '../../../../services/knowledgebase.service';
-import {WorkspaceService} from '../../../../services/workspace.service';
+import {KnowledgebaseService} from '../../../../../services/knowledgebase.service';
+import {WorkspaceService} from '../../../../../services/workspace.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Router} from '@angular/router';
-import {Workspace} from '../../../../interfaces/workspace';
-import {KnowledgebaseCategory} from '../../../../interfaces/knowledgebase-category';
+import {Workspace} from '../../../../../interfaces/workspace';
+import {KnowledgebaseCategory} from '../../../../../interfaces/knowledgebase-category';
 import {ToastrService} from 'ngx-toastr';
+import {Breadcrumb} from '../../../../../interfaces/breadcrumb';
 
 @UntilDestroy()
 @Component({
@@ -18,6 +19,8 @@ export class KnowledgeBaseCategoriesHomeComponent implements OnInit {
   activeWorkspace!: Workspace;
   loading = true;
   knowledgebaseCategories: KnowledgebaseCategory[] = [];
+
+  breadCrumbs: Breadcrumb[] = [];
 
   constructor(
     private knowledgebaseService: KnowledgebaseService,
@@ -53,4 +56,17 @@ export class KnowledgeBaseCategoriesHomeComponent implements OnInit {
     })
   }
 
+  deleteCategory(knowledgebaseCategory: KnowledgebaseCategory) {
+    this.knowledgebaseService.deleteCategory(this.activeWorkspace, knowledgebaseCategory).pipe(untilDestroyed(this)).subscribe({
+      next: (response) => {
+        this.toastr.success('Category deleted successfully');
+        this.loadCategoriesForWorkspace();
+
+      },
+      error: (error) => {
+        console.error(error);
+        this.toastr.error('Failed to delete category');
+      }
+    });
+  }
 }
