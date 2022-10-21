@@ -12,6 +12,8 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { KnowledgebaseCategoryUpdateComponent } from './components/knowledgebase-categories/knowledgebase-category-update/knowledgebase-category-update.component';
 import { KnowledgebaseCategoryComponent } from './components/knowledgebase-categories/knowledgebase-category/knowledgebase-category.component';
 import { KnowledgebaseFormComponent } from './components/knowledgebase-form/knowledgebase-form.component';
+import {DataTablesModule} from 'angular-datatables';
+import { KnowledgebaseItemFormComponent } from './components/knowledgebase-item-form/knowledgebase-item-form.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { KnowledgebaseFormComponent } from './components/knowledgebase-form/know
     KnowledgebaseCategoryFormComponent,
     KnowledgebaseCategoryUpdateComponent,
     KnowledgebaseCategoryComponent,
-    KnowledgebaseFormComponent
+    KnowledgebaseFormComponent,
+    KnowledgebaseItemFormComponent
   ],
   imports: [
     CommonModule,
@@ -28,6 +31,7 @@ import { KnowledgebaseFormComponent } from './components/knowledgebase-form/know
     SharedModule,
     SweetAlert2Module,
     ReactiveFormsModule,
+    DataTablesModule,
   ]
 })
 export class KnowledgebaseModule {

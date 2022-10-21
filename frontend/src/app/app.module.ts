@@ -16,6 +16,7 @@ import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {SortablejsModule} from 'ngx-sortablejs';
 import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
+import {DataTablesModule} from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
     HttpClientModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    DataTablesModule,
     SweetAlert2Module.forRoot({
       // Add custom options into swal globally
       provideSwal: () => import('sweetalert2').then(({default: swal}) => swal.mixin(

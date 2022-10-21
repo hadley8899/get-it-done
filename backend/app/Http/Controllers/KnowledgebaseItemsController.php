@@ -7,6 +7,8 @@ use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\KnowledgeBase\AddKnowledgebaseItemRequest;
 use App\Http\Requests\KnowledgeBase\UpdateKnowledgebaseItemRequest;
+use App\Http\Resources\Knowledgebase\KnowledgebaseItemCollection;
+use App\Http\Resources\Knowledgebase\KnowledgebaseItemResource;
 use App\Http\Resources\Knowledgebase\KnowledgebaseResource;
 use App\Models\Knowledgebase;
 use App\Models\KnowledgebaseCategory;
@@ -39,7 +41,7 @@ class KnowledgebaseItemsController extends Controller
         // Get all the knowledgebase items
         $items = $knowledgebase->knowledgebaseItems()->get();
 
-        return response()->json(KnowledgebaseResource::collection($items));
+        return response()->json(new KnowledgebaseItemCollection(KnowledgebaseItemResource::collection($items)));
     }
 
     /**

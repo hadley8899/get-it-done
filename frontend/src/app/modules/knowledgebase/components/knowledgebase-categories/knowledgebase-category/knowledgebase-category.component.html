@@ -39,15 +39,15 @@
 </ul>
 
 <hr/>
-
 <h2>Knowledgebases</h2>
 
 <ul class="nav nav-pills">
   <li class="nav-item me-1 mb-1" *ngFor="let knowledgebase of knowledgebases">
     <a
-      class="btn btn-outline-secondary"
+      class="btn"
       aria-current="page"
-      [routerLink]="['/knowledgebase','category', knowledgebase.uuid]"
+      (click)="selectKnowledgebase(knowledgebase)"
+      [ngClass]="{'btn-outline-secondary': knowledgebase.uuid !== selectedKnowledgebase.uuid, 'btn-secondary': knowledgebase.uuid == selectedKnowledgebase.uuid }"
     ><span class="fa fa-book"></span> {{knowledgebase.name}}</a>
   </li>
   <li class="nav-item me-1 mb-1">
@@ -61,6 +61,49 @@
     </a>
   </li>
 </ul>
+
+<hr/>
+
+
+<div class="row">
+  <div class="col-sm-6">
+    <h2>Knowledgebase Items</h2>
+
+  </div>
+
+  <div class="col-sm-6 text-end">
+    <a class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#new-knowledgebase-item-modal">
+      <span class="fa fa-plus"></span> New
+    </a>
+  </div>
+</div>
+
+<spinner [show]="loadingKnowledgebaseItems"></spinner>
+
+<p *ngIf="knowledgebaseItems.length === 0 && !loadingKnowledgebaseItems">No knowledgebase items</p>
+
+<table datatable class="row-border hover w-100" *ngIf="!loadingKnowledgebaseItems && knowledgebaseItems.length > 0">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Created</th>
+    <th>Updated</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let knowledgebaseItem of knowledgebaseItems">
+    <td>{{knowledgebaseItem.name}}</td>
+    <td>{{knowledgebaseItem.contents}}</td>
+    <td>{{formatDate(knowledgebaseItem.created_at)}}</td>
+    <td>{{formatDate(knowledgebaseItem.updated_at)}}</td>
+  </tr>
+  </tbody>
+</table>
+
+
+<!-- MODALS -->
+<!-- ------------------------------------------------------------------------------------------------------------------>
 
 <!-- New Knowledgebase category modal -->
 <div
@@ -150,6 +193,35 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseModalCloseButton
+        >Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Knowledgebase item Modal -->
+<div
+  class="modal fade"
+  id="new-knowledgebase-item-modal"
+  tabindex="-1"
+  aria-labelledby="new-knowledgebase-item-modal-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="new-knowledgebase-item-modal-label">New Knowledgebase Item</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        .. Form here
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          #knowledgebaseItemModalCloseButton
         >Close</button>
       </div>
     </div>

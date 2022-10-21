@@ -40,15 +40,27 @@ export class KnowledgebaseService {
     return this.http.get<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/categories/${knowledgebaseCategory.uuid}/children`);
   }
 
-  loadKnowledgebases(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory) :Observable<{ data: Knowledgebase[] }> {
+  loadKnowledgebases(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory): Observable<{ data: Knowledgebase[] }> {
     return this.http.get<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${activeKnowledgebaseCategory.uuid}/knowledgebases`);
   }
 
-  createKnowledgebase(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory, value: FormData) {
-    return this.http.post<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${activeKnowledgebaseCategory.uuid}/knowledgebases`, value);
+  createKnowledgebase(activeWorkspace: Workspace, knowledgebaseCategory: KnowledgebaseCategory, value: FormData) {
+    return this.http.post<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${knowledgebaseCategory.uuid}/knowledgebases`, value);
   }
 
   updateKnowledgebase(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory, uuid: string, value: FormData) {
     return this.http.put<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${activeKnowledgebaseCategory.uuid}/knowledgebases/${uuid}`, value);
+  }
+
+  loadKnowledgebaseItems(activeWorkspace: Workspace, knowledgebaseCategory: KnowledgebaseCategory, selectedKnowledgebase: Knowledgebase) {
+    return this.http.get<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${knowledgebaseCategory.uuid}/knowledgebases/${selectedKnowledgebase.uuid}/items`);
+  }
+
+  createKnowledgebaseItem(activeWorkspace: Workspace, knowledgebaseCategory: KnowledgebaseCategory, selectedKnowledgebase: Knowledgebase, value: FormData) {
+    return this.http.post<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${knowledgebaseCategory.uuid}/knowledgebases/${selectedKnowledgebase.uuid}/items`, value);
+  }
+
+  updateKnowledgebaseItem(activeWorkspace: Workspace, knowledgebaseCategory: KnowledgebaseCategory, selectedKnowledgebase: Knowledgebase, uuid: string, value: FormData) {
+    return this.http.put<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${knowledgebaseCategory.uuid}/knowledgebases/${selectedKnowledgebase.uuid}/items/${uuid}`, value);
   }
 }

@@ -8,6 +8,9 @@ import {KnowledgebaseCategory} from '../../../../../interfaces/knowledgebase-cat
 import {ToastrService} from 'ngx-toastr';
 import {Breadcrumb} from '../../../../../interfaces/breadcrumb';
 import {GenericErrorHandlerService} from '../../../../../services/generic-error-handler.service';
+import {Knowledgebase} from '../../../../../interfaces/knowledgebase';
+import {DateService} from '../../../../../services/date.service';
+import {KnowledgebaseItem} from '../../../../../interfaces/knowledgebase-item';
 
 @UntilDestroy()
 @Component({
@@ -29,13 +32,18 @@ export class KnowledgebaseCategoryComponent implements OnInit {
   activeWorkspace!: Workspace;
   activeKnowledgebaseCategory!: KnowledgebaseCategory;
   childCategories: KnowledgebaseCategory[] = [];
-  knowledgebases: any[] = [];
+  knowledgebases: Knowledgebase[] = [];
+  selectedKnowledgebase!: Knowledgebase;
+
+  loadingKnowledgebaseItems = false;
+  knowledgebaseItems: KnowledgebaseItem[] = [];
 
   loading = true;
 
   @ViewChild('childCategoryCloseButton') childCategoryCloseButton!: ElementRef;
   @ViewChild('knowledgebaseCategoryUpdateModalCloseButton') knowledgebaseCategoryUpdateModalCloseButton!: ElementRef;
   @ViewChild('knowledgebaseModalCloseButton') knowledgebaseModalCloseButton!: ElementRef;
+  @ViewChild('knowledgebaseItemModalCloseButton') knowledgebaseItemModalCloseButton!: ElementRef;
 
 
   constructor(
@@ -98,6 +106,11 @@ export class KnowledgebaseCategoryComponent implements OnInit {
     this.knowledgebaseService.loadKnowledgebases(this.activeWorkspace, this.activeKnowledgebaseCategory).pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
         this.knowledgebases = response.data;
+        // If the count of knowledgebases is greater than 0, then select the first one
+        if (this.knowledgebases.length > 0) {
+          this.selectedKnowledgebase = this.knowledgebases[0];
+          this.loadKnowledgebaseItems();
+        }
       },
       error: (error) => {
         this.genericErrorHandlerService.handleError(error);
@@ -133,5 +146,28 @@ export class KnowledgebaseCategoryComponent implements OnInit {
     this.loadKnowledgebaseCategoryDetails(this.activeKnowledgebaseCategory.uuid);
     this.toastr.success('Knowledgebase updated');
     this.knowledgebaseCategoryUpdateModalCloseButton.nativeElement.click();
+  }
+
+  formatDate(date: string, format = 'DD-MM-YYYY HH:mm:ss') {
+    return DateService.formatDate(date);
+  }
+
+  selectKnowledgebase(knowledgebase: Knowledgebase) {
+    this.selectedKnowledgebase = knowledgebase;
+    this.loadKnowledgebaseItems();
+  }
+
+  loadKnowledgebaseItems() {
+    this.loadingKnowledgebaseItems = true;
+    this.knowledgebaseService.loadKnowledgebaseItems(this.activeWorkspace, this.activeKnowledgebaseCategory, this.selectedKnowledgebase).pipe(untilDestroyed(this)).subscribe({
+      next: (response) => {
+        this.knowledgebaseItems = response.data;
+        this.loadingKnowledgebaseItems = false;
+      },
+      error: (error) => {
+        this.genericErrorHandlerService.handleError(error);
+        this.loadingKnowledgebaseItems = false;
+      }
+    });
   }
 }
