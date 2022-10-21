@@ -1,20 +1,40 @@
-<app-main-header [header]="headingText" [breadCrumbs]="breadCrumbs"></app-main-header>
+<app-main-header [header]="headingText" [subHeader]="subHeaderText" [breadCrumbs]="breadCrumbs"></app-main-header>
 
 <div class="row mb-4">
   <div class="col-12 text-end">
-    <button type="button" class="btn btn-primary btn-sm btn-mr" data-bs-toggle="modal" data-bs-target="#new-knowledgebase-category-child-modal">
-      <span class="fa fa-plus"></span> Add Knowledgebase Category Child
-    </button>
-    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#new-knowledgebase-modal">
-      <span class="fa fa-plus"></span> Add Knowledgebase
+    <button
+      class="btn btn-primary btn-sm"
+      data-bs-toggle="modal"
+      data-bs-target="#update-knowledgebase-category-child-modal"
+    >
+      <span class="fa fa-edit"></span> Update Knowledgebase Category
     </button>
   </div>
 </div>
 
 <h2>Children</h2>
 <ul class="nav nav-pills">
+  <li class="nav-item me-1 mb-1">
+    <a class="btn btn-outline-secondary" aria-current="page" [routerLink]="backLink()">
+      <span class="fa fa-arrow-left"></span>
+    </a>
+  </li>
   <li class="nav-item me-1 mb-1" *ngFor="let category of childCategories">
-    <a class=" btn btn-outline-secondary" aria-current="page" [routerLink]="['/knowledgebase','category', category.uuid]"><span class="fa fa-folder"></span> {{category.name}}</a>
+    <a
+      class="btn btn-outline-secondary"
+      aria-current="page"
+      [routerLink]="['/knowledgebase','category', category.uuid]"
+    ><span class="fa fa-folder"></span> {{category.name}}</a>
+  </li>
+  <li class="nav-item me-1 mb-1">
+    <a
+      class="btn btn-outline-secondary"
+      aria-current="page"
+      data-bs-toggle="modal"
+      data-bs-target="#new-knowledgebase-category-child-modal"
+    >
+      <span class="fa fa-plus"></span> New
+    </a>
   </li>
 </ul>
 
@@ -22,12 +42,34 @@
 
 <h2>Knowledgebases</h2>
 
-<pre>
-  {{knowledgebases|json}}
-</pre>
+<ul class="nav nav-pills">
+  <li class="nav-item me-1 mb-1" *ngFor="let knowledgebase of knowledgebases">
+    <a
+      class="btn btn-outline-secondary"
+      aria-current="page"
+      [routerLink]="['/knowledgebase','category', knowledgebase.uuid]"
+    ><span class="fa fa-book"></span> {{knowledgebase.name}}</a>
+  </li>
+  <li class="nav-item me-1 mb-1">
+    <a
+      class="btn btn-outline-secondary"
+      aria-current="page"
+      data-bs-toggle="modal"
+      data-bs-target="#new-knowledgebase-modal"
+    >
+      <span class="fa fa-plus"></span> New
+    </a>
+  </li>
+</ul>
 
-<!-- Modal -->
-<div class="modal fade" id="new-knowledgebase-category-child-modal" tabindex="-1" aria-labelledby="new-child-modal" aria-hidden="true">
+<!-- New Knowledgebase category modal -->
+<div
+  class="modal fade"
+  id="new-knowledgebase-category-child-modal"
+  tabindex="-1"
+  aria-labelledby="new-child-modal"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -48,8 +90,48 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="new-knowledgebase-modal" tabindex="-1" aria-labelledby="new-knowledgebase-modal-label" aria-hidden="true">
+<!-- Update Knowledgebase category modal -->
+<div
+  class="modal fade"
+  id="update-knowledgebase-category-child-modal"
+  tabindex="-1"
+  aria-labelledby="update-knowledgebase-category-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="update-knowledgebase-category-modal">Update Knowledgebase Category</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-knowledgebase-category-form
+          *ngIf="!loading"
+          [parentKnowledgebaseCategory]="this.activeKnowledgebaseCategory"
+          (knowledgebaseCategoryUpdated)="handleKnowledgebaseUpdated()"
+          [knowledgebaseCategory]="activeKnowledgebaseCategory"
+        ></app-knowledgebase-category-form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          #knowledgebaseCategoryUpdateModalCloseButton
+        >Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Knowledgebase Modal -->
+<div
+  class="modal fade"
+  id="new-knowledgebase-modal"
+  tabindex="-1"
+  aria-labelledby="new-knowledgebase-modal-label"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -57,10 +139,18 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        .. This is the body of the modal
+        <app-knowledgebase-form
+          [knowledgebaseCategory]="activeKnowledgebaseCategory"
+          (knowledgebaseCreated)="handleKnowledgebaseCreated()"
+        ></app-knowledgebase-form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #childCategoryCloseButton>Close</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          #knowledgebaseModalCloseButton
+        >Close</button>
       </div>
     </div>
   </div>

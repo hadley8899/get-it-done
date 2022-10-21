@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {KnowledgebaseCategory} from '../../../../../interfaces/knowledgebase-category';
 import {ToastrService} from 'ngx-toastr';
 import {Breadcrumb} from '../../../../../interfaces/breadcrumb';
+import {GenericErrorHandlerService} from '../../../../../services/generic-error-handler.service';
 
 @UntilDestroy()
 @Component({
@@ -17,6 +18,8 @@ import {Breadcrumb} from '../../../../../interfaces/breadcrumb';
 export class KnowledgebaseCategoryComponent implements OnInit {
 
   headingText = 'Knowledgebase Category';
+  subHeaderText: string = '';
+
   breadCrumbs: Breadcrumb[] = [
     {linkText: 'Home', routeItems: ['/']},
     {linkText: 'Knowledgebase Categories', routeItems: ['/knowledgebase/']},
@@ -31,14 +34,20 @@ export class KnowledgebaseCategoryComponent implements OnInit {
   loading = true;
 
   @ViewChild('childCategoryCloseButton') childCategoryCloseButton!: ElementRef;
+  @ViewChild('knowledgebaseCategoryUpdateModalCloseButton') knowledgebaseCategoryUpdateModalCloseButton!: ElementRef;
+  @ViewChild('knowledgebaseModalCloseButton') knowledgebaseModalCloseButton!: ElementRef;
+
 
   constructor(
     private workspaceService: WorkspaceService,
     private knowledgebaseService: KnowledgebaseService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private genericErrorHandlerService: GenericErrorHandlerService
   ) {
+    // Force the component to reload
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   ngOnInit(): void {
@@ -48,6 +57,9 @@ export class KnowledgebaseCategoryComponent implements OnInit {
         this.route.params.pipe(untilDestroyed(this)).subscribe({
           next: (params) => {
             this.loadKnowledgebaseCategoryDetails(params['uuid']);
+          },
+          error: (error) => {
+            this.genericErrorHandlerService.handleError(error);
           }
         });
       }
@@ -59,17 +71,14 @@ export class KnowledgebaseCategoryComponent implements OnInit {
       next: (response) => {
         this.activeKnowledgebaseCategory = response;
 
-        // Need to think about breadcrumbs here, Do I make a tree of the parents of this category?
-
         this.headingText = this.activeKnowledgebaseCategory.name;
+        this.subHeaderText = this.activeKnowledgebaseCategory.description;
         this.loadKnowledgebaseChildCategories();
         this.loadKnowledgebases();
         this.loading = false;
       },
       error: (error) => {
-        console.error(error);
-        this.toastr.error('Failed to load knowledgebase category details');
-        this.router.navigate(['/knowledgebase/']).then();
+        this.genericErrorHandlerService.handleError(error);
       }
     });
   }
@@ -78,6 +87,9 @@ export class KnowledgebaseCategoryComponent implements OnInit {
     this.knowledgebaseService.loadChildCategories(this.activeWorkspace, this.activeKnowledgebaseCategory).pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
         this.childCategories = response.data;
+      },
+      error: (error) => {
+        this.genericErrorHandlerService.handleError(error);
       }
     });
   }
@@ -85,11 +97,10 @@ export class KnowledgebaseCategoryComponent implements OnInit {
   loadKnowledgebases() {
     this.knowledgebaseService.loadKnowledgebases(this.activeWorkspace, this.activeKnowledgebaseCategory).pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
-        console.table(response);
+        this.knowledgebases = response.data;
       },
       error: (error) => {
-        console.error(error);
-        this.toastr.error('Failed to load knowledgebases');
+        this.genericErrorHandlerService.handleError(error);
       }
     });
   }
@@ -98,5 +109,29 @@ export class KnowledgebaseCategoryComponent implements OnInit {
     this.loadKnowledgebaseChildCategories();
     this.toastr.success('Knowledgebase category created');
     this.childCategoryCloseButton.nativeElement.click();
+  }
+
+  handleKnowledgebaseCreated() {
+    this.loadKnowledgebases();
+    this.toastr.success('Knowledgebase created');
+    this.knowledgebaseModalCloseButton.nativeElement.click();
+  }
+
+  backLink() {
+    if (!this.loading) {
+      if (this.activeKnowledgebaseCategory.parent) {
+        return ['/knowledgebase/category', this.activeKnowledgebaseCategory.parent.uuid];
+      } else {
+        return ['/knowledgebase'];
+      }
+    }
+
+    return [];
+  }
+
+  handleKnowledgebaseUpdated() {
+    this.loadKnowledgebaseCategoryDetails(this.activeKnowledgebaseCategory.uuid);
+    this.toastr.success('Knowledgebase updated');
+    this.knowledgebaseCategoryUpdateModalCloseButton.nativeElement.click();
   }
 }

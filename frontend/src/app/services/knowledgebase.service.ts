@@ -4,6 +4,7 @@ import {environment} from '../../environments/environment';
 import {Workspace} from '../interfaces/workspace';
 import {Observable} from 'rxjs';
 import {KnowledgebaseCategory} from '../interfaces/knowledgebase-category';
+import {Knowledgebase} from '../interfaces/knowledgebase';
 
 @Injectable({
   providedIn: 'root'
@@ -39,11 +40,15 @@ export class KnowledgebaseService {
     return this.http.get<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/categories/${knowledgebaseCategory.uuid}/children`);
   }
 
-  loadKnowledgebases(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory) {
-    return this.http.get(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${activeKnowledgebaseCategory.uuid}/knowledgebases`);
+  loadKnowledgebases(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory) :Observable<{ data: Knowledgebase[] }> {
+    return this.http.get<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${activeKnowledgebaseCategory.uuid}/knowledgebases`);
   }
 
   createKnowledgebase(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory, value: FormData) {
     return this.http.post<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${activeKnowledgebaseCategory.uuid}/knowledgebases`, value);
+  }
+
+  updateKnowledgebase(activeWorkspace: Workspace, activeKnowledgebaseCategory: KnowledgebaseCategory, uuid: string, value: FormData) {
+    return this.http.put<any>(`${this.apiUrl}knowledgebase/${activeWorkspace.uuid}/${activeKnowledgebaseCategory.uuid}/knowledgebases/${uuid}`, value);
   }
 }
