@@ -39,7 +39,7 @@ class KnowledgebaseItemsController extends Controller
         }
 
         // Get all the knowledgebase items
-        $items = $knowledgebase->knowledgebaseItems()->get();
+        $items = $knowledgebase->knowledgebaseItems()->orderBy('position')->get();
 
         return response()->json(new KnowledgebaseItemCollection(KnowledgebaseItemResource::collection($items)));
     }
@@ -97,7 +97,9 @@ class KnowledgebaseItemsController extends Controller
         $knowledgebaseItem->knowledgebase_id = $knowledgebase->id;
 
         // Find the next available position
-        $knowledgebaseItem->position = KnowledgebaseItem::where('knowledgebase_id', $knowledgebase->id)->max('position') + 1;
+        $knowledgebaseItem->position = KnowledgebaseItem::query()
+                ->where('knowledgebase_id', $knowledgebase->id)
+                ->max('position') + 1;
 
         $knowledgebaseItem->save();
 

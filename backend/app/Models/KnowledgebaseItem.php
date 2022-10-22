@@ -14,7 +14,7 @@ class KnowledgebaseItem extends Model
 
     protected $fillable = [
         'name',
-        'content',
+        'contents',
         'knowledgebase_id',
     ];
 

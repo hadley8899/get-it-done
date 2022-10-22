@@ -26,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // Model::preventLazyLoading(!app()->isProduction());
         Model::preventSilentlyDiscardingAttributes(!app()->isProduction());
-        //Model::preventAccessingMissingAttributes(! app()->isProduction());
+       // Model::preventAccessingMissingAttributes(! app()->isProduction());
     }
 }

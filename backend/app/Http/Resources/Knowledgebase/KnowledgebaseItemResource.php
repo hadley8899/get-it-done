@@ -17,8 +17,9 @@ class KnowledgebaseItemResource extends JsonResource
     {
         return [
             'uuid' => $this->uuid,
-            'title' => $this->title,
-            'content' => $this->content,
+            'name' => $this->name,
+            'contents' => $this->contents,
+            'position' => $this->position,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

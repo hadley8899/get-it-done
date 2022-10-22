@@ -34,6 +34,7 @@ export class KnowledgebaseCategoryComponent implements OnInit {
   childCategories: KnowledgebaseCategory[] = [];
   knowledgebases: Knowledgebase[] = [];
   selectedKnowledgebase!: Knowledgebase;
+  loadingKnowledgebases = true;
 
   loadingKnowledgebaseItems = false;
   knowledgebaseItems: KnowledgebaseItem[] = [];
@@ -44,6 +45,7 @@ export class KnowledgebaseCategoryComponent implements OnInit {
   @ViewChild('knowledgebaseCategoryUpdateModalCloseButton') knowledgebaseCategoryUpdateModalCloseButton!: ElementRef;
   @ViewChild('knowledgebaseModalCloseButton') knowledgebaseModalCloseButton!: ElementRef;
   @ViewChild('knowledgebaseItemModalCloseButton') knowledgebaseItemModalCloseButton!: ElementRef;
+
 
 
   constructor(
@@ -103,6 +105,7 @@ export class KnowledgebaseCategoryComponent implements OnInit {
   }
 
   loadKnowledgebases() {
+    this.loadingKnowledgebases = true;
     this.knowledgebaseService.loadKnowledgebases(this.activeWorkspace, this.activeKnowledgebaseCategory).pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
         this.knowledgebases = response.data;
@@ -111,9 +114,11 @@ export class KnowledgebaseCategoryComponent implements OnInit {
           this.selectedKnowledgebase = this.knowledgebases[0];
           this.loadKnowledgebaseItems();
         }
+        this.loadingKnowledgebases = false;
       },
       error: (error) => {
         this.genericErrorHandlerService.handleError(error);
+        this.loadingKnowledgebases = false;
       }
     });
   }
@@ -169,5 +174,11 @@ export class KnowledgebaseCategoryComponent implements OnInit {
         this.loadingKnowledgebaseItems = false;
       }
     });
+  }
+
+  handleKnowledgebaseItemCreated() {
+    this.loadKnowledgebaseItems();
+    this.toastr.success('Knowledgebase item created');
+    this.knowledgebaseItemModalCloseButton.nativeElement.click();
   }
 }

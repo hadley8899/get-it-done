@@ -169,6 +169,7 @@ class KnowledgebaseController extends Controller
 
         $knowledgebases = Knowledgebase::query()
             ->where('category_id', '=', $knowledgebaseCategory->id)
+            ->with('knowledgebaseItems')
             ->get();
 
         return response()->json(new KnowledgebaseCollection(KnowledgebaseResource::collection($knowledgebases)));

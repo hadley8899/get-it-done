@@ -15,10 +15,10 @@
             <a
               [routerLink]="navItem.routeItems"
               *ngIf="navItem.routeItems.length > 0"
-              class="breadcrumb-list-item"
+              class="breadcrumb-list-item small"
             >{{ navItem.linkText | uppercase}}</a>
 
-            <span *ngIf="navItem.routeItems.length === 0">&nbsp;{{navItem.linkText | uppercase}}</span>
+            <span *ngIf="navItem.routeItems.length === 0" class="small">&nbsp;{{navItem.linkText | uppercase}}</span>
           </li>
         </ol>
 

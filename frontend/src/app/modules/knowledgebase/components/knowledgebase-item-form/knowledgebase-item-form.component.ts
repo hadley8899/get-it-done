@@ -1,6 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {GenericErrorHandlerService} from '../../../../services/generic-error-handler.service';
-import {ToastrService} from 'ngx-toastr';
 import {KnowledgebaseService} from '../../../../services/knowledgebase.service';
 import {KnowledgebaseItem} from '../../../../interfaces/knowledgebase-item';
 import {KnowledgebaseCategory} from '../../../../interfaces/knowledgebase-category';
@@ -20,7 +19,6 @@ export class KnowledgebaseItemFormComponent implements OnInit {
 
   constructor(
     private knowledgebaseService: KnowledgebaseService,
-    private toastr: ToastrService,
     private genericErrorHandlerService: GenericErrorHandlerService,
     private workspaceService: WorkspaceService,
   ) {
@@ -29,13 +27,18 @@ export class KnowledgebaseItemFormComponent implements OnInit {
   activeWorkspace!: Workspace;
 
   loading = true;
+  saving = false;
   knowledgebaseItemForm!: FormGroup;
 
   @Input() knowledgebaseItem!: KnowledgebaseItem;
   @Input() knowledgebase!: Knowledgebase;
   @Input() knowledgebaseCategory !: KnowledgebaseCategory;
 
+  @Output() knowledgebaseItemCreated: EventEmitter<any> = new EventEmitter<any>();
+  @Output() knowledgebaseItemUpdated: EventEmitter<any> = new EventEmitter<any>();
+
   ngOnInit(): void {
+    console.log('init');
     this.workspaceService.activeWorkspace?.pipe(untilDestroyed(this)).subscribe((workspace) => {
       this.activeWorkspace = workspace;
       this.initForm();
@@ -45,14 +48,15 @@ export class KnowledgebaseItemFormComponent implements OnInit {
   initForm(): void {
     this.loading = true;
     this.knowledgebaseItemForm = new FormGroup({
-      title: new FormControl(this.knowledgebaseItem.name, [Validators.required]),
-      content: new FormControl(this.knowledgebaseItem.contents, [Validators.required]),
+      name: new FormControl(this.knowledgebaseItem?.name, [Validators.required]),
+      contents: new FormControl(this.knowledgebaseItem?.contents, [Validators.required]),
     });
 
     this.loading = false;
   }
 
   save() {
+    this.saving = true;
     if (this.knowledgebaseItem) {
       this.update();
       return;
@@ -62,12 +66,29 @@ export class KnowledgebaseItemFormComponent implements OnInit {
   }
 
   update(): void {
+    this.knowledgebaseService.updateKnowledgebaseItem(this.activeWorkspace, this.knowledgebaseCategory, this.knowledgebase, this.knowledgebaseItem, this.knowledgebaseItemForm.value).subscribe({
+      next: (knowledgebaseItem) => {
+        this.knowledgebaseItemUpdated.emit(knowledgebaseItem);
+        this.saving = false;
+      },
+      error: (error) => {
+        this.genericErrorHandlerService.handleError(error);
+        this.saving = false;
+      }
+    });
   }
 
   create(): void {
-    this.knowledgebaseService.createKnowledgebaseItem(this.activeWorkspace, this.knowledgebaseCategory, this.knowledgebase, this.knowledgebaseItemForm.value).subscribe(
-      (response) => {
-        this.toastr.success('Knowledgebase Item created successfully');
-      });
+    this.knowledgebaseService.createKnowledgebaseItem(this.activeWorkspace, this.knowledgebaseCategory, this.knowledgebase, this.knowledgebaseItemForm.value).subscribe({
+        next: (response) => {
+          this.knowledgebaseItemCreated.emit(response);
+          this.saving = false;
+        },
+        error: (error) => {
+          this.genericErrorHandlerService.handleError(error);
+          this.saving = false;
+        }
+      }
+    );
   }
 }

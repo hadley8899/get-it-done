@@ -48,7 +48,7 @@
       aria-current="page"
       (click)="selectKnowledgebase(knowledgebase)"
       [ngClass]="{'btn-outline-secondary': knowledgebase.uuid !== selectedKnowledgebase.uuid, 'btn-secondary': knowledgebase.uuid == selectedKnowledgebase.uuid }"
-    ><span class="fa fa-book"></span> {{knowledgebase.name}}</a>
+    ><span class="fa fa-book"></span> {{knowledgebase.name}} ({{knowledgebase.item_count}})</a>
   </li>
   <li class="nav-item me-1 mb-1">
     <a
@@ -62,45 +62,51 @@
   </li>
 </ul>
 
-<hr/>
 
 
-<div class="row">
-  <div class="col-sm-6">
-    <h2>Knowledgebase Items</h2>
+<div *ngIf="selectedKnowledgebase">
+  <hr/>
+  <div class="row">
+    <div class="col-sm-6">
+      <h2>Knowledgebase Items</h2>
 
+    </div>
+
+    <div class="col-sm-6 text-end">
+      <a
+        class="btn btn-outline-secondary"
+        data-bs-toggle="modal"
+        data-bs-target="#new-knowledgebase-item-modal"
+        *ngIf="selectedKnowledgebase"
+      >
+        <span class="fa fa-plus"></span> New
+      </a>
+    </div>
   </div>
 
-  <div class="col-sm-6 text-end">
-    <a class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#new-knowledgebase-item-modal">
-      <span class="fa fa-plus"></span> New
-    </a>
-  </div>
+  <spinner [show]="loadingKnowledgebaseItems"></spinner>
+
+  <p *ngIf="knowledgebaseItems.length === 0 && !loadingKnowledgebaseItems">No knowledgebase items</p>
+
+  <table datatable class="row-border hover w-100" *ngIf="!loadingKnowledgebaseItems && knowledgebaseItems.length > 0">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Created</th>
+      <th>Updated</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let knowledgebaseItem of knowledgebaseItems">
+      <td>{{knowledgebaseItem.name}}</td>
+      <td>{{knowledgebaseItem.contents}}</td>
+      <td>{{formatDate(knowledgebaseItem.created_at)}}</td>
+      <td>{{formatDate(knowledgebaseItem.updated_at)}}</td>
+    </tr>
+    </tbody>
+  </table>
 </div>
-
-<spinner [show]="loadingKnowledgebaseItems"></spinner>
-
-<p *ngIf="knowledgebaseItems.length === 0 && !loadingKnowledgebaseItems">No knowledgebase items</p>
-
-<table datatable class="row-border hover w-100" *ngIf="!loadingKnowledgebaseItems && knowledgebaseItems.length > 0">
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Created</th>
-    <th>Updated</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let knowledgebaseItem of knowledgebaseItems">
-    <td>{{knowledgebaseItem.name}}</td>
-    <td>{{knowledgebaseItem.contents}}</td>
-    <td>{{formatDate(knowledgebaseItem.created_at)}}</td>
-    <td>{{formatDate(knowledgebaseItem.updated_at)}}</td>
-  </tr>
-  </tbody>
-</table>
-
 
 <!-- MODALS -->
 <!-- ------------------------------------------------------------------------------------------------------------------>
@@ -214,7 +220,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        .. Form here
+        <app-knowledgebase-item-form
+          [knowledgebase]="selectedKnowledgebase"
+          [knowledgebaseCategory]="activeKnowledgebaseCategory"
+          (knowledgebaseItemCreated)="handleKnowledgebaseItemCreated()"
+          *ngIf="!loadingKnowledgebases"
+        ></app-knowledgebase-item-form>
       </div>
       <div class="modal-footer">
         <button
