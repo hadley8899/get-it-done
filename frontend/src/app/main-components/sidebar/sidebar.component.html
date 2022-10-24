@@ -9,55 +9,69 @@
         </a>
       </li>
 
-      <li class="nav-item">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                data-bs-target="#tasks-collapse" aria-expanded="false">
+       <li class="nav-item">
+        <a class="nav-link" aria-current="page" [routerLink]="['/boards']" [routerLinkActive]="'active'">
+          <span class="fa fa-folder"></span>
           Boards
-        </button>
-        <div class="collapse" id="tasks-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/boards']" [routerLinkActive]="'active'">
-                All Boards
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/boards', 'create']"
-                 [routerLinkActive]="'active'">
-                New Board
-              </a>
-            </li>
-
-          </ul>
-        </div>
+        </a>
       </li>
 
-      <li class="nav-item">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                data-bs-target="#knowledgebases-collapse" aria-expanded="false">
-          KnowledgeBases
-        </button>
-        <div class="collapse" id="knowledgebases-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/knowledgebase']" [routerLinkActive]="'active'">
-                Knowledgebase Categories
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" [routerLink]="['/knowledgebase','category', 'create']"
-                 [routerLinkActive]="'active'">
-                New Category
-              </a>
-            </li>
-
-          </ul>
-        </div>
+        <li class="nav-item">
+        <a class="nav-link" aria-current="page" [routerLink]="['/knowledgebase']" [routerLinkActive]="'active'">
+          <span class="fa fa-chess-board"></span>
+          Knowledgebases
+        </a>
       </li>
+
+<!--      <li class="nav-item">-->
+<!--        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"-->
+<!--                data-bs-target="#tasks-collapse" aria-expanded="false">-->
+<!--          Boards-->
+<!--        </button>-->
+<!--        <div class="collapse" id="tasks-collapse">-->
+<!--          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">-->
+
+<!--            <li class="nav-item">-->
+<!--              <a class="nav-link" aria-current="page" [routerLink]="['/boards']" [routerLinkActive]="'active'">-->
+<!--                All Boards-->
+<!--              </a>-->
+<!--            </li>-->
+
+<!--            <li class="nav-item">-->
+<!--              <a class="nav-link" aria-current="page" [routerLink]="['/boards', 'create']"-->
+<!--                 [routerLinkActive]="'active'">-->
+<!--                New Board-->
+<!--              </a>-->
+<!--            </li>-->
+
+<!--          </ul>-->
+<!--        </div>-->
+<!--      </li>-->
+
+<!--      <li class="nav-item">-->
+<!--        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"-->
+<!--                data-bs-target="#knowledgebases-collapse" aria-expanded="false">-->
+<!--          KnowledgeBases-->
+<!--        </button>-->
+<!--        <div class="collapse" id="knowledgebases-collapse">-->
+<!--          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">-->
+
+<!--            <li class="nav-item">-->
+<!--              <a class="nav-link" aria-current="page" [routerLink]="['/knowledgebase']" [routerLinkActive]="'active'">-->
+<!--                Knowledgebase Categories-->
+<!--              </a>-->
+<!--            </li>-->
+
+<!--            <li class="nav-item">-->
+<!--              <a class="nav-link" aria-current="page" [routerLink]="['/knowledgebase','category', 'create']"-->
+<!--                 [routerLinkActive]="'active'">-->
+<!--                New Category-->
+<!--              </a>-->
+<!--            </li>-->
+
+<!--          </ul>-->
+<!--        </div>-->
+<!--      </li>-->
 
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['/workspaces']" [routerLinkActive]="'active'">

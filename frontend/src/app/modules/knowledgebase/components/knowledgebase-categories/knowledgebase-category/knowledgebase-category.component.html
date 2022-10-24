@@ -328,7 +328,18 @@
             Updated: {{formatDate(activeKnowledgebaseItem.updated_at)}}</span>
           </p>
 
-          <button class="btn btn-primary" (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem">Edit</button>
+          <button
+            class="btn btn-primary me-2"
+            (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem"
+          ><span class="fa fa-edit"></span> Edit</button>
+          <button
+            class="btn btn-danger"
+            [swal]="{ title: 'Delete Knowledgebase Item?', showCancelButton: true }"
+            (confirm)="deleteKnowledgebaseItem()">
+            <span class="fa fa-trash">
+
+            </span> Delete
+          </button>
 
         </div>
 

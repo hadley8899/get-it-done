@@ -192,6 +192,8 @@ export class KnowledgebaseCategoryComponent implements OnInit {
 
   handleKnowledgebaseItemCreated() {
     this.loadKnowledgebaseItems();
+    // Add 1 to the item count
+    this.activeKnowledgebase.item_count = this.activeKnowledgebase.item_count + 1;
     this.toastr.success('Knowledgebase item created');
     this.knowledgebaseItemModalCloseButton.nativeElement.click();
   }
@@ -211,5 +213,19 @@ export class KnowledgebaseCategoryComponent implements OnInit {
     this.loadKnowledgebases();
     this.toastr.success('Knowledgebase updated');
     this.updateKnowledgebaseModalCloseButton.nativeElement.click();
+  }
+
+  deleteKnowledgebaseItem() {
+    this.knowledgebaseService.deleteKnowledgebaseItem(this.activeWorkspace, this.activeKnowledgebaseCategory, this.activeKnowledgebase, this.activeKnowledgebaseItem).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.loadKnowledgebaseItems();
+        this.toastr.success('Knowledgebase item deleted');
+        this.knowledgebaseItemCloseButton.nativeElement.click();
+        this.activeKnowledgebase.item_count = this.activeKnowledgebase.item_count - 1;
+      },
+      error: (error) => {
+        this.genericErrorHandlerService.handleError(error);
+      }
+    });
   }
 }

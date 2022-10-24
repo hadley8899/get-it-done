@@ -64,4 +64,8 @@ export class KnowledgebaseService {
   updateKnowledgebaseItem(workspace: Workspace, knowledgebaseCategory: KnowledgebaseCategory, selectedKnowledgebase: Knowledgebase, knowledgebaseItem: KnowledgebaseItem, value: FormData) {
     return this.http.put<any>(`${this.apiUrl}knowledgebase/${workspace.uuid}/${knowledgebaseCategory.uuid}/knowledgebases/${selectedKnowledgebase.uuid}/items/${knowledgebaseItem.uuid}`, value);
   }
+
+  deleteKnowledgebaseItem(workspace: Workspace, knowledgebaseCategory: KnowledgebaseCategory, selectedKnowledgebase: Knowledgebase, knowledgebaseItem: KnowledgebaseItem): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}knowledgebase/${workspace.uuid}/${knowledgebaseCategory.uuid}/knowledgebases/${selectedKnowledgebase.uuid}/items/${knowledgebaseItem.uuid}`);
+  }
 }

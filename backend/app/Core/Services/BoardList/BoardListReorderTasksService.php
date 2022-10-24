@@ -51,6 +51,8 @@ class BoardListReorderTasksService
                 continue;
             }
             $task->position = $position;
+            // As we are only reordering the list, Don't update the updated_at timestamp
+            $task->updated_at = false;
             $task->saveOrFail();
             $position++;
         }
