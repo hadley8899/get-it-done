@@ -13,30 +13,10 @@
 </div>
 
 <h2>Children</h2>
-<ul class="nav nav-pills">
-  <li class="nav-item me-1 mb-1">
-    <a class="btn btn-outline-secondary" aria-current="page" [routerLink]="backLink()">
-      <span class="fa fa-arrow-left"></span>
-    </a>
-  </li>
-  <li class="nav-item me-1 mb-1" *ngFor="let category of childCategories">
-    <a
-      class="btn btn-outline-secondary"
-      aria-current="page"
-      [routerLink]="['/knowledgebase','category', category.uuid]"
-    ><span class="fa fa-folder"></span> {{category.name}}</a>
-  </li>
-  <li class="nav-item me-1 mb-1">
-    <a
-      class="btn btn-outline-secondary"
-      aria-current="page"
-      data-bs-toggle="modal"
-      data-bs-target="#new-knowledgebase-category-child-modal"
-    >
-      <span class="fa fa-plus"></span> New
-    </a>
-  </li>
-</ul>
+<app-knowledgebase-category-child-list
+  [backLink]="backLink()"
+  [childCategories]="childCategories"
+></app-knowledgebase-category-child-list>
 
 <hr/>
 <div class="row">
@@ -50,33 +30,17 @@
       class="btn btn-primary btn-sm"
       data-bs-toggle="modal"
       data-bs-target="#update-knowledgebase-modal"
-    ><span class="fa fa-edit"></span> Edit</button>
+    ><span class="fa fa-edit"></span> Edit
+    </button>
   </div>
 </div>
 
 
-<ul class="nav nav-pills">
-  <li class="nav-item me-1 mb-1" *ngFor="let knowledgebase of knowledgebases">
-    <a
-      class="btn"
-      aria-current="page"
-      (click)="selectKnowledgebase(knowledgebase)"
-      [ngClass]="{'btn-outline-secondary': knowledgebase.uuid !== activeKnowledgebase.uuid, 'btn-secondary': knowledgebase.uuid == activeKnowledgebase.uuid }"
-    ><span class="fa fa-book"></span> {{knowledgebase.name}} ({{knowledgebase.item_count}})</a>
-  </li>
-  <li class="nav-item me-1 mb-1">
-    <a
-      class="btn btn-outline-secondary"
-      aria-current="page"
-      data-bs-toggle="modal"
-      data-bs-target="#new-knowledgebase-modal"
-    >
-      <span class="fa fa-plus"></span> New
-    </a>
-  </li>
-</ul>
-
-
+<app-knowledgebase-list
+  [knowledgebases]="knowledgebases"
+  [activeKnowledgebase]="activeKnowledgebase"
+  (knowledgebaseClick)="selectKnowledgebase($event)"
+></app-knowledgebase-list>
 
 <div *ngIf="activeKnowledgebase">
   <hr/>
@@ -102,37 +66,16 @@
 
   <p *ngIf="knowledgebaseItems.length === 0 && !loadingKnowledgebaseItems">No knowledgebase items</p>
 
-  <table datatable class="row-border hover w-100" *ngIf="!loadingKnowledgebaseItems && knowledgebaseItems.length > 0">
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>Content</th>
-      <th>Created</th>
-      <th>Updated</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let knowledgebaseItem of knowledgebaseItems">
-      <td>
-        <a
-          href="#"
-          data-bs-toggle="modal"
-          data-bs-target="#knowledgebase-item-modal"
-          (click)="selectKnowledgebaseItem(knowledgebaseItem)"
-        >{{knowledgebaseItem.name}}</a>
-      </td>
-      <td>{{knowledgebaseItem.contents|truncate:[50]}}</td>
-      <td>{{formatDate(knowledgebaseItem.created_at)}}</td>
-      <td>{{formatDate(knowledgebaseItem.updated_at)}}</td>
-    </tr>
-    </tbody>
-  </table>
+  <app-knowledgebase-items-table
+    [loadingKnowledgebaseItems]="loadingKnowledgebaseItems"
+    [knowledgebaseItems]="knowledgebaseItems"
+    (knowledgebaseItemClick)="selectKnowledgebaseItem($event)"
+  ></app-knowledgebase-items-table>
 </div>
 
 <!-- MODALS -->
 <!-- ------------------------------------------------------------------------------------------------------------------>
 
-<!-- New Knowledgebase category modal -->
 <div
   class="modal fade"
   id="new-knowledgebase-category-child-modal"
@@ -159,6 +102,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Update Knowledgebase category modal -->
 <div
@@ -188,7 +132,8 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseCategoryUpdateModalCloseButton
-        >Close</button>
+        >Close
+        </button>
       </div>
     </div>
   </div>
@@ -220,7 +165,8 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseModalCloseButton
-        >Close</button>
+        >Close
+        </button>
       </div>
     </div>
   </div>
@@ -255,7 +201,8 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #updateKnowledgebaseModalCloseButton
-        >Close</button>
+        >Close
+        </button>
       </div>
     </div>
   </div>
@@ -289,7 +236,8 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseItemModalCloseButton
-        >Close</button>
+        >Close
+        </button>
       </div>
     </div>
   </div>
@@ -331,7 +279,8 @@
           <button
             class="btn btn-primary me-2"
             (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem"
-          ><span class="fa fa-edit"></span> Edit</button>
+          ><span class="fa fa-edit"></span> Edit
+          </button>
           <button
             class="btn btn-danger"
             [swal]="{ title: 'Delete Knowledgebase Item?', showCancelButton: true }"
@@ -351,7 +300,8 @@
             (knowledgebaseItemUpdated)="handleKnowledgebaseItemUpdated($event)"
           ></app-knowledgebase-item-form>
 
-          <button class="btn btn-danger mt-3" (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem">Cancel</button>
+          <button class="btn btn-danger mt-3" (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem">Cancel
+          </button>
 
         </div>
 
@@ -362,7 +312,8 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseItemCloseButton
-        >Close</button>
+        >Close
+        </button>
       </div>
     </div>
   </div>

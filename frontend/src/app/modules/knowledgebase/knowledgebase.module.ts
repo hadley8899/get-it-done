@@ -15,6 +15,9 @@ import { KnowledgebaseFormComponent } from './components/knowledgebase-form/know
 import {DataTablesModule} from 'angular-datatables';
 import { KnowledgebaseItemFormComponent } from './components/knowledgebase-item-form/knowledgebase-item-form.component';
 import {MarkdownModule} from 'ngx-markdown';
+import { KnowledgebaseItemsTableComponent } from './components/knowledgebase-categories/knowledgebase-category/knowledgebase-items-table/knowledgebase-items-table.component';
+import { KnowledgebaseListComponent } from './components/knowledgebase-categories/knowledgebase-category/knowledgebase-list/knowledgebase-list.component';
+import { KnowledgebaseCategoryChildListComponent } from './components/knowledgebase-categories/knowledgebase-category/knowledgebase-category-child-list/knowledgebase-category-child-list.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import {MarkdownModule} from 'ngx-markdown';
     KnowledgebaseCategoryUpdateComponent,
     KnowledgebaseCategoryComponent,
     KnowledgebaseFormComponent,
-    KnowledgebaseItemFormComponent
+    KnowledgebaseItemFormComponent,
+    KnowledgebaseItemsTableComponent,
+    KnowledgebaseListComponent,
+    KnowledgebaseCategoryChildListComponent,
   ],
   imports: [
     CommonModule,

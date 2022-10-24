@@ -1,0 +1,25 @@
+<table datatable class="row-border hover w-100" *ngIf="!loadingKnowledgebaseItems && knowledgebaseItems.length > 0">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Content</th>
+    <th>Created</th>
+    <th>Updated</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let knowledgebaseItem of knowledgebaseItems">
+    <td>
+      <a
+        href="#"
+        data-bs-toggle="modal"
+        data-bs-target="#knowledgebase-item-modal"
+        (click)="selectKnowledgebaseItem(knowledgebaseItem)"
+      >{{knowledgebaseItem.name}}</a>
+    </td>
+    <td>{{knowledgebaseItem.contents|truncate:[50]}}</td>
+    <td>{{formatDate(knowledgebaseItem.created_at)}}</td>
+    <td>{{formatDate(knowledgebaseItem.updated_at)}}</td>
+  </tr>
+  </tbody>
+</table>
