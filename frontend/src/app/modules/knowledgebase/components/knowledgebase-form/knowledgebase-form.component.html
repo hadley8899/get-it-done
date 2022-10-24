@@ -1,4 +1,5 @@
-<form [formGroup]="knowledgebaseForm" (ngSubmit)="save()">
+<spinner [show]="loading"></spinner>
+<form [formGroup]="knowledgebaseForm" (ngSubmit)="save()" *ngIf="!loading">
   <div class="mb-3">
     <label for="name" class="form-label">Name</label>
     <input type="text" class="form-control" id="name" placeholder="Knowledgebase Name..." formControlName="name">

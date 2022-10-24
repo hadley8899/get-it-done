@@ -38,7 +38,6 @@ export class KnowledgebaseItemFormComponent implements OnInit {
   @Output() knowledgebaseItemUpdated: EventEmitter<any> = new EventEmitter<any>();
 
   ngOnInit(): void {
-    console.log('init');
     this.workspaceService.activeWorkspace?.pipe(untilDestroyed(this)).subscribe((workspace) => {
       this.activeWorkspace = workspace;
       this.initForm();
@@ -83,6 +82,7 @@ export class KnowledgebaseItemFormComponent implements OnInit {
         next: (response) => {
           this.knowledgebaseItemCreated.emit(response);
           this.saving = false;
+          this.knowledgebaseItemForm.reset();
         },
         error: (error) => {
           this.genericErrorHandlerService.handleError(error);

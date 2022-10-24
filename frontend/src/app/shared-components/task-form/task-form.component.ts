@@ -68,8 +68,6 @@ export class TaskFormComponent implements OnInit {
       assigned_to: new FormControl(this.taskDetails.assigned_to?.uuid)
     });
 
-    console.log(this.taskDetailsForm.get('assigned_to')?.value);
-
     this.loadingTaskDetailsForm = false;
   }
 

@@ -5,7 +5,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {WorkspaceService} from '../../../../../services/workspace.service';
 import {Workspace} from '../../../../../interfaces/workspace';
 import {ToastrService} from 'ngx-toastr';
-import {LaravelErrorExtractorService} from '../../../../../services/laravel-error-extractor.service';
+import {GenericErrorHandlerService} from '../../../../../services/generic-error-handler.service';
 
 @Component({
   selector: 'app-knowledgebase-category-form',
@@ -31,7 +31,8 @@ export class KnowledgebaseCategoryFormComponent implements OnInit {
   constructor(
     private knowledgebaseService: KnowledgebaseService,
     private workspaceService: WorkspaceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private genericErrorExtractor: GenericErrorHandlerService,
   ) {
   }
 
@@ -64,18 +65,7 @@ export class KnowledgebaseCategoryFormComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error(error);
-
-        let errorMessages = LaravelErrorExtractorService.extractErrorMessagesFromErrorResponse(error);
-        console.log(errorMessages);
-        if (errorMessages.length > 0) {
-          errorMessages.forEach((errorMessage) => {
-            this.toastr.error(errorMessage);
-          })
-        } else {
-
-          this.toastr.error('Failed to update knowledgebase category');
-        }
+        this.genericErrorExtractor.handleError(error);
         this.saving = false;
       }
     })
@@ -96,18 +86,7 @@ export class KnowledgebaseCategoryFormComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error(error);
-
-        let errorMessages = LaravelErrorExtractorService.extractErrorMessagesFromErrorResponse(error);
-        console.log(errorMessages);
-        if (errorMessages.length > 0) {
-          errorMessages.forEach((errorMessage) => {
-            this.toastr.error(errorMessage);
-          })
-        } else {
-
-          this.toastr.error('Failed to update knowledgebase category');
-        }
+        this.genericErrorExtractor.handleError(error);
         this.saving = false;
       }
     })

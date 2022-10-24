@@ -14,6 +14,7 @@ import { KnowledgebaseCategoryComponent } from './components/knowledgebase-categ
 import { KnowledgebaseFormComponent } from './components/knowledgebase-form/knowledgebase-form.component';
 import {DataTablesModule} from 'angular-datatables';
 import { KnowledgebaseItemFormComponent } from './components/knowledgebase-item-form/knowledgebase-item-form.component';
+import {MarkdownModule} from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { KnowledgebaseItemFormComponent } from './components/knowledgebase-item-
     SweetAlert2Module,
     ReactiveFormsModule,
     DataTablesModule,
+    MarkdownModule.forChild(),
   ]
 })
 export class KnowledgebaseModule {

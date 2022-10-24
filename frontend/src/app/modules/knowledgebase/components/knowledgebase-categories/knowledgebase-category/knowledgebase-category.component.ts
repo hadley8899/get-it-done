@@ -30,23 +30,29 @@ export class KnowledgebaseCategoryComponent implements OnInit {
   ];
 
   activeWorkspace!: Workspace;
+
   activeKnowledgebaseCategory!: KnowledgebaseCategory;
   childCategories: KnowledgebaseCategory[] = [];
+
   knowledgebases: Knowledgebase[] = [];
-  selectedKnowledgebase!: Knowledgebase;
+  activeKnowledgebase!: Knowledgebase;
   loadingKnowledgebases = true;
+  selectingKnowledgebase = true;
 
   loadingKnowledgebaseItems = false;
   knowledgebaseItems: KnowledgebaseItem[] = [];
+
+  activeKnowledgebaseItem!: KnowledgebaseItem;
+  editingKnowledgebaseItem = false;
 
   loading = true;
 
   @ViewChild('childCategoryCloseButton') childCategoryCloseButton!: ElementRef;
   @ViewChild('knowledgebaseCategoryUpdateModalCloseButton') knowledgebaseCategoryUpdateModalCloseButton!: ElementRef;
   @ViewChild('knowledgebaseModalCloseButton') knowledgebaseModalCloseButton!: ElementRef;
+  @ViewChild('updateKnowledgebaseModalCloseButton') updateKnowledgebaseModalCloseButton!: ElementRef;
   @ViewChild('knowledgebaseItemModalCloseButton') knowledgebaseItemModalCloseButton!: ElementRef;
-
-
+  @ViewChild('knowledgebaseItemCloseButton') knowledgebaseItemCloseButton!: ElementRef;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -106,19 +112,22 @@ export class KnowledgebaseCategoryComponent implements OnInit {
 
   loadKnowledgebases() {
     this.loadingKnowledgebases = true;
+    this.selectingKnowledgebase = true;
     this.knowledgebaseService.loadKnowledgebases(this.activeWorkspace, this.activeKnowledgebaseCategory).pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
         this.knowledgebases = response.data;
         // If the count of knowledgebases is greater than 0, then select the first one
         if (this.knowledgebases.length > 0) {
-          this.selectedKnowledgebase = this.knowledgebases[0];
+          this.activeKnowledgebase = this.knowledgebases[0];
           this.loadKnowledgebaseItems();
         }
         this.loadingKnowledgebases = false;
+        this.selectingKnowledgebase = false;
       },
       error: (error) => {
         this.genericErrorHandlerService.handleError(error);
         this.loadingKnowledgebases = false;
+        this.selectingKnowledgebase = false;
       }
     });
   }
@@ -147,24 +156,29 @@ export class KnowledgebaseCategoryComponent implements OnInit {
     return [];
   }
 
-  handleKnowledgebaseUpdated() {
+  handleKnowledgebaseCategoryUpdated() {
     this.loadKnowledgebaseCategoryDetails(this.activeKnowledgebaseCategory.uuid);
     this.toastr.success('Knowledgebase updated');
     this.knowledgebaseCategoryUpdateModalCloseButton.nativeElement.click();
   }
 
-  formatDate(date: string, format = 'DD-MM-YYYY HH:mm:ss') {
+  formatDate(date: string) {
     return DateService.formatDate(date);
   }
 
   selectKnowledgebase(knowledgebase: Knowledgebase) {
-    this.selectedKnowledgebase = knowledgebase;
+    this.selectingKnowledgebase = true;
+    this.activeKnowledgebase = knowledgebase;
     this.loadKnowledgebaseItems();
+    // This is a bit of a hack, But delaying the selection of knowledgebase rerenders the child form
+    setTimeout(() => {
+      this.selectingKnowledgebase = false;
+    }, 100);
   }
 
   loadKnowledgebaseItems() {
     this.loadingKnowledgebaseItems = true;
-    this.knowledgebaseService.loadKnowledgebaseItems(this.activeWorkspace, this.activeKnowledgebaseCategory, this.selectedKnowledgebase).pipe(untilDestroyed(this)).subscribe({
+    this.knowledgebaseService.loadKnowledgebaseItems(this.activeWorkspace, this.activeKnowledgebaseCategory, this.activeKnowledgebase).pipe(untilDestroyed(this)).subscribe({
       next: (response) => {
         this.knowledgebaseItems = response.data;
         this.loadingKnowledgebaseItems = false;
@@ -180,5 +194,22 @@ export class KnowledgebaseCategoryComponent implements OnInit {
     this.loadKnowledgebaseItems();
     this.toastr.success('Knowledgebase item created');
     this.knowledgebaseItemModalCloseButton.nativeElement.click();
+  }
+
+  selectKnowledgebaseItem(knowledgebaseItem: KnowledgebaseItem) {
+    this.activeKnowledgebaseItem = knowledgebaseItem;
+  }
+
+  handleKnowledgebaseItemUpdated(knowledgebaseItem: KnowledgebaseItem) {
+    this.activeKnowledgebaseItem = knowledgebaseItem;
+    this.loadKnowledgebaseItems();
+    this.toastr.success('Knowledgebase item updated');
+    this.editingKnowledgebaseItem = false;
+  }
+
+  handleKnowledgebaseUpdated() {
+    this.loadKnowledgebases();
+    this.toastr.success('Knowledgebase updated');
+    this.updateKnowledgebaseModalCloseButton.nativeElement.click();
   }
 }

@@ -30,6 +30,6 @@ var test = 1;
   }
 
   showOutput() {
-    console.log(this.markdownInput);
+
   }
 }

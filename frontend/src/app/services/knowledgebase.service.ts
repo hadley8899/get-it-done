@@ -58,10 +58,6 @@ export class KnowledgebaseService {
   }
 
   createKnowledgebaseItem(workspace: Workspace, knowledgebaseCategory: KnowledgebaseCategory, knowledgebase: Knowledgebase, value: FormData) {
-    console.log(workspace.uuid);
-    console.log(knowledgebaseCategory.uuid);
-    console.log(knowledgebase.uuid);
-
     return this.http.post<any>(`${this.apiUrl}knowledgebase/${workspace.uuid}/${knowledgebaseCategory.uuid}/knowledgebases/${knowledgebase.uuid}/items`, value);
   }
 

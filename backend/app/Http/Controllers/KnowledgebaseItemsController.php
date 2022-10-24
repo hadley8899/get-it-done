@@ -39,7 +39,10 @@ class KnowledgebaseItemsController extends Controller
         }
 
         // Get all the knowledgebase items
-        $items = $knowledgebase->knowledgebaseItems()->orderBy('position')->get();
+        $items = $knowledgebase
+            ->knowledgebaseItems()
+            ->orderBy('position')
+            ->get();
 
         return response()->json(new KnowledgebaseItemCollection(KnowledgebaseItemResource::collection($items)));
     }
@@ -103,7 +106,7 @@ class KnowledgebaseItemsController extends Controller
 
         $knowledgebaseItem->save();
 
-        return response()->json(new KnowledgebaseResource($knowledgebaseItem));
+        return response()->json(new KnowledgebaseItemResource($knowledgebaseItem));
     }
 
     /**
@@ -136,7 +139,9 @@ class KnowledgebaseItemsController extends Controller
         $knowledgebaseItem->update($updateKnowledgebaseItemRequest->validated());
 
         // Update the positions of other knowledgebase items
-        $knowledgebaseItems = KnowledgebaseItem::query()->where('knowledgebase_id', $knowledgebase->id)->get();
+        $knowledgebaseItems = KnowledgebaseItem::query()
+            ->where('knowledgebase_id', $knowledgebase->id)
+            ->get();
         $position = 1;
         foreach ($knowledgebaseItems as $item) {
             $item->position = $position;
@@ -144,7 +149,7 @@ class KnowledgebaseItemsController extends Controller
             $position++;
         }
 
-        return response()->json(new KnowledgebaseResource($knowledgebaseItem));
+        return response()->json(new KnowledgebaseItemResource($knowledgebaseItem));
     }
 
     /**

@@ -39,7 +39,21 @@
 </ul>
 
 <hr/>
-<h2>Knowledgebases</h2>
+<div class="row">
+  <div class="col-6">
+    <h2>Knowledgebases</h2>
+  </div>
+
+  <div class="col text-end">
+    <button
+      *ngIf="activeKnowledgebase"
+      class="btn btn-primary btn-sm"
+      data-bs-toggle="modal"
+      data-bs-target="#update-knowledgebase-modal"
+    ><span class="fa fa-edit"></span> Edit</button>
+  </div>
+</div>
+
 
 <ul class="nav nav-pills">
   <li class="nav-item me-1 mb-1" *ngFor="let knowledgebase of knowledgebases">
@@ -47,7 +61,7 @@
       class="btn"
       aria-current="page"
       (click)="selectKnowledgebase(knowledgebase)"
-      [ngClass]="{'btn-outline-secondary': knowledgebase.uuid !== selectedKnowledgebase.uuid, 'btn-secondary': knowledgebase.uuid == selectedKnowledgebase.uuid }"
+      [ngClass]="{'btn-outline-secondary': knowledgebase.uuid !== activeKnowledgebase.uuid, 'btn-secondary': knowledgebase.uuid == activeKnowledgebase.uuid }"
     ><span class="fa fa-book"></span> {{knowledgebase.name}} ({{knowledgebase.item_count}})</a>
   </li>
   <li class="nav-item me-1 mb-1">
@@ -64,7 +78,7 @@
 
 
 
-<div *ngIf="selectedKnowledgebase">
+<div *ngIf="activeKnowledgebase">
   <hr/>
   <div class="row">
     <div class="col-sm-6">
@@ -74,10 +88,10 @@
 
     <div class="col-sm-6 text-end">
       <a
-        class="btn btn-outline-secondary"
+        class="btn btn-success btn-sm"
         data-bs-toggle="modal"
         data-bs-target="#new-knowledgebase-item-modal"
-        *ngIf="selectedKnowledgebase"
+        *ngIf="activeKnowledgebase"
       >
         <span class="fa fa-plus"></span> New
       </a>
@@ -92,15 +106,22 @@
     <thead>
     <tr>
       <th>Name</th>
-      <th>Description</th>
+      <th>Content</th>
       <th>Created</th>
       <th>Updated</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let knowledgebaseItem of knowledgebaseItems">
-      <td>{{knowledgebaseItem.name}}</td>
-      <td>{{knowledgebaseItem.contents}}</td>
+      <td>
+        <a
+          href="#"
+          data-bs-toggle="modal"
+          data-bs-target="#knowledgebase-item-modal"
+          (click)="selectKnowledgebaseItem(knowledgebaseItem)"
+        >{{knowledgebaseItem.name}}</a>
+      </td>
+      <td>{{knowledgebaseItem.contents|truncate:[50]}}</td>
       <td>{{formatDate(knowledgebaseItem.created_at)}}</td>
       <td>{{formatDate(knowledgebaseItem.updated_at)}}</td>
     </tr>
@@ -157,7 +178,7 @@
         <app-knowledgebase-category-form
           *ngIf="!loading"
           [parentKnowledgebaseCategory]="this.activeKnowledgebaseCategory"
-          (knowledgebaseCategoryUpdated)="handleKnowledgebaseUpdated()"
+          (knowledgebaseCategoryUpdated)="handleKnowledgebaseCategoryUpdated()"
           [knowledgebaseCategory]="activeKnowledgebaseCategory"
         ></app-knowledgebase-category-form>
       </div>
@@ -205,6 +226,41 @@
   </div>
 </div>
 
+<!-- Update Knowledgebase Modal -->
+<div
+  class="modal fade"
+  id="update-knowledgebase-modal"
+  tabindex="-1"
+  aria-labelledby="update-knowledgebase-modal-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="update-knowledgebase-modal-label">Update Knowledgebase</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="!selectingKnowledgebase">
+
+        <app-knowledgebase-form
+          *ngIf="!selectingKnowledgebase"
+          [knowledgebaseCategory]="activeKnowledgebaseCategory"
+          [knowledgebase]="activeKnowledgebase"
+          (knowledgebaseUpdated)="handleKnowledgebaseUpdated()"
+        ></app-knowledgebase-form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          #updateKnowledgebaseModalCloseButton
+        >Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- New Knowledgebase item Modal -->
 <div
   class="modal fade"
@@ -221,7 +277,7 @@
       </div>
       <div class="modal-body">
         <app-knowledgebase-item-form
-          [knowledgebase]="selectedKnowledgebase"
+          [knowledgebase]="activeKnowledgebase"
           [knowledgebaseCategory]="activeKnowledgebaseCategory"
           (knowledgebaseItemCreated)="handleKnowledgebaseItemCreated()"
           *ngIf="!loadingKnowledgebases"
@@ -233,6 +289,68 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseItemModalCloseButton
+        >Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Knowledgebase item Modal -->
+<div
+  class="modal fade"
+  id="knowledgebase-item-modal"
+  tabindex="-1"
+  aria-labelledby="knowledgebase-item-modal-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" *ngIf="activeKnowledgebaseItem">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="knowledgebase-item-modal-label">{{activeKnowledgebaseItem.name}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div *ngIf="!editingKnowledgebaseItem">
+          <p class="mb-4">
+            <b>Name</b><br/>
+            {{activeKnowledgebaseItem.name}}
+          </p>
+
+          <p class="mb-4">
+            <b>Content</b><br/>
+            <markdown emoji lineNumbers [data]="activeKnowledgebaseItem.contents"></markdown>
+          </p>
+
+          <p class="mb-4">
+            <b>Dates</b><br/>
+            <span class="text-muted text-small">Created: {{formatDate(activeKnowledgebaseItem.created_at)}}<br/>
+            Updated: {{formatDate(activeKnowledgebaseItem.updated_at)}}</span>
+          </p>
+
+          <button class="btn btn-primary" (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem">Edit</button>
+
+        </div>
+
+        <div *ngIf="editingKnowledgebaseItem">
+          <app-knowledgebase-item-form
+            [knowledgebase]="activeKnowledgebase"
+            [knowledgebaseCategory]="activeKnowledgebaseCategory"
+            [knowledgebaseItem]="activeKnowledgebaseItem"
+            (knowledgebaseItemUpdated)="handleKnowledgebaseItemUpdated($event)"
+          ></app-knowledgebase-item-form>
+
+          <button class="btn btn-danger mt-3" (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem">Cancel</button>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          #knowledgebaseItemCloseButton
         >Close</button>
       </div>
     </div>

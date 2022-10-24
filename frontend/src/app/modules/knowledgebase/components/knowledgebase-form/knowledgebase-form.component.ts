@@ -18,7 +18,7 @@ import {GenericErrorHandlerService} from '../../../../services/generic-error-han
 export class KnowledgebaseFormComponent implements OnInit {
 
   @Input() knowledgebaseCategory!: KnowledgebaseCategory;
-  @Input() knowledgebase !: Knowledgebase;
+  @Input() knowledgebase!: Knowledgebase;
 
   @Output() knowledgebaseCreated: EventEmitter<any> = new EventEmitter<any>();
   @Output() knowledgebaseUpdated: EventEmitter<any> = new EventEmitter<any>();
@@ -48,10 +48,12 @@ export class KnowledgebaseFormComponent implements OnInit {
   }
 
   initForm() {
+    this.loading = true;
     this.knowledgebaseForm = new FormGroup({
-      name: new FormControl(this.knowledgebaseCategory?.name, [Validators.required]),
-      description: new FormControl(this.knowledgebaseCategory?.description, [Validators.required]),
+      name: new FormControl(this.knowledgebase?.name, [Validators.required]),
+      description: new FormControl(this.knowledgebase?.description, [Validators.required]),
     });
+    this.loading = false;
   }
 
   save() {
