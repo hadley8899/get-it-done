@@ -1,30 +1,43 @@
 <app-main-header [header]="'Boards'" [breadCrumbs]="breadCrumbs"></app-main-header>
 
-<div class="row mb-4">
-  <div class="col-12 text-end">
-    <a class="btn btn-primary btn-sm" [routerLink]="['/boards','create']">Add Board</a>
+<div class="row" *ngIf="!loading">
+
+  <div class="col-sm-12 col-lg-3 mb-3" *ngFor="let board of boards">
+    <div class="card">
+      <div class="card-body p-3 d-flex align-items-center">
+        <div class="bg-primary text-white p-3 me-3">
+          <span class="fa fa-chess-board"></span>
+        </div>
+        <div>
+          <div class="fs-6 fw-semibold text-primary">
+            <a [routerLink]="['/boards/', board.uuid]" class="btn-link">
+              {{board.name}}
+            </a>
+          </div>
+          <div class="text-medium-emphasis text-uppercase fw-semibold small">{{board.description}}</div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="card">
-  <div class="card-body">
-
-    <div class="row" *ngIf="boards.length > 0 && !loading">
-      <div *ngFor="let board of boards" class="col-sm-6 col-md-3 col-lg-2 mb-3">
-        <div class="card">
-          <svg *ngIf="!board.image" class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
-          <img *ngIf="board.image" class="card-img-top" [src]="apiUrl + board.image" alt="{{board.name}}">
-          <div class="card-body text-center">
-            <h5 class="card-title">{{board.name}}</h5>
-            <p class="card-text" *ngIf="board.description">{{board.description}}</p>
-            <p class="text-muted" *ngIf="!board.description">No Description...</p>
-            <a [routerLink]="['/boards/', board.uuid]" class="btn btn-primary">Go To Board</a>
+  <div class="col-6 col-lg-3 mb-3">
+    <div class="card">
+      <div class="card-body p-3 d-flex align-items-center">
+        <div class="bg-success text-white p-3 me-3">
+          <span class="fa fa-plus"></span>
+        </div>
+        <div>
+          <div class="fs-6 fw-semibold text-primary">
+            <a [routerLink]="['/boards/', 'create']" class="btn-link">
+              <span class="fa fa-plus"></span> Create New
+            </a>
+          </div>
+          <div class="text-medium-emphasis text-uppercase fw-semibold small">
+            Create a new board
           </div>
         </div>
       </div>
     </div>
-
-    <p *ngIf="boards.length == 0 && !loading">No Boards Found... <a [routerLink]="['/boards', 'create']">Create New</a> </p>
-
   </div>
+
 </div>
