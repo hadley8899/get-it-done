@@ -10,6 +10,7 @@ use App\Exceptions\WorkspaceException;
 use App\Http\Requests\Tasks\StoreTaskRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Http\Resources\Task\TaskResource;
+use App\Http\Resources\Task\TaskWithCommentsResource;
 use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\Task;
@@ -54,7 +55,7 @@ class TaskController extends Controller
      */
     public function show(Task $task): JsonResponse
     {
-        return response()->json(new TaskResource($task));
+        return response()->json(new TaskWithCommentsResource($task));
     }
 
     /**

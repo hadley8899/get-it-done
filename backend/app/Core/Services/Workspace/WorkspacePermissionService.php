@@ -15,7 +15,10 @@ class WorkspacePermissionService
         }
 
         // If the user is a member of the workspace they have access
-        $workspaceMember = WorkspaceMembers::query()->where('workspace_id', '=', $workspace->id)->where('user_id', '=', $user->id)->first();
+        $workspaceMember = WorkspaceMembers::query()
+            ->where('workspace_id', '=', $workspace->id)
+            ->where('user_id', '=', $user->id)
+            ->first();
 
         if (!$workspaceMember) {
             return false;

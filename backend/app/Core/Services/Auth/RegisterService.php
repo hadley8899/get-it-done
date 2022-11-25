@@ -41,6 +41,9 @@ class RegisterService
         // Merge in the image if there is one
         $postArray = array_merge($postArray, $imageArray ?? []);
 
+        // Remove the c_password from the array as this will not get inserted into the DB and isn't fillable on User
+        unset($postArray['c_password']);
+
         /** @var User $user */
         $user = User::query()->create($postArray);
 

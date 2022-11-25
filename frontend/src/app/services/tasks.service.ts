@@ -30,4 +30,8 @@ export class TasksService {
   deleteTask(uuid: string) {
     return this.http.delete(this.apiUrl + 'tasks/' + uuid);
   }
+
+  addComment(uuid: string, formData: FormData):Observable<{ success: boolean, errorMessages: string[] }> {
+    return this.http.post<any>(this.apiUrl + 'tasks/' + uuid + '/comments', formData);
+  }
 }

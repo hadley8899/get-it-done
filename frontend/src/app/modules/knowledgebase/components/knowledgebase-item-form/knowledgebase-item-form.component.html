@@ -1,4 +1,9 @@
 <spinner [show]="loading"></spinner>
+
+<div class="row" *ngIf="!loading">
+
+  <div class="col-md-5">
+
 <form [formGroup]="knowledgebaseItemForm" (ngSubmit)="save()" *ngIf="!loading">
   <div class="mb-3">
     <label for="name" class="form-label">Name</label>
@@ -7,7 +12,14 @@
 
   <div class="mb-3">
     <label for="content" class="form-label">Contents</label>
-    <textarea type="text" class="form-control" id="content" placeholder="Contents..." formControlName="contents"></textarea>
+    <textarea
+      type="text"
+      class="form-control"
+      id="content"
+      placeholder="Contents..."
+      formControlName="contents"
+      rows="10"
+    ></textarea>
   </div>
 
   <button type="submit" class="btn btn-success" [disabled]="knowledgebaseItemForm.invalid || saving">
@@ -16,3 +28,9 @@
   </button>
 
 </form>
+  </div>
+
+  <div class="col-md-7">
+    <markdown emoji lineNumbers [data]="knowledgebaseItemForm.get('contents')?.value"></markdown>
+  </div>
+</div>

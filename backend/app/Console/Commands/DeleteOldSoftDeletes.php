@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\Task;
+use App\Models\TaskComment;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
@@ -37,12 +38,12 @@ class DeleteOldSoftDeletes extends Command
         $models = [
             User::class,
             Task::class,
+            TaskComment::class,
             Board::class,
             BoardList::class,
         ];
 
         foreach ($models as $model) {
-
             $this->info('Doing cleanup for: ' . $model);
 
             $model = new $model;

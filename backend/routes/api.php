@@ -5,6 +5,7 @@ use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
 use App\Http\Controllers\KnowledgebaseController;
 use App\Http\Controllers\KnowledgebaseItemsController;
+use App\Http\Controllers\TaskCommentController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMembersController;
@@ -73,6 +74,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('', [TaskController::class, 'show'])->name('tasks.show');
         Route::put('', [TaskController::class, 'update'])->name('tasks.update');
         Route::delete('', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+        Route::prefix('comments')->group(function () {
+            Route::get('', [TaskCommentController::class, 'index'])->name('tasks.comments');
+            Route::post('', [TaskCommentController::class, 'store'])->name('tasks.comments.store');
+            Route::put('{taskComment:uuid}', [TaskCommentController::class, 'update'])->name('tasks.comments.update');
+            Route::delete('{taskComment:uuid}', [TaskCommentController::class, 'destroy'])->name('tasks.comments.destroy');
+        });
     });
 
     Route::prefix('workspace-members')->group(function () {

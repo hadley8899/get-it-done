@@ -8,12 +8,13 @@ import {SortableOptions} from 'sortablejs';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
 import {BoardListService} from '../../../../services/board-list.service';
 import {WorkspaceMembersService} from '../../../../services/workspace-members.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BoardList} from '../../../../interfaces/board-list';
 import {WorkspaceMember} from '../../../../interfaces/workspace-member';
 import {Board} from '../../../../interfaces/board';
 import {BoardService} from '../../../../services/board.service';
 import {TaskDetailsFull} from '../../../../interfaces/task-details-full';
+import {DateService} from '../../../../services/date.service';
 
 @UntilDestroy()
 @Component({
@@ -98,6 +99,9 @@ export class BoardDetailsComponent implements OnInit {
   taskDetails!: TaskDetailsFull | null;
 
   newTask = false;
+
+  loadingAddCommentForm = true;
+  addCommentForm!: FormGroup;
 
   ngOnInit(): void {
     this.workspaceService.activeWorkspace?.pipe(untilDestroyed(this)).subscribe(workspace => {
@@ -225,6 +229,7 @@ export class BoardDetailsComponent implements OnInit {
       next: (task) => {
         this.taskDetails = task;
         this.loadingTaskDetails = false;
+        this.initNewCommentForm();
       },
       error: (err) => {
         this.toastrService.error(err.error.message);
@@ -332,5 +337,33 @@ export class BoardDetailsComponent implements OnInit {
   taskDeleted() {
     this.loadBoardListsAndTasks();
     this.closeTaskModal.nativeElement.click();
+  }
+
+  formatDate(date: string) {
+    return DateService.formatDate(date);
+  }
+
+  initNewCommentForm() {
+    this.addCommentForm = new FormGroup({
+      comment: new FormControl('', Validators.required)
+    });
+  }
+
+  addCommentSubmit() {
+    if (!this.taskDetails) {
+      return;
+    }
+
+    this.taskService.addComment(this.taskDetails.uuid, this.addCommentForm.value).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.toastrService.success('Comment added successfully');
+        this.addCommentForm.reset();
+        if (this.taskDetails) {
+          this.editTaskClick(this.taskDetails.uuid);
+        }
+      }, error: (err: any) => {
+        this.toastrService.error(err.error.message);
+      }
+    });
   }
 }
