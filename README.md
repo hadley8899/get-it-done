@@ -1,7 +1,19 @@
 # Get It Done!
 
 ## Introduction
-Just a simple angular/Laravel app to help you get things done and store useful information in organised workspaces
+Our task management system is a powerful tool for teams to manage their tasks, stay organized, and collaborate more effectively. With our drag and drop board, you can easily move tasks between columns and update their status. Plus, our knowledgebases feature lets you store and access important information right in the app.
+
+## Technologies Used
+Our app is built with Angular and Laravel, making it fast, scalable, and easy to maintain. We also use a variety of libraries and tools to enhance the user experience, including:
+
+- ngxsortable for drag and drop functionality
+- datatables for sorting and table management
+- Bootstrap 5.1.3 for responsive design
+- laravel/passport for authenciation
+- spatie/laravel-permission for permission management
+
+## Getting started
+To get started with our task management system, simply clone the repository and follow the installation instructions in the README. Once you have the app up and running, you can start creating tasks, dragging them between columns, and storing important information in knowledgebases.
 
 ## Installation
 ### Backend

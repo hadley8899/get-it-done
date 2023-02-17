@@ -11,25 +11,10 @@ export class DashboardHomeComponent implements OnInit {
   breadCrumbs: Breadcrumb[] = [
     {linkText: 'Home', routeItems: ['']},
   ]
-  markdownInput: string = `# This is some markdown
-
-\`\`\`php
-<?php echo "test"; ?>
-\`\`\`
-
-\`\`\`js
-var test = 1;
-\`\`\`
-
-:smile:
-`;
 
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  showOutput() {
 
   }
 }

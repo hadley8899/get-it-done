@@ -12,14 +12,14 @@ export class GenericErrorHandlerService {
   ) {
   }
 
-   handleError(error: any, defaultMessage: string = 'An error occurred') {
+  handleError(error: any, defaultMessage: string = 'An error occurred') {
     let errorMessages = LaravelErrorExtractorService.extractErrorMessagesFromErrorResponse(error);
 
     if (errorMessages.length > 0) {
       errorMessages.forEach((errorMessage) => {
         this.toastr.error(errorMessage);
       });
-    } else if(error.message) {
+    } else if (error.message) {
       this.toastr.error(error.message);
     } else {
       this.toastr.error(defaultMessage);
