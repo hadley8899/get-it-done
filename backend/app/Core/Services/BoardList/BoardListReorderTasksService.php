@@ -45,14 +45,15 @@ class BoardListReorderTasksService
         }
 
         $position = 1;
+        // The task uuids come over from the frontend in the order they should be in
         foreach ($taskUuIds as $taskUuId) {
             $task = Task::query()->where('uuid', '=', $taskUuId)->first();
             if (!$task) {
                 continue;
             }
             $task->position = $position;
-            // As we are only reordering the list, Don't update the updated_at timestamp
-            $task->updated_at = false;
+            // As we are only reordering the list, Don't update the timestamps
+            $task->timestamps = false;
             $task->saveOrFail();
             $position++;
         }
