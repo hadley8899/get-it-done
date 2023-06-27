@@ -14,7 +14,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {ToastrModule} from 'ngx-toastr';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {SortablejsModule} from 'ngx-sortablejs';
+import {SortablejsModule} from 'nxt-sortablejs'
 import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
 import {DataTablesModule} from 'angular-datatables';
 
@@ -30,6 +30,7 @@ import {DataTablesModule} from 'angular-datatables';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     DataTablesModule,
+    SortablejsModule.forRoot({animation: 150}),
     SweetAlert2Module.forRoot({
       // Add custom options into swal globally
       provideSwal: () => import('sweetalert2').then(({default: swal}) => swal.mixin(
@@ -43,7 +44,6 @@ import {DataTablesModule} from 'angular-datatables';
         }
       ))
     }),
-    SortablejsModule.forRoot({animation: 150}),
     MarkdownModule.forRoot({
       markedOptions: {
         provide: MarkedOptions,

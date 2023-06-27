@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   appName: 'Get It Done',
-  apiUrl: 'http://api.get-it-done-local.co.uk/',
+  apiUrl: 'https://api-get-it-done.ryantesting.co.uk/',
   apiDebug: true,
 };
 

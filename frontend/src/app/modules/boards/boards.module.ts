@@ -8,9 +8,9 @@ import { UpdateBoardComponent } from './components/update-board/update-board.com
 import { BoardFormComponent } from './components/board-form/board-form.component';
 import { BoardDetailsComponent } from './components/board-details/board-details.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SortablejsModule} from 'ngx-sortablejs';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {MarkdownModule} from 'ngx-markdown';
+import {SortablejsModule} from "nxt-sortablejs";
 
 @NgModule({
   imports: [

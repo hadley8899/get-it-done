@@ -54,8 +54,8 @@
       />
 
       <div
-        [sortablejs]="taskList.tasks"
-        [sortablejsOptions]="options" style="min-height: 10px;"
+        [nxtSortablejs]="taskList.tasks"
+        [config]="options" style="min-height: 10px;"
         [attr.data-uuid]="taskList.uuid"
         [attr.data-index]="i"
         [attr.data-name]="taskList.name"
@@ -169,8 +169,8 @@
             <spinner [show]="loadingBoardListsAndTasks"></spinner>
 
             <div
-              [sortablejs]="boardLists"
-              [sortablejsOptions]="boardListsReorderOptions" style="min-height: 10px;"
+              [nxtSortablejs]="boardLists"
+              [config]="boardListsReorderOptions" style="min-height: 10px;"
             >
               <div *ngFor="let boardList of boardLists">
                 <div class="border border-1 p-1 ps-2 pe-2">
