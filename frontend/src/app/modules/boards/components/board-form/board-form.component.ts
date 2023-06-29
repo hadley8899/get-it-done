@@ -7,6 +7,7 @@ import {Workspace} from '../../../../interfaces/workspace';
 import {ToastrService} from 'ngx-toastr';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {LaravelErrorExtractorService} from '../../../../services/laravel-error-extractor.service';
+import {BoardTemplate} from "../../../../interfaces/board-template";
 
 @UntilDestroy()
 @Component({
@@ -28,6 +29,7 @@ export class BoardFormComponent implements OnInit {
   imageSource: any;
 
   boardForm!: FormGroup;
+  boardTemplates: BoardTemplate[] = [];
 
   constructor(
     private boardService: BoardService,
@@ -36,7 +38,6 @@ export class BoardFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.workspaceService.activeWorkspace?.subscribe(
       (workspace: Workspace) => {
         this.activeWorkspace = workspace;
@@ -48,11 +49,25 @@ export class BoardFormComponent implements OnInit {
 
   initForm() {
     this.loading = true;
+    this.loadBoardTemplates();
+  }
+
+  loadBoardTemplates() {
+    this.boardService.loadBoardTemplates().pipe(untilDestroyed(this)).subscribe({
+      next: (response) => {
+        this.boardTemplates = response.data;
+        this.initBoardForm();
+        this.loading = false;
+      }
+    });
+  }
+
+  initBoardForm() {
     this.boardForm = new FormGroup<any>({
       name: new FormControl(this.board?.name, [Validators.required]),
       description: new FormControl(this.board?.description),
+      boardTemplate: new FormControl(this.board?.boardTemplate ? this.board.boardTemplate : ''),
     });
-    this.loading = false;
   }
 
   handleSubmit() {
@@ -107,6 +122,7 @@ export class BoardFormComponent implements OnInit {
     if (this.imageSource) {
       formData.append('image', this.imageSource);
     }
+    formData.append('board_template_uuid', this.boardForm.value.boardTemplate);
 
     this.boardService.createBoard(formData, this.activeWorkspace.uuid).pipe(untilDestroyed(this)).subscribe({
       next: (board: Board) => {

@@ -1,0 +1,18 @@
+<spinner [show]="loadingForm || saving"></spinner>
+<form [formGroup]="boardTemplateForm" *ngIf="!loadingForm" (ngSubmit)="formSubmit()">
+
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" formControlName="name">
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="form-control" id="description" formControlName="description"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-success" [disabled]="boardTemplateForm.invalid || saving">
+    <span class="fa fa-save" *ngIf="!saving"></span> Save
+  </button>
+
+</form>

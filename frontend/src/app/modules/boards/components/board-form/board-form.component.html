@@ -6,7 +6,7 @@
   </div>
 
   <div class="mb-3">
-    <label for="description" class="form-label">Name</label>
+    <label for="description" class="form-label">Description</label>
     <input
       type="text"
       class="form-control"
@@ -14,6 +14,17 @@
       placeholder="Board description..."
       formControlName="description"
     >
+  </div>
+
+
+  <div class="mb-3" *ngIf="!board?.uuid">
+    <label for="template" class="form-label">Board Template</label>
+    <select formControlName="boardTemplate" id="template" class="form-control">
+      <option value="" selected>None</option>
+      <option *ngFor="let boardTemplate of boardTemplates" [value]="boardTemplate.uuid">
+        {{ boardTemplate.name }} {{boardTemplate.items.length ? '(' + boardTemplate.items + ')' : '(No Items)'}}
+    </select>
+    <div id="template_help" class="form-text">Will create default lists in the new board</div>
   </div>
 
   <div class="mb-3">

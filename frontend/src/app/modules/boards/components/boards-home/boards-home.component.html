@@ -1,5 +1,16 @@
 <app-main-header [header]="'Boards'" [breadCrumbs]="breadCrumbs"></app-main-header>
 
+<div class="row mb-4">
+  <div class="col-12 text-end">
+    <a
+      class="btn btn-secondary btn-sm btn-mr"
+      [routerLink]="['/boards/board-templates']"
+    >
+      <span class="fa fa-cog"></span> Board Templates
+    </a>
+  </div>
+</div>
+
 <div class="row" *ngIf="!loading">
 
   <div class="col-sm-12 col-lg-3 mb-3" *ngFor="let board of boards">

@@ -40,7 +40,8 @@ class BoardController extends Controller
      */
     public function store(StoreBoardRequest $request, Workspace $workspace): JsonResponse
     {
-        $board = (new BoardCreateService())->createBoard($request->validated(), $workspace, $request->file('image'));
+        $boardTemplateUuId = $request->get('board_template_uuid');
+        $board = (new BoardCreateService())->createBoard($request->validated(), $workspace, $request->file('image'), $boardTemplateUuId);
         return response()->json(new BoardResource($board), 201);
     }
 

@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardListController;
+use App\Http\Controllers\BoardTemplateController;
+use App\Http\Controllers\BoardTemplateItemController;
 use App\Http\Controllers\KnowledgebaseController;
 use App\Http\Controllers\KnowledgebaseItemsController;
 use App\Http\Controllers\TaskCommentController;
@@ -57,6 +59,23 @@ Route::middleware(['auth:api'])->group(function () {
 
                 Route::post('{boardList:uuid}/tasks', [TaskController::class, 'store'])->name('boards.lists.tasks.store');
             });
+        });
+    });
+
+    Route::prefix('board-templates')->group(function () {
+        Route::get('', [BoardTemplateController::class, 'index'])->name('board-templates.index');
+        Route::post('', [BoardTemplateController::class, 'store'])->name('board-templates.store');
+        Route::get('{boardTemplate:uuid}', [BoardTemplateController::class, 'show'])->name('board-templates.show');
+        Route::put('{boardTemplate:uuid}', [BoardTemplateController::class, 'update'])->name('board-templates.update');
+        Route::delete('{boardTemplate:uuid}', [BoardTemplateController::class, 'destroy'])->name('board-templates.destroy');
+
+        Route::prefix('items/{boardTemplate:uuid}')->group(function() {
+            Route::get('', [BoardTemplateItemController::class, 'index'])->name('board-templates.items.index');
+            Route::post('reorder', [BoardTemplateItemController::class, 'reorder'])->name('board-templates.items.reorder');
+            Route::get('{boardTemplateItem:uuid}', [BoardTemplateItemController::class, 'show'])->name('board-templates.items.show');
+            Route::post('', [BoardTemplateItemController::class, 'store'])->name('board-templates.items.store');
+            Route::put('{boardTemplateItem:uuid}', [BoardTemplateItemController::class, 'update'])->name('board-templates.items.update');
+            Route::delete('{boardTemplateItem:uuid}', [BoardTemplateItemController::class, 'destroy'])->name('board-templates.items.destroy');
         });
     });
 

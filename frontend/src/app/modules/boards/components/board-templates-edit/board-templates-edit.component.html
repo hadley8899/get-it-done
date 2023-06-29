@@ -1,0 +1,121 @@
+<app-main-header [header]="'Edit board template'" [breadCrumbs]="breadCrumbs"></app-main-header>
+
+<div class="card mt-3" *ngIf="!loadingTemplateDetails">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">Board Template Details</h5>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#boardTemplateEditModal">Edit</button>
+    </div>
+    <hr>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <strong>Name</strong>
+      </div>
+      <div class="col-md-6">
+        {{boardTemplate.name}}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <strong>Description</strong>
+      </div>
+      <div class="col-md-6">
+        {{boardTemplate.description}}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <strong>Created</strong>
+      </div>
+      <div class="col-md-6">
+        {{boardTemplate.created_at | date:'medium'}}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <strong>Last Updated</strong>
+      </div>
+      <div class="col-md-6">
+        {{boardTemplate.updated_at | date:'medium'}}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">Board Template Items</h5>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#boardTemplateItemsAddModal">New</button>
+    </div>
+    <hr>
+    <div
+      [nxtSortablejs]="boardTemplateItems"
+      [config]="boardTemplateItemReorderOptions"
+      style="min-height: 10px;"
+    >
+      <div *ngFor="let boardTemplateItem of boardTemplateItems" [attr.data-uuid]="boardTemplateItem.uuid">
+        <div class="border border-1 p-1 ps-2 pe-2">
+          <div class="row">
+            <div class="col-sm-4">
+              {{boardTemplateItem.name}}
+            </div>
+
+            <div class="col-sm-6">
+              <span class="text-muted">{{boardTemplateItem.description}}</span>
+            </div>
+
+            <div class="col-sm-2 text-lg-end text-md-end">
+              <button
+                class="btn btn-sm btn-danger"
+                [swal]="{ title: 'Are you sure?', text: 'This will delete this item from this board template', showCancelButton: true }"
+                (confirm)="deleteBoardListItem(boardTemplateItem)"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="boardTemplateItemsAddModal" tabindex="-1" aria-labelledby="boardTemplateItemsAddModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="boardTemplateItemsAddModalLabel">New Board Template Item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-board-templates-item-form [boardTemplate]="boardTemplate" (boardTemplateItemAdded)="handleItemAdded()"></app-board-templates-item-form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeTemplateItemNewModal>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="boardTemplateEditModal" tabindex="-1" aria-labelledby="boardTemplateEditModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="boardTemplateEditModalLabel">Update Board Template</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="!loadingTemplateDetails">
+        <app-board-templates-edit-form [boardTemplate]="boardTemplate" (boardTemplateUpdated)="handleBoardTemplateUpdated()"></app-board-templates-edit-form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeBoardTemplateEditModal>Close</button>
+      </div>
+    </div>
+  </div>
+</div>

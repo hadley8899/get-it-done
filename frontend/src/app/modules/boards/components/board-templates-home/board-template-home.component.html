@@ -1,0 +1,59 @@
+<app-main-header
+  [pageTitle]="'Board Templates'"
+  [header]="'Board Templates'"
+  [breadCrumbs]="breadCrumbs"
+></app-main-header>
+
+<div class="container">
+  <div class="alert alert-info mt-3">
+    <h4 class="alert-heading">What are Board Templates?</h4>
+    <p>
+      Board Templates serve as pre-designed frameworks for your new boards. These templates simplify the task
+      creation process by automatically generating lists such as "To Do", "In Progress", and "Complete". This
+      enables you to jumpstart your workflow management and helps ensure consistency across different boards.
+    </p>
+    <hr>
+    <p class="mb-0">To utilize these templates, simply create a new board using your desired template and let
+      it set up your lists automatically. You can also create or edit existing templates to better suit your
+      workflow requirements.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Your board templates</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Click edit button to update your board templates</h6>
+
+    <div class="row">
+
+      <spinner [show]="loadingBoardTemplates"></spinner>
+      <div class="list-group" *ngIf="!loadingBoardTemplates">
+
+        <div *ngFor="let boardTemplate of boardTemplates">
+          <div class="list-group-item">
+            <div class="row">
+              <div class="col-md-4">
+                {{boardTemplate.name}}
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted">{{boardTemplate.description}}</span>
+              </div>
+              <div class="col-md-4 text-lg-end text-md-end">
+                <a class="btn btn-primary"
+                   [routerLink]="['/boards', 'board-templates', 'edit', boardTemplate.uuid]">Edit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p *ngIf="!loadingBoardTemplates && boardTemplates.length == 0">No board templates found.</p>
+
+    </div>
+
+
+  </div>
+</div>
+
+
+

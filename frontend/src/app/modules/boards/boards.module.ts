@@ -11,6 +11,10 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {MarkdownModule} from 'ngx-markdown';
 import {SortablejsModule} from "nxt-sortablejs";
+import { BoardTemplateHomeComponent } from './components/board-templates-home/board-template-home.component';
+import { BoardTemplatesEditComponent } from './components/board-templates-edit/board-templates-edit.component';
+import { BoardTemplatesItemFormComponent } from './components/board-templates-item-form/board-templates-item-form.component';
+import { BoardTemplatesEditFormComponent } from './components/board-templates-edit-form/board-templates-edit-form.component';
 
 @NgModule({
   imports: [
@@ -28,7 +32,11 @@ import {SortablejsModule} from "nxt-sortablejs";
     CreateBoardComponent,
     UpdateBoardComponent,
     BoardFormComponent,
-    BoardDetailsComponent
+    BoardDetailsComponent,
+    BoardTemplateHomeComponent,
+    BoardTemplatesEditComponent,
+    BoardTemplatesItemFormComponent,
+    BoardTemplatesEditFormComponent
   ]
 })
 export class BoardsModule {

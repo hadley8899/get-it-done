@@ -12,7 +12,7 @@ use App\Core\Services\BoardList\BoardListUpdateService;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\Boards\StoreBoardListRequest;
 use App\Http\Requests\Boards\UpdateBoardListRequest;
-use App\Http\Resources\BoardListResource;
+use App\Http\Resources\Board\BoardListResource;
 use App\Http\Resources\BoardLists\BoardListWithTasksResource;
 use App\Models\Board;
 use App\Models\BoardList;
