@@ -366,4 +366,24 @@ export class BoardDetailsComponent implements OnInit {
       }
     });
   }
+
+  copyAsList(event: Event, taskList: BoardList) {
+    // prevent default action of the anchor tag
+    event.preventDefault();
+
+    console.log(taskList);
+
+    // Need to loop through each of the tasks in the list, Append the task name to a string and then copy that string to the clipboard
+    let taskListString = '';
+    taskList.tasks.forEach((task) => {
+      taskListString += `- ${task.name}\n`;
+    });
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(taskListString).then(function () {
+      console.log('Copying to clipboard was successful!');
+    }, function (err) {
+      console.error('Could not copy text: ', err);
+    });
+  }
 }

@@ -14,7 +14,7 @@ import {SortablejsModule} from "nxt-sortablejs";
 import { BoardTemplateHomeComponent } from './components/board-templates-home/board-template-home.component';
 import { BoardTemplatesEditComponent } from './components/board-templates-edit/board-templates-edit.component';
 import { BoardTemplatesItemFormComponent } from './components/board-templates-item-form/board-templates-item-form.component';
-import { BoardTemplatesEditFormComponent } from './components/board-templates-edit-form/board-templates-edit-form.component';
+import { boardTemplateForm } from './components/board-templates-edit-form/board-template-form.component';
 
 @NgModule({
   imports: [
@@ -36,7 +36,7 @@ import { BoardTemplatesEditFormComponent } from './components/board-templates-ed
     BoardTemplateHomeComponent,
     BoardTemplatesEditComponent,
     BoardTemplatesItemFormComponent,
-    BoardTemplatesEditFormComponent
+    boardTemplateForm
   ]
 })
 export class BoardsModule {

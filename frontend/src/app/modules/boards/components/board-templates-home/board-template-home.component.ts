@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BoardTemplate} from "../../../../interfaces/board-template";
 import {BoardService} from "../../../../services/board.service";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 import {Breadcrumb} from "../../../../interfaces/breadcrumb";
+import {ToastrService} from "ngx-toastr";
 
 @UntilDestroy()
 
@@ -15,13 +16,15 @@ export class BoardTemplateHomeComponent implements OnInit {
   loadingBoardTemplates = true;
   boardTemplates: BoardTemplate[] = [];
 
+  @ViewChild('closeBoardTemplateModal') closeBoardTemplateModal!: ElementRef;
+
   breadCrumbs: Breadcrumb[] = [
     {linkText: 'home', routeItems: ['/home']},
     {linkText: 'Boards', routeItems: ['/boards']},
     {linkText: 'Board Templates', routeItems: []},
   ];
 
-  constructor(private boardService: BoardService) {
+  constructor(private boardService: BoardService, private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -41,5 +44,9 @@ export class BoardTemplateHomeComponent implements OnInit {
     })
   }
 
-
+  boardCreated() {
+    this.toastr.success('Board template created');
+    this.loadBoardTemplates();
+    this.closeBoardTemplateModal.nativeElement.click();
+  }
 }

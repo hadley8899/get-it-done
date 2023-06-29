@@ -21,10 +21,14 @@ class BoardCreateService extends BoardService
      * @throws BoardException
      * @throws Throwable
      */
-    public function createBoard(array $requestData, Workspace $workspace, UploadedFile $image = null, $boardTemplateUuId = null): Board
+    public function createBoard(array $requestData, Workspace $workspace, UploadedFile $image = null, string|null $boardTemplateUuId = null): Board
     {
         $requestData['workspace_id'] = $workspace->id;
         $requestData['user_id'] = AuthHelper::getLoggedInUser()->id;
+
+        if ($requestData['description'] === 'null') {
+            $requestData['description'] = '';
+        }
 
         $board = new Board($requestData);
 
@@ -39,10 +43,13 @@ class BoardCreateService extends BoardService
 
         $board->saveOrFail();
 
-        $boardTemplate = BoardTemplate::query()->where('uuid', '=', $boardTemplateUuId)->first();
+        if ($boardTemplateUuId !== null) {
+            /** @var BoardTemplate|null $boardTemplate */
+            $boardTemplate = BoardTemplate::query()->where('uuid', '=', $boardTemplateUuId)->first();
 
-        if ($boardTemplate !== null) {
-            $this->addBoardListsFromTemplate($board, $boardTemplate);
+            if ($boardTemplate !== null) {
+                $this->addBoardListsFromTemplate($board, $boardTemplate);
+            }
         }
 
         return $board;

@@ -70,4 +70,8 @@ export class BoardService {
 
     return this.http.post<any>(this.apiUrl + 'board-templates/' + boardTemplate.uuid, formData);
   }
+
+  createBoardTemplate(formData: FormData) {
+    return this.http.post(this.apiUrl + 'board-templates/', formData);
+  }
 }

@@ -25,7 +25,10 @@
               {{board.name}}
             </a>
           </div>
-          <div class="text-medium-emphasis text-uppercase fw-semibold small">{{board.description}}</div>
+          <div class="text-medium-emphasis text-uppercase fw-semibold small">
+            <span *ngIf="board.description">{{board.description}}</span>
+            <span *ngIf="!board.description">No description</span>
+          </div>
         </div>
       </div>
     </div>

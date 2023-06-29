@@ -77,7 +77,13 @@
       </div>
 
       <a href="#" (click)="addTaskClick(taskList.uuid)" data-bs-toggle="modal" data-bs-target="#taskModal">
-        + Add New Task</a>
+        + Add New Task
+      </a>
+      <br/>
+      <a href="#" (click)="copyAsList($event, taskList)">
+        <span class="fa fa-copy"></span> Copy as List
+      </a>
+
     </div>
   </div>
 </div>
@@ -229,12 +235,10 @@
           *ngIf="!loadingTaskDetails"
         ></app-task-form>
 
-        <hr/>
 
-        <h4>Comments</h4>
-
-        <div *ngIf="!loadingTaskDetails">
-
+        <div *ngIf="!loadingTaskDetails && taskDetails">
+          <hr/>
+          <h4>Comments</h4>
           <div *ngIf="taskDetails?.comments?.length === 0">
             No comments
           </div>
@@ -258,7 +262,8 @@
                 <div class="col-md-10">
                   <label for="comment" class="sr-only">Comment</label>
 
-                  <input type="text" id="comment" placeholder="Add comment" class="form-control" formControlName="comment">
+                  <input type="text" id="comment" placeholder="Add comment" class="form-control"
+                         formControlName="comment">
                 </div>
                 <div class="col-md-2">
                   <button class="btn btn-success btn-block w-100 mt-3 mt-md-0 mt-lg-0 mt-xl-0 mt-xxl-0">+Add</button>
