@@ -34,6 +34,11 @@ class BoardListController extends Controller
         return response()->json(BoardListWithTasksResource::collection((new BoardListsWithTasksService())->boardListsWithTasks($workspace, $board)));
     }
 
+    public function listsForBoardNoTasks(Workspace $workspace, Board $board): JsonResponse
+    {
+        return response()->json(BoardListResource::collection((new BoardListsWithTasksService())->boardListsWithTasks($workspace, $board)));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -85,17 +90,6 @@ class BoardListController extends Controller
         }
 
         return response()->json(null, Response::HTTP_OK);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param BoardList $boardList
-     * @return Response
-     */
-    public function show(BoardList $boardList)
-    {
-        //
     }
 
     /**

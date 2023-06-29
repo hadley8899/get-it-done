@@ -9,6 +9,7 @@ export interface TaskDetailsFull {
   assigned_to: User;
   position: number;
   comments: TaskComment[];
+  board_list: number;
   created_at: string;
   updated_at: string;
 }

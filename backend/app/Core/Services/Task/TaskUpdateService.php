@@ -6,6 +6,7 @@ use App\Core\Services\Auth\AuthHelper;
 use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
+use App\Models\BoardList;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workspace;
@@ -22,6 +23,13 @@ class TaskUpdateService
     public function updateTask(UpdateTaskRequest $request, Workspace $workspace, Task $task): Task
     {
         $validated = $request->validated();
+
+        $boardListUuId = $validated['board_list'];
+
+        $boardList = BoardList::query()->where('uuid', '=', $boardListUuId)->firstOrFail();
+
+        unset($validated['board_list']);
+        $validated['board_list_id'] = $boardList->id;
 
         if (strtolower($validated['assigned_to']) === 'current user') {
             $validated['assigned_to'] = AuthHelper::getLoggedInUser()->id;

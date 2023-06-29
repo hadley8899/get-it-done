@@ -22,6 +22,10 @@ export class BoardListService {
     return this.http.get<any>(this.apiUrl + 'boards/' + workspace + '/' + board + '/boardLists');
   }
 
+  getBoardLists(workspace: string, board: string): Observable<BoardList[]> {
+    return this.http.get<any>(this.apiUrl + 'boards/' + workspace + '/' + board + '/boardListsNoTasks');
+  }
+
   reorderBoardList(workspace: string, boardUuid: string, taskUuIds: { uuids: string[] }, listUuId: string) {
     return this.http.post(this.apiUrl + 'boards/' + workspace + '/' + boardUuid + '/boardLists/' + listUuId + '/reorder-tasks', taskUuIds);
   }

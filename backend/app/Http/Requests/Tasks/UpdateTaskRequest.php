@@ -36,6 +36,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'board_list' => ['nullable', 'exists:board_lists,uuid'],
             'assigned_to' => ['nullable'],
         ];
     }

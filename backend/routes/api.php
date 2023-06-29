@@ -50,6 +50,7 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::delete('', [BoardController::class, 'destroy'])->name('boards.destroy');
 
                 Route::get('boardLists', [BoardListController::class, 'listsForBoard'])->name('boards.lists');
+                Route::get('boardListsNoTasks', [BoardListController::class, 'listsForBoardNoTasks'])->name('boards.lists.no-tasks');
                 Route::post('boardLists', [BoardListController::class, 'store'])->name('boards.lists');
                 Route::post('boardLists/reorder', [BoardListController::class, 'reorderLists'])->name('boards.lists');
                 Route::post('boardLists/move-task', [BoardListController::class, 'moveTask'])->name('boards.lists.move');

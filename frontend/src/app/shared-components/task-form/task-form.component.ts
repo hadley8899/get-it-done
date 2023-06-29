@@ -8,6 +8,8 @@ import {WorkspaceMember} from '../../interfaces/workspace-member';
 import {WorkspaceService} from '../../services/workspace.service';
 import {Task} from '../../interfaces/task';
 import {Board} from '../../interfaces/board';
+import {BoardListService} from "../../services/board-list.service";
+import {BoardList} from "../../interfaces/board-list";
 
 @UntilDestroy()
 @Component({
@@ -37,18 +39,22 @@ export class TaskFormComponent implements OnInit {
 
   errors: string[] = [];
 
+  boardLists: BoardList[] = [];
+
   constructor(
     private taskService: TasksService,
+    private boardListService: BoardListService,
     private workspaceMembersService: WorkspaceMembersService,
     private workspaceService: WorkspaceService,
   ) {
   }
 
   ngOnInit(): void {
+
     this.workspaceService.activeWorkspace?.pipe(untilDestroyed(this)).subscribe(workspace => {
       this.activeWorkspace = workspace;
+      this.loadBoardLists();
       this.initForm();
-      this.taskMarkdownText = this.taskDetailsForm.get('description')?.value;
     });
   }
 
@@ -56,19 +62,34 @@ export class TaskFormComponent implements OnInit {
     this.loadingTaskDetailsForm = true;
     this.loadWorkspaceMembers();
 
-    if (this.taskDetails === null) {
-      this.taskDetails = {} as TaskDetailsFull;
-      // If we are creating a new task, Show the edit box
-      this.taskDescriptionEditBox = true;
+    if (this.board === null) {
+      return;
     }
+    this.boardListService.getBoardLists(this.activeWorkspace.uuid, this.board.uuid).pipe(untilDestroyed(this)).subscribe({
+      next: (boardLists) => {
+        this.boardLists = boardLists;
 
-    this.taskDetailsForm = new FormGroup({
-      name: new FormControl(this.taskDetails.name),
-      description: new FormControl(this.taskDetails.description),
-      assigned_to: new FormControl(this.taskDetails.assigned_to?.uuid)
+        if (this.taskDetails === null) {
+          this.taskDetails = {} as TaskDetailsFull;
+          // If we are creating a new task, Show the edit box
+          this.taskDescriptionEditBox = true;
+        }
+
+        this.taskDetailsForm = new FormGroup({
+          name: new FormControl(this.taskDetails.name),
+          description: new FormControl(this.taskDetails.description),
+          board_list: new FormControl(this.taskDetails.board_list ? this.taskDetails.board_list : this.boardListUuId),
+          assigned_to: new FormControl(this.taskDetails.assigned_to?.uuid)
+        });
+
+        this.loadingTaskDetailsForm = false;
+        this.taskMarkdownText = this.taskDetailsForm.get('description')?.value;
+      },
+      error: (err) => {
+        console.error(err);
+      }
     });
 
-    this.loadingTaskDetailsForm = false;
   }
 
   submitTaskDetails() {
@@ -147,5 +168,9 @@ export class TaskFormComponent implements OnInit {
         this.errors.push(err.error.message);
       }
     })
+  }
+
+  loadBoardLists() {
+
   }
 }

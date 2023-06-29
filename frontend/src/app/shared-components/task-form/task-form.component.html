@@ -11,6 +11,17 @@
   </div>
 
   <div class="mb-3">
+    <label for="boardList" class="form-label">Task List</label>
+    <select formControlName="board_list" id="boardList" class="form-control">
+
+      <option *ngFor="let list of boardLists" [value]="list.uuid">
+        {{list.name}}
+      </option>
+
+    </select>
+  </div>
+
+  <div class="mb-3">
     <label for="taskDescription" class="form-label">Task Description</label>
     <textarea
       class="form-control"
@@ -31,7 +42,6 @@
             [hidden]="!taskDescriptionEditBox">
       <span class="fa fa-times"></span> Close Edit
     </button>
-
 
     <!-- Box with bootstrap 5 border-->
     <div class="border border-1 p-3 mt-1">
