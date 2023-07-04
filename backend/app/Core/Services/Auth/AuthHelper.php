@@ -14,4 +14,9 @@ class AuthHelper
     {
         return auth()->user();
     }
+
+    public static function getLoggedInUserId(): ?int
+    {
+        return self::getLoggedInUser()->id;
+    }
 }

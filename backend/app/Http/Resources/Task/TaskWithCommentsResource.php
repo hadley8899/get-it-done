@@ -19,6 +19,7 @@ class TaskWithCommentsResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'hours_worked' => $this->hours_worked,
             'user' => new UserResource($this->user),
             'board_list' => $this->boardList->uuid,
             'assigned_to' => new UserResource($this->assignedTo),

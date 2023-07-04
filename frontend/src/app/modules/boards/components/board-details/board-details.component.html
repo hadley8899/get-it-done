@@ -71,8 +71,17 @@
                 data-bs-target="#taskModal"
                 class=""
               >{{task.name}}</a>
+              <br/>
+              <span class="badge bg-primary" *ngIf="task.assigned_to; else notAssigned">
+            {{task.assigned_to.name}}
+        </span>
+              <ng-template #notAssigned>
+                <span class="badge bg-danger">Unassigned</span>
+              </ng-template>
             </div>
           </div>
+
+
         </div>
       </div>
 

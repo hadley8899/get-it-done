@@ -1,8 +1,8 @@
-import {Task} from './task';
+import {TaskDetailsFull} from './task-details-full';
 
 export interface BoardList {
   uuid: string;
   name: string;
-  tasks: Task[]
+  tasks: TaskDetailsFull[];
   position: number;
 }

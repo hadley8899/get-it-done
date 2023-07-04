@@ -79,7 +79,8 @@ export class TaskFormComponent implements OnInit {
           name: new FormControl(this.taskDetails.name),
           description: new FormControl(this.taskDetails.description),
           board_list: new FormControl(this.taskDetails.board_list ? this.taskDetails.board_list : this.boardListUuId),
-          assigned_to: new FormControl(this.taskDetails.assigned_to?.uuid)
+          assigned_to: new FormControl(this.taskDetails.assigned_to?.uuid),
+          hours_worked: new FormControl(this.taskDetails.hours_worked),
         });
 
         this.loadingTaskDetailsForm = false;

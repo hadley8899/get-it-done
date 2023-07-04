@@ -19,19 +19,18 @@ class TaskAddService
     /**
      * @param StoreTaskRequest $request
      * @param Workspace $workspace
-     * @param Board $board
      * @param BoardList $boardList
      * @return Task
      * @throws UserException
      * @throws WorkspaceException
      * @throws Throwable
      */
-    public function addNewTask(StoreTaskRequest $request, Workspace $workspace, Board $board, BoardList $boardList): Task
+    public function addNewTask(StoreTaskRequest $request, Workspace $workspace, BoardList $boardList): Task
     {
         $validated = $request->validated();
 
         if (strtolower($validated['assigned_to']) === 'current user') {
-            $validated['assigned_to'] = auth()->user()->id;
+            $validated['assigned_to'] = AuthHelper::getLoggedInUserId();
         } elseif (strtolower($validated['assigned_to']) === '') {
             $validated['assigned_to'] = null;
         } else {
@@ -48,10 +47,12 @@ class TaskAddService
         }
 
         $validated['board_list_id'] = $boardList->id;
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = AuthHelper::getLoggedInUserId();
 
         // Find the next position for the task
-        $nextPosition = Task::query()->where('board_list_id', '=', $boardList->id)->max('position') + 1;
+        $nextPosition = Task::query()
+                ->where('board_list_id', '=', $boardList->id)
+                ->max('position') + 1;
 
         $validated['position'] = $nextPosition;
 

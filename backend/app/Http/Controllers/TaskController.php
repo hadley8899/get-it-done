@@ -43,7 +43,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request, Workspace $workspace, Board $board, BoardList $boardList): JsonResponse
     {
-        $task = (new TaskAddService())->addNewTask($request, $workspace, $board, $boardList);
+        $task = (new TaskAddService())->addNewTask($request, $workspace, $boardList);
         return response()->json(new TaskResource($task), 201);
     }
 

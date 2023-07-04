@@ -25,6 +25,7 @@ class Task extends Model
         'board_list_id',
         'name',
         'description',
+        'hours_worked',
         'position',
     ];
 

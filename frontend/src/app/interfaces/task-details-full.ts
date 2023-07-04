@@ -5,6 +5,7 @@ export interface TaskDetailsFull {
   uuid: string;
   name: string;
   description: string;
+  hours_worked: number;
   user: User,
   assigned_to: User;
   position: number;

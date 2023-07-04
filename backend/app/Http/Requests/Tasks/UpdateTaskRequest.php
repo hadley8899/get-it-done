@@ -38,6 +38,7 @@ class UpdateTaskRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'board_list' => ['nullable', 'exists:board_lists,uuid'],
             'assigned_to' => ['nullable'],
+            'hours_worked' => ['nullable', 'numeric'],
         ];
     }
 }
