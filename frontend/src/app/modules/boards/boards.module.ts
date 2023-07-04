@@ -15,6 +15,9 @@ import { BoardTemplateHomeComponent } from './components/board-templates-home/bo
 import { BoardTemplatesEditComponent } from './components/board-templates-edit/board-templates-edit.component';
 import { BoardTemplatesItemFormComponent } from './components/board-templates-item-form/board-templates-item-form.component';
 import { boardTemplateForm } from './components/board-templates-edit-form/board-template-form.component';
+import { BoardControlButtonsComponent } from './components/board-details/board-control-buttons/board-control-buttons.component';
+import { NewBoardListModalComponent } from './components/board-details/new-board-list-modal/new-board-list-modal.component';
+import { BoardSettingsModalComponent } from './components/board-details/board-settings-modal/board-settings-modal.component';
 
 @NgModule({
   imports: [
@@ -36,7 +39,10 @@ import { boardTemplateForm } from './components/board-templates-edit-form/board-
     BoardTemplateHomeComponent,
     BoardTemplatesEditComponent,
     BoardTemplatesItemFormComponent,
-    boardTemplateForm
+    boardTemplateForm,
+    BoardControlButtonsComponent,
+    NewBoardListModalComponent,
+    BoardSettingsModalComponent
   ]
 })
 export class BoardsModule {

@@ -1,0 +1,89 @@
+<!-- Board Settings Modal -->
+<div
+  class="modal fade"
+  id="boardSettingsModal"
+  tabindex="-1"
+  aria-labelledby="boardSettingsModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="boardSettingsModalLabel">Board Settings</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-general-settings-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-general-board-settings" type="button" role="tab"
+                    aria-controls="nav-general-board-settings" aria-selected="true">General
+            </button>
+            <button class="nav-link" id="nav-board-lists-tab" data-bs-toggle="tab" data-bs-target="#nav-board-lists"
+                    type="button" role="tab" aria-controls="nav-board-lists" aria-selected="false">Lists
+            </button>
+          </div>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent">
+
+          <div class="tab-pane fade show active" id="nav-general-board-settings" role="tabpanel"
+               aria-labelledby="nav-general-settings-tab">
+
+            <p></p>
+            <spinner [show]="loadingBoardSettingsForm"></spinner>
+            <app-board-form
+              [board]="activeBoard"
+              (boardUpdated)="onBoardUpdated($event)"
+              *ngIf="!loadingBoardSettingsForm"
+            ></app-board-form>
+
+          </div>
+
+          <div class="tab-pane fade" id="nav-board-lists" role="tabpanel" aria-labelledby="nav-board-lists-tab">
+
+            <div class="alert alert-info mt-1">
+              <span class="fa fa-info"></span> Drag lists to reorder
+            </div>
+
+            <spinner [show]="loadingBoardListsAndTasks"></spinner>
+
+            <div
+              [nxtSortablejs]="boardLists"
+              [config]="boardListsReorderOptions"
+              style="min-height: 10px;"
+            >
+              <div *ngFor="let boardList of boardLists">
+                <div class="border border-1 p-1 ps-2 pe-2">
+                  <div class="row">
+                    <div class="col-sm-10">
+                      {{boardList.name}}
+                    </div>
+                    <div class="col-sm-2">
+                      <button
+                        class="btn btn-sm btn-danger"
+                        [swal]="{ title: 'Are you sure?', text: 'All tasks inside this list will also be deleted!', showCancelButton: true }"
+                        (confirm)="onDeleteBoardList(boardList)"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeBoardSettingsModalBtn>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Board Settings Modal -->

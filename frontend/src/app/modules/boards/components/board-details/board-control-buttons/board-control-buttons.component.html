@@ -1,0 +1,28 @@
+<div class="row mb-4">
+  <div class="col-12 text-end">
+    <a
+      (click)="boardSettingsClick()"
+      class="btn btn-secondary btn-sm btn-mr"
+      data-bs-toggle="modal"
+      data-bs-target="#boardSettingsModal"
+    >
+      <span class="fa fa-cog"></span> Board Settings
+    </a>
+    <a
+      (click)="addNewListClick()"
+      class="btn btn-primary btn-sm btn-mr"
+      data-bs-toggle="modal"
+      data-bs-target="#newBoardListModal"
+    >
+      <span class="fa fa-list"></span> Add List
+    </a>
+
+    <a
+      class="btn btn-danger btn-sm"
+      [swal]="{ title: 'Are you sure?', text: 'All tasks in this board will be deleted', showCancelButton: true }"
+      (confirm)="deleteBoardClick()"
+    >
+      <span class="fa fa-trash"></span> Delete Board
+    </a>
+  </div>
+</div>

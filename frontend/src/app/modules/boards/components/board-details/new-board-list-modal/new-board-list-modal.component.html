@@ -1,0 +1,34 @@
+<!-- Add board list modal -->
+<div class="modal fade" id="newBoardListModal" tabindex="-1" aria-labelledby="newBoardListModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newBoardListModalLabel">New List</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <spinner [show]="loadingNewListForm"></spinner>
+        <form [formGroup]="newListForm" (ngSubmit)="onSubmit()" *ngIf="!loadingNewListForm">
+          <div class="mb-3">
+            <label for="boardListName" class="form-label">Board List Name</label>
+            <input type="text" class="form-control" id="boardListName" aria-describedby="boardName"
+                   formControlName="name">
+            <div id="boardListNameHelp" class="form-text">Name of the board list</div>
+          </div>
+
+          <button type="submit" class="btn btn-success" [disabled]="savingNewList">
+            <spinner [show]="savingNewList"></spinner>
+            <span class="fa fa-save"></span>&nbsp;Save
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #closeNewTaskListBtn>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Add board list modal -->
