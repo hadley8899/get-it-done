@@ -23,7 +23,7 @@ class UserWorkspaceInvite extends Mailable
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
@@ -34,7 +34,7 @@ class UserWorkspaceInvite extends Mailable
     public function build(): static
     {
         return $this->markdown('emails.workspace.workspace-invite', [
-            'url' => env('APP_URL') . '/workspace-invite/' . $this->workspaceInvite->token,
+            'url' => env('APP_URL') . '/workspaces/accept-invite/' . $this->workspaceInvite->token,
         ]);
     }
 }

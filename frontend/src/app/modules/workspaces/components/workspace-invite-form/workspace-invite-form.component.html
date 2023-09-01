@@ -1,0 +1,22 @@
+<spinner [show]="loadingForm"></spinner>
+<form [formGroup]="workspaceInviteForm" (ngSubmit)="handleSubmit()" *ngIf="!loadingForm">
+  <div class="mb-3">
+
+    <label for="email" class="form-label">Email address</label>
+    <input
+      type="email"
+      class="form-control"
+      [ngClass]="{'is-invalid': !isValid('email')}"
+      id="email"
+      name="email"
+      formControlName="email"
+      placeholder="name@example.com"
+      required
+    >
+    <div class="form-text">We'll send an invitation to this email address.</div>
+    <div class="invalid-feedback" *ngIf="!isValid('email')">
+      {{ getErrorMessage('email') }}
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" [disabled]="!workspaceInviteForm.valid">Invite</button>
+</form>

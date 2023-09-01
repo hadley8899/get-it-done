@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->string('email');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('workspace_id');
             $table->string('token');
             $table->timestamp('expires_at');

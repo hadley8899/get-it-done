@@ -3,3 +3,16 @@
 <div *ngIf="!loading">
   <app-workspace-form (workspaceUpdated)="workspaceUpdated($event)" [workspace]="workspace"></app-workspace-form>
 </div>
+
+<div *ngIf="!loading">
+  <div class="card mt-3">
+    <div class="card-header">
+      Users with access to this workspace
+    </div>
+    <div class="card-body">
+
+      <h5 class="card-title">Invite a user to use this workspace</h5>
+      <app-workspace-invite-form [workspaceUuid]="workspace.uuid"></app-workspace-invite-form>
+    </div>
+  </div>
+</div>

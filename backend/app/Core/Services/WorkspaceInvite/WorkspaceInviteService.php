@@ -2,6 +2,7 @@
 
 namespace App\Core\Services\WorkspaceInvite;
 
+use App\Core\Services\Auth\AuthHelper;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\WorkspaceMembers\WorkspaceMemberInviteRequest;
 use App\Mail\UserSignupWorkspaceInvite;
@@ -54,15 +55,11 @@ class WorkspaceInviteService
         // Create a row in the workspace_invites table for this user.
         $workspaceInvite = (new WorkspaceInvite([
             'email' => $email,
+            'user_id' => AuthHelper::getLoggedInUserId(),
             'workspace_id' => $workspace->id,
             'token' => $token,
             'expires_at' => $expiresAt,
         ]));
-
-        // Add the user if one was found
-        if ($user !== null) {
-            $workspaceInvite->user_id = $user->id;
-        }
 
         $workspaceInvite->saveOrFail();
 
@@ -76,7 +73,7 @@ class WorkspaceInviteService
 
             return response()->json([
                 'success' => true,
-                'token' => $token, // TODO remove
+                'token' => $token,
             ]);
         }
 
@@ -88,7 +85,7 @@ class WorkspaceInviteService
 
         return response()->json([
             'success' => 'true',
-            'token' => $token, // TODO remove
+            'token' => $token,
         ]);
     }
 

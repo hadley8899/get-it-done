@@ -17,4 +17,8 @@ export class WorkspaceMembersService {
   getWorkspaceMembers(uuid: string):Observable<WorkspaceMember[]> {
     return this.http.get<any>(this.apiUrl + 'workspaces/' + uuid + '/members');
   }
+
+  inviteMemberToWorkspace(formData: FormData): Observable<any> {
+    return this.http.post(this.apiUrl + 'workspace-members/invite', formData);
+  }
 }

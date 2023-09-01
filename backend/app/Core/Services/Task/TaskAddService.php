@@ -46,6 +46,10 @@ class TaskAddService
             $validated['assigned_to'] = $user->id;
         }
 
+        if ($validated['hours_worked'] === null) {
+            $validated['hours_worked'] = 0;
+        }
+
         $validated['board_list_id'] = $boardList->id;
         $validated['user_id'] = AuthHelper::getLoggedInUserId();
 
