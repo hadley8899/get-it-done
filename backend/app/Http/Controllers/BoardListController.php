@@ -34,6 +34,9 @@ class BoardListController extends Controller
         return response()->json(BoardListWithTasksResource::collection((new BoardListsWithTasksService())->boardListsWithTasks($workspace, $board)));
     }
 
+    /**
+     * @throws WorkspaceException
+     */
     public function listsForBoardNoTasks(Workspace $workspace, Board $board): JsonResponse
     {
         return response()->json(BoardListResource::collection((new BoardListsWithTasksService())->boardListsWithTasks($workspace, $board)));
@@ -61,9 +64,7 @@ class BoardListController extends Controller
      */
     public function reorderTasks(Workspace $workspace, Board $board, BoardList $boardList, Request $request): JsonResponse
     {
-        (new BoardListReorderTasksService())->reorderTasks($workspace, $board, $boardList, $request);
-
-        return response()->json(null, Response::HTTP_OK);
+        return (new BoardListReorderTasksService())->reorderTasks($workspace, $board, $boardList, $request);
     }
 
     /**
@@ -85,11 +86,7 @@ class BoardListController extends Controller
     {
         $response = (new BoardListMoveTaskService())->moveTask($workspace, $board, $request);
 
-        if ($response !== null) {
-            return $response;
-        }
-
-        return response()->json(null, Response::HTTP_OK);
+        return $response ?? response()->json(null, Response::HTTP_OK);
     }
 
     /**
@@ -103,7 +100,7 @@ class BoardListController extends Controller
      * @throws Throwable
      * @throws WorkspaceException
      */
-    public function update(UpdateBoardListRequest $request, Workspace $workspace, Board $board, BoardList $boardList)
+    public function update(UpdateBoardListRequest $request, Workspace $workspace, Board $board, BoardList $boardList): JsonResponse
     {
         (new BoardListUpdateService())->updateBoardList($workspace, $board, $boardList, $request->validated());
 

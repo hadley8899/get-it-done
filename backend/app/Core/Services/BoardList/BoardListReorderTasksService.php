@@ -9,6 +9,7 @@ use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\Task;
 use App\Models\Workspace;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Throwable;
@@ -19,7 +20,7 @@ class BoardListReorderTasksService
      * @throws Throwable
      * @throws WorkspaceException
      */
-    public function reorderTasks(Workspace $workspace, Board $board, BoardList $boardList, Request $request)
+    public function reorderTasks(Workspace $workspace, Board $board, BoardList $boardList, Request $request): JsonResponse
     {
         // Ensure the user has access to this workspace
         if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
@@ -41,7 +42,7 @@ class BoardListReorderTasksService
         $tasks = Task::query()->whereIn('uuid', $taskUuIds)->get('id');
 
         if (count($tasks) !== count($taskUuIds)) {
-            return response()->json(['error' => 'Invalid task UUIDs'], Response::HTTP_BAD_REQUEST);
+            return response()->json(['success' => false, 'errorMessages' => ['Invalid task UUIDs']], Response::HTTP_BAD_REQUEST);
         }
 
         $position = 1;
@@ -58,6 +59,6 @@ class BoardListReorderTasksService
             $position++;
         }
 
-        return $this;
+        return response()->json(['success' => true], Response::HTTP_OK);
     }
 }
