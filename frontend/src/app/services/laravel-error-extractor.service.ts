@@ -1,12 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
+import {ToastrService} from "ngx-toastr";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class LaravelErrorExtractorService {
-  static extractErrorMessagesFromErrorResponse(errorResponse: HttpErrorResponse): string[] {
+
+  constructor(private toastr: ToastrService) {
+
+  }
+
+  static extractErrorMessagesFromErrorResponse = (errorResponse: HttpErrorResponse): string[] => {
     // 1 - Create empty array to store errors
     const errors: string[] = [];
 
@@ -36,4 +42,14 @@ export class LaravelErrorExtractorService {
     }
     return errors;
   };
+
+  handleErrors = (errorResponse: HttpErrorResponse): void => {
+    const errors = LaravelErrorExtractorService.extractErrorMessagesFromErrorResponse(errorResponse);
+
+    // Show the error message with a toast from toastr
+    errors.forEach(error => {
+      this.toastr.error(error);
+    });
+
+  }
 }

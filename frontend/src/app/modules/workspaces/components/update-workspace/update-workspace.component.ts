@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {WorkspaceService} from '../../../../services/workspace.service';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {ToastrService} from 'ngx-toastr';
+
 @UntilDestroy()
 @Component({
   selector: 'app-update-workspace',
@@ -43,7 +44,7 @@ export class UpdateWorkspaceComponent implements OnInit {
     });
   }
 
-  workspaceUpdated(event: Workspace) {
+  workspaceUpdated() {
     this.workspaceService.refreshWorkspaceList();
     this.toastr.success('Workspace updated successfully');
     this.router.navigate(['/workspaces']);

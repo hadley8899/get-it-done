@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {WorkspaceMembersService} from "../../../../services/workspace-members.service";
 import {ToastrService} from "ngx-toastr";
+import {LaravelErrorExtractorService} from "../../../../services/laravel-error-extractor.service";
 
 @Component({
   selector: 'app-workspace-invite-form',
@@ -15,7 +16,11 @@ export class WorkspaceInviteFormComponent implements OnInit {
   workspaceInviteForm!: FormGroup;
   loadingForm: boolean = true;
 
-  constructor(private workspaceMemberService: WorkspaceMembersService, private toastr: ToastrService) {
+  constructor(
+    private workspaceMemberService: WorkspaceMembersService,
+    private toastr: ToastrService,
+    private errorHandler: LaravelErrorExtractorService
+  ) {
   }
 
   ngOnInit(): void {
@@ -38,19 +43,16 @@ export class WorkspaceInviteFormComponent implements OnInit {
       formData.append('workspace_uuid', this.workspaceUuid);
 
       this.workspaceMemberService.inviteMemberToWorkspace(formData).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: () => {
           this.toastr.success('Invitation sent.');
           this.initForm();
         },
         error: (error) => {
-          console.log(error);
-          this.toastr.error('Error sending invitation.');
+          this.errorHandler.handleErrors(error);
         }
       });
 
     } else {
-      console.log('Form is not valid.');
       this.toastr.error('Form is not valid.');
     }
   }

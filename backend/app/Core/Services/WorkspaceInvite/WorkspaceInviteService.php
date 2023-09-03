@@ -25,8 +25,9 @@ class WorkspaceInviteService
      */
     public static function inviteEmail(WorkspaceMemberInviteRequest $request): JsonResponse
     {
-        $email = $request->get('email');
+        $email = $request->validated('email');
 
+        // If there is already a user in the database, Get them
         $user = User::query()->where('email', '=', $email)->first();
 
         /** @var Workspace $workspace */
