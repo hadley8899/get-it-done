@@ -1,7 +1,7 @@
 <app-main-header [title]="'Update workspace'" [breadCrumbs]="breadCrumbs"></app-main-header>
 <spinner [show]="loading"></spinner>
 <div *ngIf="!loading">
-  <app-workspace-form (workspaceUpdated)="workspaceUpdated($event)" [workspace]="workspace"></app-workspace-form>
+  <app-workspace-form (workspaceUpdated)="workspaceUpdated()" [workspace]="workspace"></app-workspace-form>
 </div>
 
 <div *ngIf="!loading">
