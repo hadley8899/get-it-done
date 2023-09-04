@@ -17,6 +17,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {SortablejsModule} from 'nxt-sortablejs'
 import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
 import {DataTablesModule} from 'angular-datatables';
+import {SharedModule} from "./modules/shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -24,41 +25,42 @@ import {DataTablesModule} from 'angular-datatables';
     SidebarComponent,
     NavbarComponent,
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot(),
-    DataTablesModule,
-    SortablejsModule.forRoot({animation: 150}),
-    SweetAlert2Module.forRoot({
-      // Add custom options into swal globally
-      provideSwal: () => import('sweetalert2').then(({default: swal}) => swal.mixin(
-        {
-          // Use bootstrap 4 buttons
-          customClass: {
-            confirmButton: 'btn btn-success btn-mr',
-            cancelButton: 'btn btn-danger btn-mr'
-          },
-          buttonsStyling: false
-        }
-      ))
-    }),
-    MarkdownModule.forRoot({
-      markedOptions: {
-        provide: MarkedOptions,
-        useValue: {
-          gfm: true,
-          breaks: false,
-          pedantic: false,
-          smartLists: true,
-          smartypants: false,
-        },
-      },
-    }),
-    UserModule,
-    AppRoutingModule,
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot(),
+        DataTablesModule,
+        SortablejsModule.forRoot({animation: 150}),
+        SweetAlert2Module.forRoot({
+            // Add custom options into swal globally
+            provideSwal: () => import('sweetalert2').then(({default: swal}) => swal.mixin(
+                {
+                    // Use bootstrap 4 buttons
+                    customClass: {
+                        confirmButton: 'btn btn-success btn-mr',
+                        cancelButton: 'btn btn-danger btn-mr'
+                    },
+                    buttonsStyling: false
+                }
+            ))
+        }),
+        MarkdownModule.forRoot({
+            markedOptions: {
+                provide: MarkedOptions,
+                useValue: {
+                    gfm: true,
+                    breaks: false,
+                    pedantic: false,
+                    smartLists: true,
+                    smartypants: false,
+                },
+            },
+        }),
+        UserModule,
+        AppRoutingModule,
+        SharedModule,
+    ],
   providers: [
     AuthGuard,
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},

@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {WorkspaceMember} from '../interfaces/workspace-member';
 import {Observable} from 'rxjs';
+import {WorkspaceInvite} from "../interfaces/workspace-invite";
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,13 @@ export class WorkspaceMembersService {
 
   inviteMemberToWorkspace(formData: FormData): Observable<any> {
     return this.http.post(this.apiUrl + 'workspace-members/invite', formData);
+  }
+
+  checkCode(code: string): Observable<{success: boolean, data: WorkspaceInvite}> {
+    return this.http.get<any>(this.apiUrl + 'workspace-members/details/' + code);
+  }
+
+  acceptInvite(token: string) {
+    return this.http.get<any>(this.apiUrl + 'workspace-members/accept/' + token);
   }
 }

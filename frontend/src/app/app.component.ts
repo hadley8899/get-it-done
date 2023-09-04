@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
@@ -9,28 +9,36 @@ import {NavigationEnd, Router} from '@angular/router';
 export class AppComponent implements OnInit{
 
   showNavs = true;
+  loading = true;
 
   // Add to this array to hide the nav for certain pages
   routesToHideNav: string[] = [
-    '/login', '/register', '/user/forgot-password', 'jobs/customer-job-invoice','jobs/customer-job-report'
+    '/login',
+    '/register',
+    '/user/forgot-password',
+    '/user/reset-password',
+    '/user/activate-account',
+    'workspaces/accept-invite/',
   ];
 
-  constructor(private zone: NgZone, private router: Router) {
+  constructor(private router: Router) {
   }
 
   ngOnInit() {
+    this.loading = true;
     // Stop the navigation showing on certain pages
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
 
-        this.showNavs = true;
+        let shouldShowNavs = true;
         for (const hiddenPart of this.routesToHideNav) {
           if (event.url.search(hiddenPart) !== -1) {
-            this.showNavs = false;
+            shouldShowNavs = false;
           }
         }
+        this.loading = false;
+        this.showNavs = shouldShowNavs;
       }
     });
   }
-
 }

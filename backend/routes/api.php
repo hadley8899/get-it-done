@@ -28,7 +28,7 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
 // Details for workspace invite, Needs to be public
-Route::get('details/{workspaceInvite:token}', [WorkspaceMembersController::class, 'details'])->name('workspace-members.details');
+Route::get('workspace-members/details/{workspaceInvite:token}', [WorkspaceMembersController::class, 'details'])->name('workspace-members.details');
 
 Route::middleware(['auth:api'])->group(function () {
 

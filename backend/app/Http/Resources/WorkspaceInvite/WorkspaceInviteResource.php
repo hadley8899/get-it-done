@@ -23,6 +23,7 @@ class WorkspaceInviteResource extends JsonResource
             'uuid' => $this->uuid,
             'email' => $this->email,
             'workspace' => new WorkspaceResource($this->workspace),
+            'user' => $this->user,
             'token' => $this->token,
             'expires_at' => $this->expires_at,
             'created_at' => Date::toUserTime($this->created_at),

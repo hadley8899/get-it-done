@@ -9,6 +9,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import { WorkspaceInviteFormComponent } from './components/workspace-invite-form/workspace-invite-form.component';
+import { AcceptWorkspaceInviteComponent } from './components/accept-workspace-invite/accept-workspace-invite.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { WorkspaceInviteFormComponent } from './components/workspace-invite-form
     CreateWorkspaceComponent,
     UpdateWorkspaceComponent,
     WorkspaceFormComponent,
-    WorkspaceInviteFormComponent
+    WorkspaceInviteFormComponent,
+    AcceptWorkspaceInviteComponent
   ],
   imports: [
     CommonModule,

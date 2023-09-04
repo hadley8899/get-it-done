@@ -36,6 +36,9 @@ export class SidebarComponent implements OnInit {
   }
 
   loadWorkspaces() {
+
+    console.log('Running sidebar loadWorkspaces');
+
     this.workspaceService.refreshWorkspaceList();
 
     this.workspaceService.workspaceListSubject().pipe(untilDestroyed(this)).subscribe({
@@ -47,7 +50,6 @@ export class SidebarComponent implements OnInit {
 
   selectWorkspace(workspace: Workspace) {
     this.workspaceService.setActiveWorkspace(workspace);
-    this.router.navigate(['/boards']).then(r => {
-    });
+    this.router.navigate(['/boards']).then();
   }
 }

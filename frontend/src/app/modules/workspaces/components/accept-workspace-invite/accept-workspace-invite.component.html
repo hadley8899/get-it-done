@@ -1,0 +1,32 @@
+<spinner [show]="loading"></spinner>
+<section class="hold-transition login-page" *ngIf="!loading">
+  <div class="login-box">
+    <div class="login-logo">
+      <p><b>{{siteName}}</b></p>
+    </div>
+
+    <div class="card">
+      <div class="card-body login-card-body">
+        <p class="login-box-msg" style="font-weight: bold">You have been invited to join a workspace</p>
+
+        <h4>Details</h4>
+        <p>
+          Workspace Name: {{workspaceInvite.workspace.name}}<br/>
+        Invited by: {{workspaceInvite.user.name}}<br/>
+        Your email: {{workspaceInvite.email}}<br/>
+        </p>
+
+        <button class="btn btn-primary btn-block mb-3 w-100" (click)="acceptInvite()">
+          Accept Invite
+        </button>
+
+        <p class="mb-1">
+          <a [routerLink]="['/user/login']">Login</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+
+</section>

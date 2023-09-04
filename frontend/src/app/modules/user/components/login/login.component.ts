@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../../../services/auth.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {LaravelErrorExtractorService} from '../../../../services/laravel-error-extractor.service';
@@ -22,14 +22,31 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   errorMessages: string[] = [];
 
-  constructor(private authService: AuthService, private router: Router, private toastr: ToastrService) {
+  returnUrl: string | null = '';
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService,
+    private route: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
+    this.getReturnUrl();
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
     this.initForm();
+  }
+
+  getReturnUrl() {
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+
+    // trim the returnURL
+    if (this.returnUrl) {
+      this.returnUrl = this.returnUrl.trim();
+    }
   }
 
   initForm() {
@@ -45,7 +62,14 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).pipe(untilDestroyed(this)).subscribe({
       next: (res) => {
         this.authService.sendToken(res.token);
-        this.router.navigate(['/']);
+
+        // If we have a return URL, Go to that, If not go to home page
+        if (this.returnUrl) {
+          this.router.navigate([this.returnUrl]).then();
+          return;
+        }
+
+        this.router.navigate(['/']).then();
       },
       error: (error) => {
         const errorMessages = LaravelErrorExtractorService.extractErrorMessagesFromErrorResponse(error);
