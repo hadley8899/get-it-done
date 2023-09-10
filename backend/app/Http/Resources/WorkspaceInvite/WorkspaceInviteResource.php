@@ -3,6 +3,7 @@
 namespace App\Http\Resources\WorkspaceInvite;
 
 use App\Core\Helpers\Date;
+use App\Http\Resources\User\UserResource;
 use App\Http\Resources\Workspace\WorkspaceResource;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -23,8 +24,7 @@ class WorkspaceInviteResource extends JsonResource
             'uuid' => $this->uuid,
             'email' => $this->email,
             'workspace' => new WorkspaceResource($this->workspace),
-            'user' => $this->user,
-            'token' => $this->token,
+            'user' => new UserResource($this->user),
             'expires_at' => $this->expires_at,
             'created_at' => Date::toUserTime($this->created_at),
             'updated_at' => Date::toUserTime($this->updated_at),

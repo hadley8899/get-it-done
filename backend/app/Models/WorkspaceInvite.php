@@ -15,7 +15,6 @@ class WorkspaceInvite extends Model
         'workspace_id',
         'email',
         'user_id',
-        'token',
         'expires_at',
     ];
 

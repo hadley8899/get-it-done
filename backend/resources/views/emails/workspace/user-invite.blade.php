@@ -1,7 +1,8 @@
 @component('mail::message')
-Hi {{ auth()->user()->name }} has invited you to join the workspace {{ $workspace->name }}
+Hi, {{ auth()->user()->name }} has invited you to join the workspace {{ $workspace->name }}
 
-To accept the invitation, please click the button below.
+<br/>
+It looks like you don't have an account yet. Please click the button below to create an account and join the workspace.
 
 @component('mail::button', ['url' => $url])
 Accept Invitation

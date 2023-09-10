@@ -11,6 +11,45 @@
     </div>
     <div class="card-body">
 
+      <spinner [show]="loadingMembers"></spinner>
+      <div *ngIf="!loadingMembers">
+        <div *ngIf="workspaceMembers.length == 0">
+          <p>No members have access to this workspace</p>
+        </div>
+
+        <div *ngIf="workspaceMembers.length > 0">
+          <div *ngFor="let workspaceMember of workspaceMembers">
+            <div class="row">
+              <div class="col-3">
+
+                <img
+                  ngSrc="{{apiUrl}}storage/{{workspaceMember.user.avatar}}"
+                  alt="{{workspaceMember.user.name}}"
+                  [width]="50"
+                  [height]="50"
+                >
+              </div>
+              <div class="col-3">
+                <p>{{workspaceMember.user.name}}</p>
+              </div>
+              <div class="col-3">
+                <p>{{workspaceMember.user.email}}</p>
+              </div>
+              <div class="col-3 text-end">
+                <button
+                  class="btn btn-danger float-right"
+                  [swal]="{ title: 'Are you sure?', text: 'This user will no longer have access to this workspace', showCancelButton: true }"
+                  (confirm)="removeMember(workspaceMember.uuid)"
+                  *ngIf="workspaceMember.uuid"
+                >Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
       <h5 class="card-title">Invite a user to use this workspace</h5>
       <app-workspace-invite-form [workspaceUuid]="workspace.uuid"></app-workspace-invite-form>
     </div>

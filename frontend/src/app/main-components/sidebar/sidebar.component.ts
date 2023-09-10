@@ -36,9 +36,6 @@ export class SidebarComponent implements OnInit {
   }
 
   loadWorkspaces() {
-
-    console.log('Running sidebar loadWorkspaces');
-
     this.workspaceService.refreshWorkspaceList();
 
     this.workspaceService.workspaceListSubject().pipe(untilDestroyed(this)).subscribe({

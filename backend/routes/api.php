@@ -104,8 +104,12 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('workspace-members')->group(function () {
+        Route::get('invites-for-user', [WorkspaceMembersController::class, 'invitesForUser'])->name('workspace-members.invites-for-user');
+        Route::post('accept-invite', [WorkspaceMembersController::class, 'acceptInvite'])->name('workspace-members.accept-invite');
+        Route::post('reject-invite', [WorkspaceMembersController::class, 'rejectInvite'])->name('workspace-members.reject-invite');
+        Route::delete('remove-member/{workspaceMember:uuid}', [WorkspaceMembersController::class, 'removeMember'])->name('workspace-members.remove-member');
+
         Route::post('invite', [WorkspaceMembersController::class, 'invite'])->name('workspace-members.invite');
-        Route::get('accept/{workspaceInvite:token}', [WorkspaceMembersController::class, 'accept'])->name('workspace-members.accept');
     });
 
     Route::prefix('knowledgebase/{workspace:uuid}')->group(function () {

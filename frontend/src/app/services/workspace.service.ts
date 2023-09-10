@@ -80,4 +80,8 @@ export class WorkspaceService {
   deleteWorkspace(uuid: string) {
     return this.http.delete<any>(this.apiUrl + 'workspaces/' + uuid);
   }
+
+  workspaceMembers(uuid: string) {
+    return this.http.get<any>(this.apiUrl + 'workspaces/' + uuid + '/members');
+  }
 }

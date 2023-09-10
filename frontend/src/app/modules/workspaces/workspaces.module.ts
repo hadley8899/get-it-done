@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {WorkspaceRoutingModule} from './workspace-routing/workspace-routing.module';
 import { WorkspaceHomeComponent } from './components/workspace-home/workspace-home.component';
 import { CreateWorkspaceComponent } from './components/create-workspace/create-workspace.component';
@@ -9,7 +9,8 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import { WorkspaceInviteFormComponent } from './components/workspace-invite-form/workspace-invite-form.component';
-import { AcceptWorkspaceInviteComponent } from './components/accept-workspace-invite/accept-workspace-invite.component';
+import { WorkspaceInvitesButtonComponent } from './components/workspace-home/workspace-invites-button/workspace-invites-button.component';
+import { WorkspaceInvitesComponent } from './components/workspace-invites/workspace-invites.component';
 
 @NgModule({
   declarations: [
@@ -18,15 +19,17 @@ import { AcceptWorkspaceInviteComponent } from './components/accept-workspace-in
     UpdateWorkspaceComponent,
     WorkspaceFormComponent,
     WorkspaceInviteFormComponent,
-    AcceptWorkspaceInviteComponent
+    WorkspaceInvitesButtonComponent,
+    WorkspaceInvitesComponent
   ],
-  imports: [
-    CommonModule,
-    WorkspaceRoutingModule,
-    ReactiveFormsModule,
-    SharedModule,
-    SweetAlert2Module
-  ]
+    imports: [
+        CommonModule,
+        WorkspaceRoutingModule,
+        ReactiveFormsModule,
+        SharedModule,
+        SweetAlert2Module,
+        NgOptimizedImage
+    ]
 })
 export class WorkspacesModule {
 }

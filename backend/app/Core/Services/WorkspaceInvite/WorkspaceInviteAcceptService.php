@@ -7,12 +7,12 @@ use App\Exceptions\WorkspaceException;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvite;
-use App\Models\WorkspaceMembers;
+use App\Models\WorkspaceMember;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 
-class WorkspaceInviteAcceptService
+class WorkspaceInviteAcceptService extends WorkspaceInviteServiceAbstract
 {
     /**
      * @param WorkspaceInvite $workspaceInvite
@@ -23,31 +23,22 @@ class WorkspaceInviteAcceptService
      */
     public static function acceptInvite(WorkspaceInvite $workspaceInvite): JsonResponse
     {
-        $expires = Carbon::parse($workspaceInvite->expires_at);
+        self::checkIfExpired($workspaceInvite);
 
-        // Check if the invite is still valid
-        if ($expires->isPast()) {
-            throw WorkspaceException::inviteExpired();
+        [$user, $workspace] = self::checkDetailsForInvite($workspaceInvite);
+
+        // Make sure the user doesnt already exist in the workspace members
+        $workspaceMember = WorkspaceMember::query()
+            ->where('user_id', '=', $user->id)
+            ->where('workspace_id', '=', $workspace->id)
+            ->first();
+
+        if ($workspaceMember) {
+            $workspaceInvite->delete();
+            throw new UserException('User already exists in workspace');
         }
 
-        $workspace = Workspace::query()->findOrFail($workspaceInvite->workspace_id);
-
-        $user = User::query()->where('email', '=', $workspaceInvite->email)->first();
-
-        if ($user === null) {
-            throw UserException::userNotFound();
-        }
-
-        if ((int)$user->id === (int)$workspace->user_id) {
-            throw WorkspaceException::cannotInviteOwner();
-        }
-
-        // Does the invite match the logged-in user
-        if ($user->id !== auth()->user()->id) {
-            throw WorkspaceException::inviteDoesNotMatch();
-        }
-
-        $workspaceMember = new WorkspaceMembers([
+        $workspaceMember = new WorkspaceMember([
             'user_id' => $user->id,
             'workspace_id' => $workspace->id,
         ]);

@@ -87,6 +87,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function workspaceMembers() {
-        return $this->hasMany(WorkspaceMembers::class);
+        return $this->hasMany(WorkspaceMember::class);
     }
 }

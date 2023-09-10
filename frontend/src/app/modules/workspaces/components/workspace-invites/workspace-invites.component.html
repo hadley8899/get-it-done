@@ -1,0 +1,33 @@
+<app-main-header [breadCrumbs]="breadCrumbs" [header]="'Workspace Invites'"></app-main-header>
+
+<div class="container mt-4">
+  <spinner [show]="loading" class="d-inline-block"></spinner>
+
+  <div *ngIf="!loading && invites.length === 0" class="alert alert-info">
+    <p>You have no pending workspace invites.</p>
+  </div>
+
+  <div *ngIf="!loading && invites.length > 0">
+    <table class="table table-responsive table-striped table-hover">
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">Workspace</th>
+        <th scope="col">Invited By</th>
+        <th scope="col">Invited On</th>
+        <th scope="col">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let invite of invites">
+        <td>{{ invite.workspace.name }}</td>
+        <td>{{ invite.user.name }}</td>
+        <td>{{ invite.created_at | date }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary me-2" (click)="acceptInvite(invite)">Accept</button>
+          <button class="btn btn-sm btn-danger" (click)="rejectInvite(invite)">Reject</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

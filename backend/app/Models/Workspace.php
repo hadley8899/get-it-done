@@ -32,7 +32,7 @@ class Workspace extends Model
      */
     public function members(): HasMany
     {
-        return $this->hasMany(WorkspaceMembers::class);
+        return $this->hasMany(WorkspaceMember::class);
     }
 
     /**

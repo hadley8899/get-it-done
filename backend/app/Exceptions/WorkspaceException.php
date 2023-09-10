@@ -59,4 +59,9 @@ class WorkspaceException extends CustomBaseException
     {
         return new self('You don\'t have access to this workspace', ['workspace' => trans('workspace.no_access')]);
     }
+
+    public static function cannotRemoveOwner()
+    {
+        return new self('The owner of the workspace cannot be removed', ['workspace' => trans('workspace.no_access')]);
+    }
 }

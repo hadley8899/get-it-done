@@ -34,7 +34,7 @@ class UserSignupWorkspaceInvite extends Mailable
     public function build(): static
     {
         return $this->markdown('emails.workspace.user-invite', [
-            'url' => env('APP_URL') . '/workspace-signup/' . $this->workspaceInvite->token,
+            'url' => env('APP_URL') . '/register/',
         ]);
     }
 }

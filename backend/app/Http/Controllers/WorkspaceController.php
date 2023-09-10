@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Services\Auth\AuthHelper;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\Workspace\StoreWorkspaceRequest;
 use App\Http\Requests\Workspace\UpdateWorkspaceRequest;
@@ -18,7 +19,23 @@ class WorkspaceController extends Controller
      */
     public function index(): JsonResponse
     {
-        $workspaces = Workspace::query()->with(['user'])->where('user_id', '=', auth()->user()->id)->get();
+        $userId = AuthHelper::getLoggedInUserId();
+        // Fetch workspaces the user owns
+        $ownedWorkspaces = Workspace::query()
+            ->with(['user'])
+            ->where('user_id', '=', $userId)
+            ->select('workspaces.*');  // This line ensures only workspace columns are selected
+
+        // Fetch workspaces the user has access to (is a member of)
+        $memberWorkspaces = Workspace::query()
+            ->join('workspace_members', 'workspaces.id', '=', 'workspace_members.workspace_id')
+            ->where('workspace_members.user_id', '=', $userId)
+            ->select('workspaces.*');
+
+        // Combine both queries
+        $workspaces = $ownedWorkspaces
+            ->union($memberWorkspaces)
+            ->get();
 
         return response()->json(new WorkspaceCollection(WorkspaceResource::collection($workspaces)));
     }
@@ -33,12 +50,12 @@ class WorkspaceController extends Controller
     public function store(StoreWorkspaceRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = AuthHelper::getLoggedInUserId();
 
         $workspace = new Workspace($validated);
 
         // Check if there is already a workspace with the same name
-        $existingWorkspace = Workspace::query()->where('user_id', '=', auth()->user()->id)->where('name', '=', $workspace->name)->first();
+        $existingWorkspace = Workspace::query()->where('user_id', '=', AuthHelper::getLoggedInUserId())->where('name', '=', $workspace->name)->first();
 
         if ($existingWorkspace) {
             throw WorkspaceException::workspaceSameName();

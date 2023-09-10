@@ -23,11 +23,19 @@ export class WorkspaceMembersService {
     return this.http.post(this.apiUrl + 'workspace-members/invite', formData);
   }
 
-  checkCode(code: string): Observable<{success: boolean, data: WorkspaceInvite}> {
-    return this.http.get<any>(this.apiUrl + 'workspace-members/details/' + code);
+  acceptInvite(invite: WorkspaceInvite) {
+    return this.http.post<any>(this.apiUrl + 'workspace-members/accept-invite/', {invite: invite.uuid});
   }
 
-  acceptInvite(token: string) {
-    return this.http.get<any>(this.apiUrl + 'workspace-members/accept/' + token);
+  rejectInvite(invite: WorkspaceInvite) {
+    return this.http.post<any>(this.apiUrl + 'workspace-members/reject-invite/', {invite: invite.uuid});
+  }
+
+  invitesForUser(): Observable<{data: WorkspaceInvite[]}> {
+    return this.http.get<any>(this.apiUrl + 'workspace-members/invites-for-user');
+  }
+
+  removeMember(workspaceMemberUuId: string) {
+    return this.http.delete(this.apiUrl + 'workspace-members/remove-member/' + workspaceMemberUuId);
   }
 }

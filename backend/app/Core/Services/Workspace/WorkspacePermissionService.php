@@ -4,10 +4,15 @@ namespace App\Core\Services\Workspace;
 
 use App\Models\User;
 use App\Models\Workspace;
-use App\Models\WorkspaceMembers;
+use App\Models\WorkspaceMember;
 
 class WorkspacePermissionService
 {
+    /**
+     * @param User $user
+     * @param Workspace $workspace
+     * @return bool
+     */
     public static function userHasAccessToWorkspace(User $user, Workspace $workspace): bool
     {
         if ($workspace->user_id === $user->id) {
@@ -15,7 +20,7 @@ class WorkspacePermissionService
         }
 
         // If the user is a member of the workspace they have access
-        $workspaceMember = WorkspaceMembers::query()
+        $workspaceMember = WorkspaceMember::query()
             ->where('workspace_id', '=', $workspace->id)
             ->where('user_id', '=', $user->id)
             ->first();

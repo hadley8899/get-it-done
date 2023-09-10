@@ -1,0 +1,12 @@
+<button class="btn btn-secondary btn-sm me-1" [routerLink]="['/workspaces', 'invites']">
+
+
+  <span class="fa fa-envelope"></span>
+  Invites
+
+  <span *ngIf="loading">
+    (<spinner [show]="loading"></spinner>)
+  </span>
+
+  <span *ngIf="!loading">({{ invites.length || 0 }})</span>
+</button>

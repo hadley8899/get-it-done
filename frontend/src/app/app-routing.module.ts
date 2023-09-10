@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     path: 'workspaces',
     loadChildren: () => import('./modules/workspaces/workspaces.module').then(m => m.WorkspacesModule),
-    canActivate: [], // Some routes are non authenticated, Individual routes are protected by guards
+    canActivate: [AuthGuard],
   },
   {
     path: 'tasks',
