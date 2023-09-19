@@ -4,12 +4,12 @@ namespace App\Core\Services\WorkspaceInvite;
 
 use App\Exceptions\UserException;
 use App\Exceptions\WorkspaceException;
+use App\Mail\NotifyOfAcceptWorkspaceInvite;
 use App\Models\User;
-use App\Models\Workspace;
 use App\Models\WorkspaceInvite;
 use App\Models\WorkspaceMember;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class WorkspaceInviteAcceptService extends WorkspaceInviteServiceAbstract
@@ -27,7 +27,7 @@ class WorkspaceInviteAcceptService extends WorkspaceInviteServiceAbstract
 
         [$user, $workspace] = self::checkDetailsForInvite($workspaceInvite);
 
-        // Make sure the user doesnt already exist in the workspace members
+        // Make sure the user doesn't already exist in the workspace members
         $workspaceMember = WorkspaceMember::query()
             ->where('user_id', '=', $user->id)
             ->where('workspace_id', '=', $workspace->id)
@@ -46,6 +46,12 @@ class WorkspaceInviteAcceptService extends WorkspaceInviteServiceAbstract
         $workspaceMember->saveOrFail();
 
         $workspaceInvite->delete();
+
+        $notifyOfAcceptWorkspace = new NotifyOfAcceptWorkspaceInvite($user, $workspace);
+
+        $userWhoInvited = User::query()->where('id', '=', $workspaceInvite->user_id)->firstOrFail();
+
+        Mail::to($userWhoInvited->email)->send($notifyOfAcceptWorkspace);
 
         return response()->json([
             'success' => true,
