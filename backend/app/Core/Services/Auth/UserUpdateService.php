@@ -48,7 +48,7 @@ class UserUpdateService
                 // Add your validation logic here (e.g. filetype, size)
                 $imagePath = $request->file('avatar')?->store('profile', 'public');
 
-                Image::make(public_path("storage/{$imagePath}"))
+                Image::make(public_path("storage/$imagePath"))
                     ->fit(1000, 1000)
                     ->save();
 
