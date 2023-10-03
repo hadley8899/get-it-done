@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Services\Auth\AuthHelper;
 use App\Core\Services\Board\BoardCreateService;
 use App\Core\Services\Board\BoardDeleteService;
 use App\Core\Services\Board\BoardUpdateService;
+use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\BoardException;
 use App\Exceptions\WorkspaceException;
 use App\Http\Requests\Boards\StoreBoardRequest;
@@ -55,9 +57,11 @@ class BoardController extends Controller
      */
     public function show(Workspace $workspace, Board $board): JsonResponse
     {
-        if ($workspace->user->id !== auth()->user()->id) {
+        // Check if user has access to the workspace
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
             throw WorkspaceException::workspaceNotFound();
         }
+
         return response()->json(new BoardResource($board));
     }
 
