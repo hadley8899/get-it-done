@@ -47,11 +47,12 @@
                 data-bs-toggle="modal"
                 data-bs-target="#taskModal"
                 class=""
+                style="cursor: pointer;"
               >{{task.name}}</a>
               <br/>
               <span class="badge bg-primary" *ngIf="task.assigned_to; else notAssigned">
             {{task.assigned_to.name}}
-        </span>
+            </span>
               <ng-template #notAssigned>
                 <span class="badge bg-danger">Unassigned</span>
               </ng-template>

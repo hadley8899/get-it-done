@@ -1,0 +1,13 @@
+//.workspace-list {
+// Removed for now has the whole sidebar can scroll
+//  max-height: 300px;
+//  overflow-y: auto;
+//}
+#sidebarMenu {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.cursor {
+  cursor: pointer;
+}
