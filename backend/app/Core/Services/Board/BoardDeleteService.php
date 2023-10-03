@@ -3,6 +3,7 @@
 namespace App\Core\Services\Board;
 
 use App\Core\Services\Auth\AuthHelper;
+use App\Core\Services\Workspace\WorkspacePermissionService;
 use App\Exceptions\BoardException;
 use App\Exceptions\WorkspaceException;
 use App\Models\Board;
@@ -19,12 +20,9 @@ class BoardDeleteService
      */
     public function deleteBoard(Board $board, Workspace $workspace): void
     {
-        if ($workspace->user->id !== AuthHelper::getLoggedInUser()->id) {
+        // Check if user has access to the workspace
+        if (!WorkspacePermissionService::userHasAccessToWorkspace(AuthHelper::getLoggedInUser(), $workspace)) {
             throw WorkspaceException::workspaceNotFound();
-        }
-
-        if ($board->user->id !== AuthHelper::getLoggedInUser()->id) {
-            throw BoardException::boardNotFound();
         }
 
         // Delete all lists for this board
