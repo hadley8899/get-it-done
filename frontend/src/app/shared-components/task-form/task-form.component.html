@@ -89,7 +89,7 @@
     <div class="col-6">
       <button type="submit" class="btn btn-success" [disabled]="savingTaskDetails">
         <spinner [show]="savingTaskDetails"></spinner>
-        <span class="fa fa-save"></span>&nbsp;Save
+        <span class="fa fa-save" *ngIf="!savingTaskDetails"></span>&nbsp;Save
       </button>
     </div>
 

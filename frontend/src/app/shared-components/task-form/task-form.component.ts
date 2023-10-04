@@ -98,12 +98,10 @@ export class TaskFormComponent implements OnInit {
 
     if (this.taskDetails?.uuid === null || typeof this.taskDetails?.uuid === 'undefined') {
       this.createTask();
-      this.savingTaskDetails = false;
       return;
     }
 
     this.updateTask();
-    this.savingTaskDetails = false;
   }
 
   updateTask() {
@@ -114,9 +112,11 @@ export class TaskFormComponent implements OnInit {
     this.taskService.updateTask(this.taskDetails?.uuid, this.taskDetailsForm.value).pipe(untilDestroyed(this)).subscribe({
       next: (task: Task) => {
         this.taskUpdated.emit(task);
+        this.savingTaskDetails = false;
       },
       error: (err: any) => {
         this.errors.push(err.error.message);
+        this.savingTaskDetails = false;
       }
     });
   }
@@ -130,9 +130,11 @@ export class TaskFormComponent implements OnInit {
     this.taskService.createTask(this.activeWorkspace.uuid, this.board.uuid, this.boardListUuId, this.taskDetailsForm.value).pipe(untilDestroyed(this)).subscribe({
       next: (task) => {
         this.taskCreated.emit(task);
+        this.savingTaskDetails = false;
       },
       error: (err) => {
         this.errors.push(err.error.message);
+        this.savingTaskDetails = false;
       }
     });
   }
