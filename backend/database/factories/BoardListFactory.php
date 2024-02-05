@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\BoardList;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BoardList>
+ * @extends Factory<BoardList>
  */
 class BoardListFactory extends Factory
 {
@@ -14,10 +15,11 @@ class BoardListFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         return [
-            //
+            'board_id' => 1,
+            'name' => $this->faker->name(),
         ];
     }
 }
