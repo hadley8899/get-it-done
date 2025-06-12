@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 class RegisterService
 {
@@ -26,8 +26,8 @@ class RegisterService
         if ($avatar) {
             $imagePath = $avatar->store('profile', 'public');
 
-            Image::make(public_path("storage/{$imagePath}"))
-                ->fit(1000, 1000)
+            Image::read(public_path("storage/$imagePath"))
+                ->cover(1000, 1000)
                 ->save();
             $imageArray = ['avatar' => $imagePath];
         }
