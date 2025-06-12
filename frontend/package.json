@@ -30,7 +30,7 @@
     "moment": "^2.29.3",
     "ngx-markdown": "^17.1.1",
     "ngx-toastr": "^18.0.0",
-    "nxt-sortablejs": "^16.1.0",
+    "nxt-sortablejs": "^17.0.1",
     "pace-js": "^1.2.4",
     "rxjs": "~7.5.0",
     "sortablejs": "^1.15.0",

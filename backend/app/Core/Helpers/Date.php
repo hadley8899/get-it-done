@@ -13,7 +13,7 @@ class Date
 
     /**
      * @param string|null $date
-     * @return string
+     * @return string|null
      */
     public static function toUserTime(?string $date): ?string
     {

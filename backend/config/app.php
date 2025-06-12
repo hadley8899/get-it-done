@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+use Intervention\Image\Image;
+use Intervention\Image\Laravel\ServiceProvider;
 
 return [
 
@@ -41,7 +43,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -198,8 +200,7 @@ return [
         /*
          * Third-party Service Providers...
          */
-        Intervention\Image\ImageServiceProvider::class
-
+        ServiceProvider::class,
     ],
 
     /*
@@ -214,7 +215,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Image::class,
     ])->toArray(),
 
 ];
