@@ -11,9 +11,10 @@ import {Knowledgebase} from '../../../../interfaces/knowledgebase';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-knowledgebase-item-form',
-  templateUrl: './knowledgebase-item-form.component.html',
-  styleUrls: ['./knowledgebase-item-form.component.scss']
+    selector: 'app-knowledgebase-item-form',
+    templateUrl: './knowledgebase-item-form.component.html',
+    styleUrls: ['./knowledgebase-item-form.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseItemFormComponent implements OnInit {
 

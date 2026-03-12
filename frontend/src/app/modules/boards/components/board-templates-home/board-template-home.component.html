@@ -15,7 +15,7 @@
     <hr/>
     <p class="mb-0">To utilize these templates, simply create a new board using your desired template and let
       it set up your lists automatically. You can also create or edit existing templates to better suit your
-      workflow requirements.</p>
+    workflow requirements.</p>
   </div>
 </div>
 
@@ -30,27 +30,32 @@
     <div class="row">
 
       <spinner [show]="loadingBoardTemplates"></spinner>
-      <div class="list-group" *ngIf="!loadingBoardTemplates">
-
-        <div *ngFor="let boardTemplate of boardTemplates">
-          <div class="list-group-item">
-            <div class="row">
-              <div class="col-md-4">
-                {{boardTemplate.name}}
-              </div>
-              <div class="col-md-4">
-                <span class="text-muted">{{boardTemplate.description}}</span>
-              </div>
-              <div class="col-md-4 text-lg-end text-md-end">
-                <a class="btn btn-primary"
-                   [routerLink]="['/boards', 'board-templates', 'edit', boardTemplate.uuid]">Edit</a>
+      @if (!loadingBoardTemplates) {
+        <div class="list-group">
+          @for (boardTemplate of boardTemplates; track boardTemplate) {
+            <div>
+              <div class="list-group-item">
+                <div class="row">
+                  <div class="col-md-4">
+                    {{boardTemplate.name}}
+                  </div>
+                  <div class="col-md-4">
+                    <span class="text-muted">{{boardTemplate.description}}</span>
+                  </div>
+                  <div class="col-md-4 text-lg-end text-md-end">
+                    <a class="btn btn-primary"
+                    [routerLink]="['/boards', 'board-templates', 'edit', boardTemplate.uuid]">Edit</a>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
-      </div>
+      }
 
-      <p *ngIf="!loadingBoardTemplates && boardTemplates.length == 0">No board templates found.</p>
+      @if (!loadingBoardTemplates && boardTemplates.length == 0) {
+        <p>No board templates found.</p>
+      }
 
     </div>
 

@@ -9,9 +9,10 @@ import {Workspace} from '../../../../../interfaces/workspace';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-knowledgebase-category-update',
-  templateUrl: './knowledgebase-category-update.component.html',
-  styleUrls: ['./knowledgebase-category-update.component.scss']
+    selector: 'app-knowledgebase-category-update',
+    templateUrl: './knowledgebase-category-update.component.html',
+    styleUrls: ['./knowledgebase-category-update.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseCategoryUpdateComponent implements OnInit {
 

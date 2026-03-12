@@ -4,9 +4,10 @@ import {PageSetting} from '../../interface/page-setting';
 import {Breadcrumb} from '../../../../interfaces/breadcrumb';
 
 @Component({
-  selector: 'app-settings-home',
-  templateUrl: './settings-home.component.html',
-  styleUrls: ['./settings-home.component.scss']
+    selector: 'app-settings-home',
+    templateUrl: './settings-home.component.html',
+    styleUrls: ['./settings-home.component.scss'],
+    standalone: false
 })
 export class SettingsHomeComponent implements OnInit {
 

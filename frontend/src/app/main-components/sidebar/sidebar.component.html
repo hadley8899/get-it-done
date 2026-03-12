@@ -50,15 +50,19 @@
     </h6>
     <ul class="nav flex-column flex-nowrap mb-2 workspace-list" style="">
 
-      <li class="nav-item" *ngFor="let workspace of workspaces">
-        <a class="nav-link" (click)="selectWorkspace(workspace)" style="cursor:pointer;">
-          <span class="fa fa-briefcase"></span>
-          {{workspace.name}}
-          <span *ngIf="workspace.uuid === activeWorkspace?.uuid">
-            <span class="fa fa-check"></span>
-          </span>
-        </a>
-      </li>
+      @for (workspace of workspaces; track workspace) {
+        <li class="nav-item">
+          <a class="nav-link" (click)="selectWorkspace(workspace)" style="cursor:pointer;">
+            <span class="fa fa-briefcase"></span>
+            {{workspace.name}}
+            @if (workspace.uuid === activeWorkspace?.uuid) {
+              <span>
+                <span class="fa fa-check"></span>
+              </span>
+            }
+          </a>
+        </li>
+      }
     </ul>
 
     <hr/>

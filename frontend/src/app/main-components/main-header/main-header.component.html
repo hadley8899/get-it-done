@@ -4,22 +4,28 @@
       <div class="col-sm-8">
         <h1>
           {{header}}
-          <small *ngIf="subHeader">{{subHeader}}</small>
+          @if (subHeader) {
+            <small>{{subHeader}}</small>
+          }
         </h1>
       </div>
 
       <div class="col-sm-4 text-lg-end">
 
         <ol class="breadcrumb">
-          <li class="" *ngFor="let navItem of breadCrumbs">
-            <a
-              [routerLink]="navItem.routeItems"
-              *ngIf="navItem.routeItems.length > 0"
-              class="breadcrumb-list-item small"
-            >{{ navItem.linkText | uppercase}}</a>
-
-            <span *ngIf="navItem.routeItems.length === 0" class="small">&nbsp;{{navItem.linkText | uppercase}}</span>
-          </li>
+          @for (navItem of breadCrumbs; track navItem) {
+            <li class="">
+              @if (navItem.routeItems.length > 0) {
+                <a
+                  [routerLink]="navItem.routeItems"
+                  class="breadcrumb-list-item small"
+                >{{ navItem.linkText | uppercase}}</a>
+              }
+              @if (navItem.routeItems.length === 0) {
+                <span class="small">&nbsp;{{navItem.linkText | uppercase}}</span>
+              }
+            </li>
+          }
         </ol>
 
       </div>

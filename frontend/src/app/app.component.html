@@ -1,29 +1,28 @@
 <spinner [show]="loading"></spinner>
 
-<div *ngIf="!loading">
-
-  <div class="wrapper" *ngIf="showNavs">
-
-    <app-navbar></app-navbar>
-    <div class="row">
-      <div class="col-md-3 ms-sm-auto px-md-4">
-        <app-sidebar></app-sidebar>
+@if (!loading) {
+  <div>
+    @if (showNavs) {
+      <div class="wrapper">
+        <app-navbar></app-navbar>
+        <div class="row">
+          <div class="col-md-3 ms-sm-auto px-md-4">
+            <app-sidebar></app-sidebar>
+          </div>
+          <main class="col-md-9 ms-sm-auto px-md-4">
+            <router-outlet></router-outlet>
+          </main>
+        </div>
       </div>
-
-      <main class="col-md-9 ms-sm-auto px-md-4">
-
-        <router-outlet></router-outlet>
-      </main>
-
-    </div>
-  </div>
-
-  <div class="wrapper" *ngIf="!showNavs">
-    <section class="content">
-      <div class="container-fluid">
-        <router-outlet></router-outlet>
+    }
+    @if (!showNavs) {
+      <div class="wrapper">
+        <section class="content">
+          <div class="container-fluid">
+            <router-outlet></router-outlet>
+          </div>
+        </section>
       </div>
-    </section>
+    }
   </div>
-
-</div>
+}

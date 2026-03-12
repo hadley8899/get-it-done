@@ -5,9 +5,10 @@ import {WorkspaceMembersService} from "../../../../../services/workspace-members
 
 @UntilDestroy()
 @Component({
-  selector: 'app-workspace-invites-button',
-  templateUrl: './workspace-invites-button.component.html',
-  styleUrls: ['./workspace-invites-button.component.scss']
+    selector: 'app-workspace-invites-button',
+    templateUrl: './workspace-invites-button.component.html',
+    styleUrls: ['./workspace-invites-button.component.scss'],
+    standalone: false
 })
 export class WorkspaceInvitesButtonComponent implements OnInit {
 

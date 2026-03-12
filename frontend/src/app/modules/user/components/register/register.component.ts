@@ -8,9 +8,10 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 @UntilDestroy()
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    standalone: false
 })
 export class RegisterComponent implements OnInit {
 

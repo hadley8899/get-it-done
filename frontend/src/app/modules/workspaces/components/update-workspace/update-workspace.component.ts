@@ -14,9 +14,10 @@ import {WorkspaceMembersService} from "../../../../services/workspace-members.se
 
 @UntilDestroy()
 @Component({
-  selector: 'app-update-workspace',
-  templateUrl: './update-workspace.component.html',
-  styleUrls: ['./update-workspace.component.scss']
+    selector: 'app-update-workspace',
+    templateUrl: './update-workspace.component.html',
+    styleUrls: ['./update-workspace.component.scss'],
+    standalone: false
 })
 export class UpdateWorkspaceComponent implements OnInit {
   loading = true;

@@ -5,9 +5,10 @@ import {ToastrService} from "ngx-toastr";
 import {LaravelErrorExtractorService} from "../../../../services/laravel-error-extractor.service";
 
 @Component({
-  selector: 'app-workspace-invite-form',
-  templateUrl: './workspace-invite-form.component.html',
-  styleUrls: ['./workspace-invite-form.component.scss']
+    selector: 'app-workspace-invite-form',
+    templateUrl: './workspace-invite-form.component.html',
+    styleUrls: ['./workspace-invite-form.component.scss'],
+    standalone: false
 })
 export class WorkspaceInviteFormComponent implements OnInit {
 

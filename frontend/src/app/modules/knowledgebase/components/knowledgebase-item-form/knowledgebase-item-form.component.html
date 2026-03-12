@@ -1,36 +1,36 @@
 <spinner [show]="loading"></spinner>
 
-<div class="row" *ngIf="!loading">
-
-  <div class="col-md-5">
-
-<form [formGroup]="knowledgebaseItemForm" (ngSubmit)="save()" *ngIf="!loading">
-  <div class="mb-3">
-    <label for="name" class="form-label">Name</label>
-    <input type="text" class="form-control" id="name" placeholder="Knowledgebase Name..." formControlName="name">
-  </div>
-
-  <div class="mb-3">
-    <label for="content" class="form-label">Contents</label>
-    <textarea
-      type="text"
-      class="form-control"
-      id="content"
-      placeholder="Contents..."
-      formControlName="contents"
-      rows="10"
-    ></textarea>
-  </div>
-
-  <button type="submit" class="btn btn-success" [disabled]="knowledgebaseItemForm.invalid || saving">
-    <spinner [show]="saving"></spinner>
-    <span class="fa fa-save" *ngIf="!saving"></span> Submit
-  </button>
-
-</form>
-  </div>
-
-  <div class="col-md-7">
-    <markdown emoji lineNumbers [data]="knowledgebaseItemForm.get('contents')?.value"></markdown>
-  </div>
-</div>
+@if (!loading) {
+  <div class="row">
+    <div class="col-md-5">
+      @if (!loading) {
+        <form [formGroup]="knowledgebaseItemForm" (ngSubmit)="save()">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Knowledgebase Name..." formControlName="name">
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">Contents</label>
+            <textarea
+              type="text"
+              class="form-control"
+              id="content"
+              placeholder="Contents..."
+              formControlName="contents"
+              rows="10"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-success" [disabled]="knowledgebaseItemForm.invalid || saving">
+            <spinner [show]="saving"></spinner>
+            @if (!saving) {
+              <span class="fa fa-save"></span>
+              } Submit
+            </button>
+          </form>
+        }
+      </div>
+      <div class="col-md-7">
+        <markdown emoji lineNumbers [data]="knowledgebaseItemForm.get('contents')?.value"></markdown>
+      </div>
+    </div>
+  }

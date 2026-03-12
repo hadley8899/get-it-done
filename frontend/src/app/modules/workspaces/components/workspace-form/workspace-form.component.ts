@@ -8,9 +8,10 @@ import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-workspace-form',
-  templateUrl: './workspace-form.component.html',
-  styleUrls: ['./workspace-form.component.scss']
+    selector: 'app-workspace-form',
+    templateUrl: './workspace-form.component.html',
+    styleUrls: ['./workspace-form.component.scss'],
+    standalone: false
 })
 export class WorkspaceFormComponent implements OnInit {
 

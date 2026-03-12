@@ -8,9 +8,10 @@ import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 @UntilDestroy()
 
 @Component({
-  selector: 'app-board-template-form',
-  templateUrl: './board-template-form.component.html',
-  styleUrls: ['./board-template-form.component.scss']
+    selector: 'app-board-template-form',
+    templateUrl: './board-template-form.component.html',
+    styleUrls: ['./board-template-form.component.scss'],
+    standalone: false
 })
 export class boardTemplateForm implements OnInit {
 

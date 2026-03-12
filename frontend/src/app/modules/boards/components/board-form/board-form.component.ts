@@ -11,9 +11,10 @@ import {BoardTemplate} from "../../../../interfaces/board-template";
 
 @UntilDestroy()
 @Component({
-  selector: 'app-board-form',
-  templateUrl: './board-form.component.html',
-  styleUrls: ['./board-form.component.scss']
+    selector: 'app-board-form',
+    templateUrl: './board-form.component.html',
+    styleUrls: ['./board-form.component.scss'],
+    standalone: false
 })
 export class BoardFormComponent implements OnInit {
 

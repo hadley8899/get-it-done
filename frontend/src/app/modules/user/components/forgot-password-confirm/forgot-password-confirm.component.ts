@@ -8,9 +8,10 @@ import {environment} from '../../../../../environments/environment';
 import {untilDestroyed} from '@ngneat/until-destroy';
 
 @Component({
-  selector: 'app-forgot-password-confirm',
-  templateUrl: './forgot-password-confirm.component.html',
-  styleUrls: ['./forgot-password-confirm.component.scss']
+    selector: 'app-forgot-password-confirm',
+    templateUrl: './forgot-password-confirm.component.html',
+    styleUrls: ['./forgot-password-confirm.component.scss'],
+    standalone: false
 })
 export class ForgotPasswordConfirmComponent implements OnInit {
   appName = environment.appName;

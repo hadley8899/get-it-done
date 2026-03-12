@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable, ReplaySubject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {take} from 'rxjs/operators';
 import {LoggedInUser} from '../interfaces/logged-in-user';

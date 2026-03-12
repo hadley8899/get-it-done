@@ -14,9 +14,10 @@ import {KnowledgebaseItem} from '../../../../../interfaces/knowledgebase-item';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-knowledgebase-category',
-  templateUrl: './knowledgebase-category.component.html',
-  styleUrls: ['./knowledgebase-category.component.scss']
+    selector: 'app-knowledgebase-category',
+    templateUrl: './knowledgebase-category.component.html',
+    styleUrls: ['./knowledgebase-category.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseCategoryComponent implements OnInit {
 

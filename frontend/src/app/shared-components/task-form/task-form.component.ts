@@ -13,9 +13,10 @@ import {BoardList} from "../../interfaces/board-list";
 
 @UntilDestroy()
 @Component({
-  selector: 'app-task-form',
-  templateUrl: './task-form.component.html',
-  styleUrls: ['./task-form.component.scss']
+    selector: 'app-task-form',
+    templateUrl: './task-form.component.html',
+    styleUrls: ['./task-form.component.scss'],
+    standalone: false
 })
 export class TaskFormComponent implements OnInit {
   @Input() taskDetails: TaskDetailsFull | null = {} as TaskDetailsFull;

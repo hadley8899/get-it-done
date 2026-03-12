@@ -7,9 +7,10 @@ import {BoardListService} from '../../../../../services/board-list.service';
 import {Workspace} from '../../../../../interfaces/workspace';
 
 @Component({
-  selector: 'app-board-settings-modal',
-  templateUrl: './board-settings-modal.component.html',
-  styleUrls: ['./board-settings-modal.component.scss']
+    selector: 'app-board-settings-modal',
+    templateUrl: './board-settings-modal.component.html',
+    styleUrls: ['./board-settings-modal.component.scss'],
+    standalone: false
 })
 export class BoardSettingsModalComponent {
   @Input() activeBoard!: Board;

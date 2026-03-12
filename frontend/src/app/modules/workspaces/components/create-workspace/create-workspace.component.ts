@@ -6,9 +6,10 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-create-workspace',
-  templateUrl: './create-workspace.component.html',
-  styleUrls: ['./create-workspace.component.scss']
+    selector: 'app-create-workspace',
+    templateUrl: './create-workspace.component.html',
+    styleUrls: ['./create-workspace.component.scss'],
+    standalone: false
 })
 export class CreateWorkspaceComponent implements OnInit {
   breadCrumbs: Breadcrumb[] = [

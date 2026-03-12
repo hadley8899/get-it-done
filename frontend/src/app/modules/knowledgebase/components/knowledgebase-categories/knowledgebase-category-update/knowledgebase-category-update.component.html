@@ -1,10 +1,12 @@
 <app-main-header [header]="'Create Knowledgebase Category'" [breadCrumbs]="breadCrumbs"></app-main-header>
 
-<div class="card" *ngIf="!loadingKnowledgebaseCategory">
-  <div class="card-body">
-    <app-knowledgebase-category-form
-      [knowledgebaseCategory]="knowledgebaseCategory"
-      (knowledgebaseCategoryUpdated)="updated()"
-    ></app-knowledgebase-category-form>
+@if (!loadingKnowledgebaseCategory) {
+  <div class="card">
+    <div class="card-body">
+      <app-knowledgebase-category-form
+        [knowledgebaseCategory]="knowledgebaseCategory"
+        (knowledgebaseCategoryUpdated)="updated()"
+      ></app-knowledgebase-category-form>
+    </div>
   </div>
-</div>
+}

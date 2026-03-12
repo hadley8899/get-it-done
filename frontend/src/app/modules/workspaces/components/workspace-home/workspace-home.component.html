@@ -14,33 +14,39 @@
 </div>
 
 <div class="row mb-2">
-  <div class="col-sm-4 mb-3" *ngFor="let workspace of workspaces">
-    <div class="card">
-      <div class="card-header">{{workspace.name}}</div>
-      <div class="card-body">
-        <span *ngIf="workspace.description">{{workspace.description}}</span>
-        <span *ngIf="!workspace.description">(No Description)</span>
-      </div>
-      <div class="card-footer">
-        <div class="btn-group">
-          <button
-            class="btn btn-primary btn-sm"
-            (click)="selectWorkspace(workspace)"
-            [disabled]="workspace.uuid === activeWorkspace?.uuid"
-          >Select
-          </button>
-          <a
-            class="btn btn-secondary btn-sm"
-            [routerLink]="['/workspaces', 'update', workspace.uuid]"
-          >Settings</a>
-          <button
-            class="btn btn-danger btn-sm"
-            [swal]="{ title: 'Delete Workspace?', showCancelButton: true }"
-            (confirm)="deleteWorkspace(workspace)"
-          >Delete
-          </button>
+  @for (workspace of workspaces; track workspace) {
+    <div class="col-sm-4 mb-3">
+      <div class="card">
+        <div class="card-header">{{workspace.name}}</div>
+        <div class="card-body">
+          @if (workspace.description) {
+            <span>{{workspace.description}}</span>
+          }
+          @if (!workspace.description) {
+            <span>(No Description)</span>
+          }
+        </div>
+        <div class="card-footer">
+          <div class="btn-group">
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="selectWorkspace(workspace)"
+              [disabled]="workspace.uuid === activeWorkspace?.uuid"
+              >Select
+            </button>
+            <a
+              class="btn btn-secondary btn-sm"
+              [routerLink]="['/workspaces', 'update', workspace.uuid]"
+            >Settings</a>
+            <button
+              class="btn btn-danger btn-sm"
+              [swal]="{ title: 'Delete Workspace?', showCancelButton: true }"
+              (confirm)="deleteWorkspace(workspace)"
+              >Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>

@@ -7,9 +7,10 @@ import {BoardTemplate} from "../../../../interfaces/board-template";
 
 @UntilDestroy()
 @Component({
-  selector: 'app-board-templates-item-form',
-  templateUrl: './board-templates-item-form.component.html',
-  styleUrls: ['./board-templates-item-form.component.scss']
+    selector: 'app-board-templates-item-form',
+    templateUrl: './board-templates-item-form.component.html',
+    styleUrls: ['./board-templates-item-form.component.scss'],
+    standalone: false
 })
 export class BoardTemplatesItemFormComponent implements OnInit {
   loadingForm = true;

@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   appName: 'Get It Done',
-  apiUrl: 'http://api.get-it-done-local.co.uk/',
+  apiUrl: 'http://localhost:8000/',
   apiDebug: true,
 };
 

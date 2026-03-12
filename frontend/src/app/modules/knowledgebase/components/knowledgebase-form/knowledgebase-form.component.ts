@@ -11,9 +11,10 @@ import {GenericErrorHandlerService} from '../../../../services/generic-error-han
 
 @UntilDestroy()
 @Component({
-  selector: 'app-knowledgebase-form',
-  templateUrl: './knowledgebase-form.component.html',
-  styleUrls: ['./knowledgebase-form.component.scss']
+    selector: 'app-knowledgebase-form',
+    templateUrl: './knowledgebase-form.component.html',
+    styleUrls: ['./knowledgebase-form.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseFormComponent implements OnInit {
 

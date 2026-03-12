@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-tasks-assigned-to-me',
-  templateUrl: './tasks-assigned-to-me.component.html',
-  styleUrls: ['./tasks-assigned-to-me.component.scss']
+    selector: 'app-tasks-assigned-to-me',
+    templateUrl: './tasks-assigned-to-me.component.html',
+    styleUrls: ['./tasks-assigned-to-me.component.scss'],
+    standalone: false
 })
 export class TasksAssignedToMeComponent implements OnInit {
 

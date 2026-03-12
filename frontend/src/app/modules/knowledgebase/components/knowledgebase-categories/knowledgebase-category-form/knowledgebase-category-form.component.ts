@@ -8,9 +8,10 @@ import {ToastrService} from 'ngx-toastr';
 import {GenericErrorHandlerService} from '../../../../../services/generic-error-handler.service';
 
 @Component({
-  selector: 'app-knowledgebase-category-form',
-  templateUrl: './knowledgebase-category-form.component.html',
-  styleUrls: ['./knowledgebase-category-form.component.scss']
+    selector: 'app-knowledgebase-category-form',
+    templateUrl: './knowledgebase-category-form.component.html',
+    styleUrls: ['./knowledgebase-category-form.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseCategoryFormComponent implements OnInit {
 

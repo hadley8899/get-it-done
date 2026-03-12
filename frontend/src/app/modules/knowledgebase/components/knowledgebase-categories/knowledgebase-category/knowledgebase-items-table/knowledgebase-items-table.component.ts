@@ -3,9 +3,10 @@ import {KnowledgebaseItem} from '../../../../../../interfaces/knowledgebase-item
 import {DateService} from '../../../../../../services/date.service';
 
 @Component({
-  selector: 'app-knowledgebase-items-table',
-  templateUrl: './knowledgebase-items-table.component.html',
-  styleUrls: ['./knowledgebase-items-table.component.scss']
+    selector: 'app-knowledgebase-items-table',
+    templateUrl: './knowledgebase-items-table.component.html',
+    styleUrls: ['./knowledgebase-items-table.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseItemsTableComponent implements OnInit {
 

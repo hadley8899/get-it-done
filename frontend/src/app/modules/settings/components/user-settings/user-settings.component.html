@@ -7,12 +7,14 @@
 
         <form class="form-horizontal" [formGroup]="userEditForm" (ngSubmit)="submitEdit()">
           <div class="mb-3">
-            <img
-              [src]="avatarImageLink"
-              class="img-thumbnail avatar-preview mb-2"
-              (click)="fileInput.click()"
-              *ngIf="avatarImageLink" [alt]="userDetails.name"
-            >
+            @if (avatarImageLink) {
+              <img
+                [src]="avatarImageLink"
+                class="img-thumbnail avatar-preview mb-2"
+                (click)="fileInput.click()"
+                [alt]="userDetails.name"
+                >
+            }
             <br/>
             <input hidden (change)="imageInputChange($event.target)" #fileInput type="file" id="file">
             <button type="button" (click)="fileInput.click()" class="btn btn-primary" hidden>Choose Image</button>

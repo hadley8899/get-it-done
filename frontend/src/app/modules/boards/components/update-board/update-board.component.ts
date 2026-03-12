@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-update-board',
-  templateUrl: './update-board.component.html',
-  styleUrls: ['./update-board.component.scss']
+    selector: 'app-update-board',
+    templateUrl: './update-board.component.html',
+    styleUrls: ['./update-board.component.scss'],
+    standalone: false
 })
 export class UpdateBoardComponent implements OnInit {
 

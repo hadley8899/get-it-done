@@ -7,9 +7,10 @@ import {ToastrService} from 'ngx-toastr';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-workspace-home',
-  templateUrl: './workspace-home.component.html',
-  styleUrls: ['./workspace-home.component.scss']
+    selector: 'app-workspace-home',
+    templateUrl: './workspace-home.component.html',
+    styleUrls: ['./workspace-home.component.scss'],
+    standalone: false
 })
 export class WorkspaceHomeComponent implements OnInit {
 

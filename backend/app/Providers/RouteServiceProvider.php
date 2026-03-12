@@ -29,20 +29,29 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            $apiDomain = $this->normalizeApiDomain(env('API_URL'));
+            $apiRoutes = Route::middleware('api');
 
+            if (!empty($apiDomain)) {
+                $apiRoutes->domain($apiDomain);
+            }
 
-            Route::domain(env('API_URL', 'api.garage-cms.com'))
-                ->middleware('api')
-                ->group(base_path('routes/api.php'));
-
-
-//            Route::middleware('api')
-//                ->prefix('api')
-//                ->group(base_path('routes/api.php'));
-
-//            Route::middleware('web')
-//                ->group(base_path('routes/web.php'));
+            $apiRoutes->group(base_path('routes/api.php'));
         });
+    }
+
+    private function normalizeApiDomain(?string $apiUrl): ?string
+    {
+        if (empty($apiUrl)) {
+            return null;
+        }
+
+        $candidate = trim($apiUrl);
+        $candidate = preg_replace('#^https?://#', '', $candidate) ?? $candidate;
+        $candidate = explode('/', $candidate)[0];
+        $candidate = explode(':', $candidate)[0];
+
+        return $candidate !== '' ? $candidate : null;
     }
 
     /**

@@ -7,9 +7,10 @@ import {LaravelErrorExtractorService} from "../../../../services/laravel-error-e
 
 @UntilDestroy()
 @Component({
-  selector: 'app-workspace-invites',
-  templateUrl: './workspace-invites.component.html',
-  styleUrls: ['./workspace-invites.component.scss']
+    selector: 'app-workspace-invites',
+    templateUrl: './workspace-invites.component.html',
+    styleUrls: ['./workspace-invites.component.scss'],
+    standalone: false
 })
 export class WorkspaceInvitesComponent implements OnInit {
 

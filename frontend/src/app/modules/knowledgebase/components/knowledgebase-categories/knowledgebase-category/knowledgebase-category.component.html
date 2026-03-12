@@ -6,7 +6,7 @@
       class="btn btn-primary btn-sm"
       data-bs-toggle="modal"
       data-bs-target="#update-knowledgebase-category-child-modal"
-    >
+      >
       <span class="fa fa-edit"></span> Update Knowledgebase Category
     </button>
   </div>
@@ -25,13 +25,14 @@
   </div>
 
   <div class="col text-end">
-    <button
-      *ngIf="activeKnowledgebase"
-      class="btn btn-primary btn-sm"
-      data-bs-toggle="modal"
-      data-bs-target="#update-knowledgebase-modal"
-    ><span class="fa fa-edit"></span> Edit
-    </button>
+    @if (activeKnowledgebase) {
+      <button
+        class="btn btn-primary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#update-knowledgebase-modal"
+        ><span class="fa fa-edit"></span> Edit
+      </button>
+    }
   </div>
 </div>
 
@@ -42,36 +43,36 @@
   (knowledgebaseClick)="selectKnowledgebase($event)"
 ></app-knowledgebase-list>
 
-<div *ngIf="activeKnowledgebase">
-  <hr/>
-  <div class="row">
-    <div class="col-sm-6">
-      <h2>Knowledgebase Items</h2>
-
+@if (activeKnowledgebase) {
+  <div>
+    <hr/>
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Knowledgebase Items</h2>
+      </div>
+      <div class="col-sm-6 text-end">
+        @if (activeKnowledgebase) {
+          <a
+            class="btn btn-success btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#new-knowledgebase-item-modal"
+            >
+            <span class="fa fa-plus"></span> New
+          </a>
+        }
+      </div>
     </div>
-
-    <div class="col-sm-6 text-end">
-      <a
-        class="btn btn-success btn-sm"
-        data-bs-toggle="modal"
-        data-bs-target="#new-knowledgebase-item-modal"
-        *ngIf="activeKnowledgebase"
-      >
-        <span class="fa fa-plus"></span> New
-      </a>
-    </div>
+    <spinner [show]="loadingKnowledgebaseItems"></spinner>
+    @if (knowledgebaseItems.length === 0 && !loadingKnowledgebaseItems) {
+      <p>No knowledgebase items</p>
+    }
+    <app-knowledgebase-items-table
+      [loadingKnowledgebaseItems]="loadingKnowledgebaseItems"
+      [knowledgebaseItems]="knowledgebaseItems"
+      (knowledgebaseItemClick)="selectKnowledgebaseItem($event)"
+    ></app-knowledgebase-items-table>
   </div>
-
-  <spinner [show]="loadingKnowledgebaseItems"></spinner>
-
-  <p *ngIf="knowledgebaseItems.length === 0 && !loadingKnowledgebaseItems">No knowledgebase items</p>
-
-  <app-knowledgebase-items-table
-    [loadingKnowledgebaseItems]="loadingKnowledgebaseItems"
-    [knowledgebaseItems]="knowledgebaseItems"
-    (knowledgebaseItemClick)="selectKnowledgebaseItem($event)"
-  ></app-knowledgebase-items-table>
-</div>
+}
 
 <!-- MODALS -->
 <!-- ------------------------------------------------------------------------------------------------------------------>
@@ -82,7 +83,7 @@
   tabindex="-1"
   aria-labelledby="new-child-modal"
   aria-hidden="true"
->
+  >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -90,11 +91,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <app-knowledgebase-category-form
-          *ngIf="!loading"
-          [parentKnowledgebaseCategory]="this.activeKnowledgebaseCategory"
-          (knowledgebaseCategoryCreated)="handleKnowledgebaseCategoryCreated()"
-        ></app-knowledgebase-category-form>
+        @if (!loading) {
+          <app-knowledgebase-category-form
+            [parentKnowledgebaseCategory]="this.activeKnowledgebaseCategory"
+            (knowledgebaseCategoryCreated)="handleKnowledgebaseCategoryCreated()"
+          ></app-knowledgebase-category-form>
+        }
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #childCategoryCloseButton>Close</button>
@@ -111,7 +113,7 @@
   tabindex="-1"
   aria-labelledby="update-knowledgebase-category-modal"
   aria-hidden="true"
->
+  >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -119,12 +121,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <app-knowledgebase-category-form
-          *ngIf="!loading"
-          [parentKnowledgebaseCategory]="this.activeKnowledgebaseCategory"
-          (knowledgebaseCategoryUpdated)="handleKnowledgebaseCategoryUpdated()"
-          [knowledgebaseCategory]="activeKnowledgebaseCategory"
-        ></app-knowledgebase-category-form>
+        @if (!loading) {
+          <app-knowledgebase-category-form
+            [parentKnowledgebaseCategory]="this.activeKnowledgebaseCategory"
+            (knowledgebaseCategoryUpdated)="handleKnowledgebaseCategoryUpdated()"
+            [knowledgebaseCategory]="activeKnowledgebaseCategory"
+          ></app-knowledgebase-category-form>
+        }
       </div>
       <div class="modal-footer">
         <button
@@ -132,7 +135,7 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseCategoryUpdateModalCloseButton
-        >Close
+          >Close
         </button>
       </div>
     </div>
@@ -146,7 +149,7 @@
   tabindex="-1"
   aria-labelledby="new-knowledgebase-modal-label"
   aria-hidden="true"
->
+  >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -165,7 +168,7 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseModalCloseButton
-        >Close
+          >Close
         </button>
       </div>
     </div>
@@ -179,29 +182,31 @@
   tabindex="-1"
   aria-labelledby="update-knowledgebase-modal-label"
   aria-hidden="true"
->
+  >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="update-knowledgebase-modal-label">Update Knowledgebase</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" *ngIf="!selectingKnowledgebase">
-
-        <app-knowledgebase-form
-          *ngIf="!selectingKnowledgebase"
-          [knowledgebaseCategory]="activeKnowledgebaseCategory"
-          [knowledgebase]="activeKnowledgebase"
-          (knowledgebaseUpdated)="handleKnowledgebaseUpdated()"
-        ></app-knowledgebase-form>
-      </div>
+      @if (!selectingKnowledgebase) {
+        <div class="modal-body">
+          @if (!selectingKnowledgebase) {
+            <app-knowledgebase-form
+              [knowledgebaseCategory]="activeKnowledgebaseCategory"
+              [knowledgebase]="activeKnowledgebase"
+              (knowledgebaseUpdated)="handleKnowledgebaseUpdated()"
+            ></app-knowledgebase-form>
+          }
+        </div>
+      }
       <div class="modal-footer">
         <button
           type="button"
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #updateKnowledgebaseModalCloseButton
-        >Close
+          >Close
         </button>
       </div>
     </div>
@@ -215,7 +220,7 @@
   tabindex="-1"
   aria-labelledby="new-knowledgebase-item-modal-label"
   aria-hidden="true"
->
+  >
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -223,12 +228,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <app-knowledgebase-item-form
-          [knowledgebase]="activeKnowledgebase"
-          [knowledgebaseCategory]="activeKnowledgebaseCategory"
-          (knowledgebaseItemCreated)="handleKnowledgebaseItemCreated()"
-          *ngIf="!loadingKnowledgebases"
-        ></app-knowledgebase-item-form>
+        @if (!loadingKnowledgebases) {
+          <app-knowledgebase-item-form
+            [knowledgebase]="activeKnowledgebase"
+            [knowledgebaseCategory]="activeKnowledgebaseCategory"
+            (knowledgebaseItemCreated)="handleKnowledgebaseItemCreated()"
+          ></app-knowledgebase-item-form>
+        }
       </div>
       <div class="modal-footer">
         <button
@@ -236,7 +242,7 @@
           class="btn btn-secondary"
           data-bs-dismiss="modal"
           #knowledgebaseItemModalCloseButton
-        >Close
+          >Close
         </button>
       </div>
     </div>
@@ -250,71 +256,67 @@
   tabindex="-1"
   aria-labelledby="knowledgebase-item-modal-label"
   aria-hidden="true"
->
+  >
   <div class="modal-dialog modal-xl">
-    <div class="modal-content" *ngIf="activeKnowledgebaseItem">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="knowledgebase-item-modal-label">{{activeKnowledgebaseItem.name}}</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <div *ngIf="!editingKnowledgebaseItem">
-          <p class="mb-4">
-            <b>Name</b><br/>
-            {{activeKnowledgebaseItem.name}}
-          </p>
-
-          <p class="mb-4">
-            <b>Content</b><br/>
-            <markdown emoji lineNumbers [data]="activeKnowledgebaseItem.contents"></markdown>
-          </p>
-
-          <p class="mb-4">
-            <b>Dates</b><br/>
-            <span class="text-muted text-small">Created: {{formatDate(activeKnowledgebaseItem.created_at)}}<br/>
-            Updated: {{formatDate(activeKnowledgebaseItem.updated_at)}}</span>
-          </p>
-
-          <button
-            class="btn btn-primary me-2"
-            (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem"
-          ><span class="fa fa-edit"></span> Edit
-          </button>
-          <button
-            class="btn btn-danger"
-            [swal]="{ title: 'Delete Knowledgebase Item?', showCancelButton: true }"
-            (confirm)="deleteKnowledgebaseItem()">
-            <span class="fa fa-trash">
-
-            </span> Delete
-          </button>
-
+    @if (activeKnowledgebaseItem) {
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="knowledgebase-item-modal-label">{{activeKnowledgebaseItem.name}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-
-        <div *ngIf="editingKnowledgebaseItem">
-          <app-knowledgebase-item-form
-            [knowledgebase]="activeKnowledgebase"
-            [knowledgebaseCategory]="activeKnowledgebaseCategory"
-            [knowledgebaseItem]="activeKnowledgebaseItem"
-            (knowledgebaseItemUpdated)="handleKnowledgebaseItemUpdated($event)"
-          ></app-knowledgebase-item-form>
-
-          <button class="btn btn-danger mt-3" (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem">Cancel
-          </button>
-
+        <div class="modal-body">
+          @if (!editingKnowledgebaseItem) {
+            <div>
+              <p class="mb-4">
+                <b>Name</b><br/>
+                {{activeKnowledgebaseItem.name}}
+              </p>
+              <p class="mb-4">
+                <b>Content</b><br/>
+                <markdown emoji lineNumbers [data]="activeKnowledgebaseItem.contents"></markdown>
+              </p>
+              <p class="mb-4">
+                <b>Dates</b><br/>
+                <span class="text-muted text-small">Created: {{formatDate(activeKnowledgebaseItem.created_at)}}<br/>
+                Updated: {{formatDate(activeKnowledgebaseItem.updated_at)}}</span>
+              </p>
+              <button
+                class="btn btn-primary me-2"
+                (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem"
+                ><span class="fa fa-edit"></span> Edit
+              </button>
+              <button
+                class="btn btn-danger"
+                [swal]="{ title: 'Delete Knowledgebase Item?', showCancelButton: true }"
+                (confirm)="deleteKnowledgebaseItem()">
+                <span class="fa fa-trash">
+                </span> Delete
+              </button>
+            </div>
+          }
+          @if (editingKnowledgebaseItem) {
+            <div>
+              <app-knowledgebase-item-form
+                [knowledgebase]="activeKnowledgebase"
+                [knowledgebaseCategory]="activeKnowledgebaseCategory"
+                [knowledgebaseItem]="activeKnowledgebaseItem"
+                (knowledgebaseItemUpdated)="handleKnowledgebaseItemUpdated($event)"
+              ></app-knowledgebase-item-form>
+              <button class="btn btn-danger mt-3" (click)="editingKnowledgebaseItem = !editingKnowledgebaseItem">Cancel
+              </button>
+            </div>
+          }
         </div>
-
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            #knowledgebaseItemCloseButton
+            >Close
+          </button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          data-bs-dismiss="modal"
-          #knowledgebaseItemCloseButton
-        >Close
-        </button>
-      </div>
-    </div>
+    }
   </div>
 </div>

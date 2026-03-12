@@ -4,9 +4,13 @@
   <span class="fa fa-envelope"></span>
   Invites
 
-  <span *ngIf="loading">
-    (<spinner [show]="loading"></spinner>)
-  </span>
+  @if (loading) {
+    <span>
+      (<spinner [show]="loading"></spinner>)
+    </span>
+  }
 
-  <span *ngIf="!loading">({{ invites.length || 0 }})</span>
+  @if (!loading) {
+    <span>({{ invites.length || 0 }})</span>
+  }
 </button>

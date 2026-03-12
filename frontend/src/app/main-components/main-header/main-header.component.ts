@@ -4,9 +4,10 @@ import {Title} from '@angular/platform-browser';
 import {environment} from '../../../environments/environment';
 
 @Component({
-  selector: 'app-main-header',
-  templateUrl: './main-header.component.html',
-  styleUrls: ['./main-header.component.scss']
+    selector: 'app-main-header',
+    templateUrl: './main-header.component.html',
+    styleUrls: ['./main-header.component.scss'],
+    standalone: false
 })
 export class MainHeaderComponent implements OnInit {
   @Input() header = '';

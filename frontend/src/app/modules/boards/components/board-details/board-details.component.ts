@@ -18,9 +18,10 @@ import {DateService} from '../../../../services/date.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-board-details',
-  templateUrl: './board-details.component.html',
-  styleUrls: ['./board-details.component.scss']
+    selector: 'app-board-details',
+    templateUrl: './board-details.component.html',
+    styleUrls: ['./board-details.component.scss'],
+    standalone: false
 })
 export class BoardDetailsComponent implements OnInit {
   activeListUuId!: string;

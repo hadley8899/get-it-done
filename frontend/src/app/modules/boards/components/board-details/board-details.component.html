@@ -1,9 +1,10 @@
-<app-main-header
-  [header]="activeBoard.name"
-  [subHeader]="activeBoard.description"
-  [breadCrumbs]="breadCrumbs"
-  *ngIf="!loadingBoardDetails"
-></app-main-header>
+@if (!loadingBoardDetails) {
+  <app-main-header
+    [header]="activeBoard.name"
+    [subHeader]="activeBoard.description"
+    [breadCrumbs]="breadCrumbs"
+  ></app-main-header>
+}
 
 <app-board-control-buttons
   (onBoardSettingsClick)="boardSettingsClick()"
@@ -12,67 +13,67 @@
 ></app-board-control-buttons>
 
 <div class="row">
-  <div class="col task-list-col" *ngFor="let taskList of boardLists; let i = index">
-
-    <div class="task-list-inner-col">
-
-      <p class="ms-1" (click)="updateBoardListNameClick(i)" *ngIf="boardListEditIndex !== i">
-        <b>{{taskList.name}}</b>
-      </p>
-
-      <input
-        type="text"
-        class="form-control"
-        *ngIf="boardListEditIndex === i"
-        [(ngModel)]="taskList.name"
-        (keyup.enter)="updateBoardListName(i)"
-        (blur)="updateBoardListName(i)"
-        (focusout)="updateBoardListName(i)"
-      />
-
-      <div
-        [nxtSortablejs]="taskList.tasks"
-        [config]="options" style="min-height: 10px;"
-        [attr.data-uuid]="taskList.uuid"
-        [attr.data-index]="i"
-        [attr.data-name]="taskList.name"
-      >
-        <div *ngFor="let task of taskList.tasks" [attr.data-task-uuid]="task.uuid">
-          <div class="card mb-1 task-card">
-            <div class="card-body">
-              <span class="grab-handle fa fa-grip-lines"></span>
-              &nbsp;
-              <a
-                (click)="editTaskClick(task.uuid)"
-                data-bs-toggle="modal"
-                data-bs-target="#taskModal"
-                class=""
-                style="cursor: pointer;"
-              >{{task.name}}</a>
-              <br/>
-              <span class="badge bg-primary" *ngIf="task.assigned_to; else notAssigned">
-            {{task.assigned_to.name}}
-            </span>
-              <ng-template #notAssigned>
-                <span class="badge bg-danger">Unassigned</span>
-              </ng-template>
+  @for (taskList of boardLists; track taskList; let i = $index) {
+    <div class="col task-list-col">
+      <div class="task-list-inner-col">
+        @if (boardListEditIndex !== i) {
+          <p class="ms-1" (click)="updateBoardListNameClick(i)">
+            <b>{{taskList.name}}</b>
+          </p>
+        }
+        @if (boardListEditIndex === i) {
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="taskList.name"
+            (keyup.enter)="updateBoardListName(i)"
+            (blur)="updateBoardListName(i)"
+            (focusout)="updateBoardListName(i)"
+            />
+        }
+        <div
+          [nxtSortablejs]="taskList.tasks"
+          [config]="options" style="min-height: 10px;"
+          [attr.data-uuid]="taskList.uuid"
+          [attr.data-index]="i"
+          [attr.data-name]="taskList.name"
+          >
+          @for (task of taskList.tasks; track task) {
+            <div [attr.data-task-uuid]="task.uuid">
+              <div class="card mb-1 task-card">
+                <div class="card-body">
+                  <span class="grab-handle fa fa-grip-lines"></span>
+                  &nbsp;
+                  <a
+                    (click)="editTaskClick(task.uuid)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#taskModal"
+                    class=""
+                    style="cursor: pointer;"
+                  >{{task.name}}</a>
+                  <br/>
+                  @if (task.assigned_to) {
+                    <span class="badge bg-primary">
+                      {{task.assigned_to.name}}
+                    </span>
+                  } @else {
+                    <span class="badge bg-danger">Unassigned</span>
+                  }
+                </div>
+              </div>
             </div>
-          </div>
-
-
+          }
         </div>
+        <a href="#" (click)="addTaskClick(taskList.uuid)" data-bs-toggle="modal" data-bs-target="#taskModal">
+          + Add New Task
+        </a>
+        <br/>
+        <a href="#" (click)="copyAsList($event, taskList)">
+          <span class="fa fa-copy"></span> Copy as List
+        </a>
       </div>
-
-      <a href="#" (click)="addTaskClick(taskList.uuid)" data-bs-toggle="modal" data-bs-target="#taskModal">
-        + Add New Task
-      </a>
-      <br/>
-      <a href="#" (click)="copyAsList($event, taskList)">
-        <span class="fa fa-copy"></span> Copy as List
-      </a>
-
     </div>
-  </div>
+  }
 </div>
 
 <app-new-board-list-modal
@@ -98,59 +99,64 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="taskModalLabel">
-          <span *ngIf="!newTask">Edit Task</span>
-          <span *ngIf="newTask">Add Task</span>
+          @if (!newTask) {
+            <span>Edit Task</span>
+          }
+          @if (newTask) {
+            <span>Add Task</span>
+          }
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <app-task-form
-          [boardListUuId]="activeListUuId"
-          [board]="activeBoard"
-          [taskDetails]="taskDetails"
-          (taskUpdated)="taskUpdated()"
-          (taskCreated)="taskCreated()"
-          (taskDeleted)="taskDeleted()"
-          *ngIf="!loadingTaskDetails"
-        ></app-task-form>
+        @if (!loadingTaskDetails) {
+          <app-task-form
+            [boardListUuId]="activeListUuId"
+            [board]="activeBoard"
+            [taskDetails]="taskDetails"
+            (taskUpdated)="taskUpdated()"
+            (taskCreated)="taskCreated()"
+            (taskDeleted)="taskDeleted()"
+          ></app-task-form>
+        }
 
 
-        <div *ngIf="!loadingTaskDetails && taskDetails">
-          <hr/>
-          <h4>Comments</h4>
-          <div *ngIf="taskDetails?.comments?.length === 0">
-            No comments
-          </div>
-
-          <div *ngIf="taskDetails?.comments?.length !== 0">
-
-            <div *ngFor="let comment of taskDetails?.comments">
-
-              <b>{{comment.user.name}}</b> - <span class="text-muted small">{{formatDate(comment.created_at)}}</span>
-              <br/>
-              <p>{{comment.comment}}</p>
-
-            </div>
-
-          </div>
-
-          <div class="mt-3">
-
-            <form [formGroup]="addCommentForm" (ngSubmit)="addCommentSubmit()">
-              <div class="row">
-                <div class="col-md-10">
-                  <label for="comment" class="sr-only">Comment</label>
-
-                  <input type="text" id="comment" placeholder="Add comment" class="form-control"
-                         formControlName="comment">
-                </div>
-                <div class="col-md-2">
-                  <button class="btn btn-success btn-block w-100 mt-3 mt-md-0 mt-lg-0 mt-xl-0 mt-xxl-0">+Add</button>
-                </div>
+        @if (!loadingTaskDetails && taskDetails) {
+          <div>
+            <hr/>
+            <h4>Comments</h4>
+            @if (taskDetails.comments.length === 0) {
+              <div>
+                No comments
               </div>
-            </form>
+            }
+            @if (taskDetails.comments.length !== 0) {
+              <div>
+                @for (comment of taskDetails.comments; track comment) {
+                  <div>
+                    <b>{{comment.user.name}}</b> - <span class="text-muted small">{{formatDate(comment.created_at)}}</span>
+                    <br/>
+                    <p>{{comment.comment}}</p>
+                  </div>
+                }
+              </div>
+            }
+            <div class="mt-3">
+              <form [formGroup]="addCommentForm" (ngSubmit)="addCommentSubmit()">
+                <div class="row">
+                  <div class="col-md-10">
+                    <label for="comment" class="sr-only">Comment</label>
+                    <input type="text" id="comment" placeholder="Add comment" class="form-control"
+                      formControlName="comment">
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-success btn-block w-100 mt-3 mt-md-0 mt-lg-0 mt-xl-0 mt-xxl-0">+Add</button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        }
 
       </div>
       <div class="modal-footer">

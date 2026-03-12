@@ -10,9 +10,10 @@ import {Breadcrumb} from '../../../../../interfaces/breadcrumb';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-knowledge-base-categories-home',
-  templateUrl: './knowledge-base-categories-home.component.html',
-  styleUrls: ['./knowledge-base-categories-home.component.scss']
+    selector: 'app-knowledge-base-categories-home',
+    templateUrl: './knowledge-base-categories-home.component.html',
+    styleUrls: ['./knowledge-base-categories-home.component.scss'],
+    standalone: false
 })
 export class KnowledgeBaseCategoriesHomeComponent implements OnInit {
 

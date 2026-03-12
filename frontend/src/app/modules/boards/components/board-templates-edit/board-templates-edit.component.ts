@@ -10,9 +10,10 @@ import {Breadcrumb} from "../../../../interfaces/breadcrumb";
 
 @UntilDestroy()
 @Component({
-  selector: 'app-board-templates-edit',
-  templateUrl: './board-templates-edit.component.html',
-  styleUrls: ['./board-templates-edit.component.scss']
+    selector: 'app-board-templates-edit',
+    templateUrl: './board-templates-edit.component.html',
+    styleUrls: ['./board-templates-edit.component.scss'],
+    standalone: false
 })
 export class BoardTemplatesEditComponent implements OnInit {
 

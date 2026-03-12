@@ -2,9 +2,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Knowledgebase} from '../../../../../../interfaces/knowledgebase';
 
 @Component({
-  selector: 'app-knowledgebase-list',
-  templateUrl: './knowledgebase-list.component.html',
-  styleUrls: ['./knowledgebase-list.component.scss']
+    selector: 'app-knowledgebase-list',
+    templateUrl: './knowledgebase-list.component.html',
+    styleUrls: ['./knowledgebase-list.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseListComponent implements OnInit {
 

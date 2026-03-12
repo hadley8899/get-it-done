@@ -8,9 +8,10 @@ import {ToastrService} from "ngx-toastr";
 @UntilDestroy()
 
 @Component({
-  selector: 'app-board-templates-home',
-  templateUrl: './board-template-home.component.html',
-  styleUrls: ['./board-template-home.component.scss']
+    selector: 'app-board-templates-home',
+    templateUrl: './board-template-home.component.html',
+    styleUrls: ['./board-template-home.component.scss'],
+    standalone: false
 })
 export class BoardTemplateHomeComponent implements OnInit {
   loadingBoardTemplates = true;

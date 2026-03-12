@@ -2,9 +2,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-new-board-list-modal',
-  templateUrl: './new-board-list-modal.component.html',
-  styleUrls: ['./new-board-list-modal.component.scss']
+    selector: 'app-new-board-list-modal',
+    templateUrl: './new-board-list-modal.component.html',
+    styleUrls: ['./new-board-list-modal.component.scss'],
+    standalone: false
 })
 export class NewBoardListModalComponent {
   @Input() loadingNewListForm!: boolean;

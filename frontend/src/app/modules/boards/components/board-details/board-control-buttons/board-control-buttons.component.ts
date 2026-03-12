@@ -1,9 +1,10 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-board-control-buttons',
-  templateUrl: './board-control-buttons.component.html',
-  styleUrls: ['./board-control-buttons.component.scss']
+    selector: 'app-board-control-buttons',
+    templateUrl: './board-control-buttons.component.html',
+    styleUrls: ['./board-control-buttons.component.scss'],
+    standalone: false
 })
 export class BoardControlButtonsComponent {
   @Output() onBoardSettingsClick: EventEmitter<void> = new EventEmitter();

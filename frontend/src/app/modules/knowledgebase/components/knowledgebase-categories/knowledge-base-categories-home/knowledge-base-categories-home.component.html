@@ -9,29 +9,35 @@
 </div>
 
 <div class="row mb-2">
-  <div class="col-sm-4 mb-3" *ngFor="let knowledgebaseCategory of knowledgebaseCategories">
-    <div class="card">
-      <div class="card-header">{{knowledgebaseCategory.name}}</div>
-      <div class="card-body">
-        <span *ngIf="knowledgebaseCategory.description">{{knowledgebaseCategory.description}}</span>
-        <span *ngIf="!knowledgebaseCategory.description">(No Description)</span>
-      </div>
-      <div class="card-footer">
-        <div class="btn-group">
-          <a [routerLink]="['/knowledgebase', 'category', knowledgebaseCategory.uuid]" class="btn btn-primary btn-sm">Select</a>
-          <a class="btn btn-secondary btn-sm"
-             [routerLink]="['/knowledgebase','category', 'update', knowledgebaseCategory.uuid]"
-          >Update</a>
-          <button
-            class="btn btn-danger btn-sm"
-            [swal]="{ title: 'Delete Knowledgebase Category?', showCancelButton: true }"
-            (confirm)="deleteCategory(knowledgebaseCategory)"
-          >Delete
-          </button>
+  @for (knowledgebaseCategory of knowledgebaseCategories; track knowledgebaseCategory) {
+    <div class="col-sm-4 mb-3">
+      <div class="card">
+        <div class="card-header">{{knowledgebaseCategory.name}}</div>
+        <div class="card-body">
+          @if (knowledgebaseCategory.description) {
+            <span>{{knowledgebaseCategory.description}}</span>
+          }
+          @if (!knowledgebaseCategory.description) {
+            <span>(No Description)</span>
+          }
+        </div>
+        <div class="card-footer">
+          <div class="btn-group">
+            <a [routerLink]="['/knowledgebase', 'category', knowledgebaseCategory.uuid]" class="btn btn-primary btn-sm">Select</a>
+            <a class="btn btn-secondary btn-sm"
+              [routerLink]="['/knowledgebase','category', 'update', knowledgebaseCategory.uuid]"
+            >Update</a>
+            <button
+              class="btn btn-danger btn-sm"
+              [swal]="{ title: 'Delete Knowledgebase Category?', showCancelButton: true }"
+              (confirm)="deleteCategory(knowledgebaseCategory)"
+              >Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>
 
 

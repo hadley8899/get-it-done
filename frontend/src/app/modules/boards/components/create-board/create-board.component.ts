@@ -5,9 +5,10 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-create-board',
-  templateUrl: './create-board.component.html',
-  styleUrls: ['./create-board.component.scss']
+    selector: 'app-create-board',
+    templateUrl: './create-board.component.html',
+    styleUrls: ['./create-board.component.scss'],
+    standalone: false
 })
 export class CreateBoardComponent implements OnInit {
   breadCrumbs: Breadcrumb[] = [

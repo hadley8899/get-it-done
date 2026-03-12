@@ -12,9 +12,10 @@ import {ImageService} from '../../../../services/image.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-user-settings',
-  templateUrl: './user-settings.component.html',
-  styleUrls: ['./user-settings.component.scss']
+    selector: 'app-user-settings',
+    templateUrl: './user-settings.component.html',
+    styleUrls: ['./user-settings.component.scss'],
+    standalone: false
 })
 export class UserSettingsComponent implements OnInit {
   apiUrl = environment.apiUrl;

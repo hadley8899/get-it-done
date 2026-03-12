@@ -5,9 +5,10 @@ import {Breadcrumb} from '../../../../../interfaces/breadcrumb';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-knowledgebase-category-create',
-  templateUrl: './knowledgebase-category-create.component.html',
-  styleUrls: ['./knowledgebase-category-create.component.scss']
+    selector: 'app-knowledgebase-category-create',
+    templateUrl: './knowledgebase-category-create.component.html',
+    styleUrls: ['./knowledgebase-category-create.component.scss'],
+    standalone: false
 })
 export class KnowledgebaseCategoryCreateComponent implements OnInit {
   breadCrumbs: Breadcrumb[] = [
