@@ -19,8 +19,8 @@ This means the real upgrade path is not just a Passport bump. It is a framework,
 
 Backend facts confirmed in this repo:
 
-- Framework: `laravel/framework ^12.0` (lock: `12.56.0`)
-- Auth: `laravel/passport ^12.0` (lock currently resolved to `12.x-dev`)
+- Framework: `laravel/framework ^13.0` (lock: `13.4.0`)
+- Auth: `laravel/passport ^13.7.1` (lock: `13.7.3`)
 - PHP constraint: `^8.3`
 - Other relevant packages:
   - `laravel/sanctum ^4.0`
@@ -28,8 +28,7 @@ Backend facts confirmed in this repo:
   - `intervention/image ^3.11`
   - `intervention/image-laravel ^1.5`
 - Composer update is being run in Docker container PHP 8.3 (not host)
-- `composer audit` still reports unresolved advisories for:
-  - `laravel/passport`
+- `composer audit` is currently clean (no reported advisories)
 
 Codebase notes:
 
@@ -246,11 +245,19 @@ Expected impact:
 
 ### Checklist
 
-- [ ] Update `laravel/framework` to `^13.0`
-- [ ] Confirm all direct dependencies are Laravel 13-compatible
-- [ ] Update Passport to `13.7.1+`
-- [ ] Run `composer update -W`
-- [ ] Run `composer audit`
+- [x] Update `laravel/framework` to `^13.0`
+- [x] Confirm all direct dependencies are Laravel 13-compatible
+- [x] Update Passport to `13.7.1+`
+- [x] Run `composer update -W`
+- [x] Run `composer audit`
+
+Status notes:
+
+- Dependency resolution required aligned package bumps: `laravel/boost` `^2.4` and `laravel/tinker` `^3.0`.
+- Passport 13 introduced a provider-aware personal access client API; app and test helpers were updated accordingly.
+- Existing OAuth tables are legacy integer-ID schema, so Passport client UUIDs are disabled in `AuthServiceProvider` for compatibility.
+- Passport key permission checks are stricter on the new stack; test bootstrap and container entrypoint now enforce `0600` on key files.
+- Verification passed in Docker: `php artisan --version`, `php artisan about`, `php artisan route:list`, `php artisan optimize:clear`, full `php artisan test` (58 passed), and `composer audit` (clean).
 
 Reference:
 

@@ -21,6 +21,8 @@ if [ ! -f storage/oauth-private.key ] || [ ! -f storage/oauth-public.key ]; then
   php artisan passport:keys --force
 fi
 
+chmod 600 storage/oauth-private.key storage/oauth-public.key
+
 if ! php artisan tinker --execute="exit(\Laravel\Passport\PersonalAccessClient::query()->exists() ? 0 : 1);"; then
   php artisan passport:client --personal --name="Get It Done Personal Access Client" --no-interaction
 fi

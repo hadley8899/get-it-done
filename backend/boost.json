@@ -1,10 +1,15 @@
 {
     "agents": [
         "codex",
-        "phpstorm"
+        "junie",
+        "copilot"
     ],
-    "editors": [
-        "phpstorm"
-    ],
-    "guidelines": []
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "sail": false,
+    "skills": [
+        "laravel-best-practices",
+        "passport-development"
+    ]
 }

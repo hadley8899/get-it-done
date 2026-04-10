@@ -21,14 +21,14 @@ abstract class ApiTestCase extends TestCase
     private function ensurePassportPersonalAccessClient(): void
     {
         $clientRepository = app(ClientRepository::class);
+        $provider = (string) config('auth.guards.api.provider', 'users');
 
         try {
-            $clientRepository->personalAccessClient();
+            $clientRepository->personalAccessClient($provider);
         } catch (RuntimeException) {
-            $clientRepository->createPersonalAccessClient(
-                null,
+            $clientRepository->createPersonalAccessGrantClient(
                 'Test Personal Access Client',
-                'http://localhost'
+                $provider
             );
         }
     }

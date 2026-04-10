@@ -14,6 +14,29 @@ trait CreatesApplication
      */
     public function createApplication()
     {
+        // Ensure test process env is deterministic even if container env vars are present.
+        putenv('APP_ENV=testing');
+        putenv('DB_CONNECTION=mysql');
+        putenv('DB_DATABASE=backend_test');
+
+        $_ENV['APP_ENV'] = 'testing';
+        $_ENV['DB_CONNECTION'] = 'mysql';
+        $_ENV['DB_DATABASE'] = 'backend_test';
+        $_SERVER['APP_ENV'] = 'testing';
+        $_SERVER['DB_CONNECTION'] = 'mysql';
+        $_SERVER['DB_DATABASE'] = 'backend_test';
+
+        $privateKey = __DIR__.'/../storage/oauth-private.key';
+        $publicKey = __DIR__.'/../storage/oauth-public.key';
+
+        if (is_file($privateKey)) {
+            @chmod($privateKey, 0600);
+        }
+
+        if (is_file($publicKey)) {
+            @chmod($publicKey, 0600);
+        }
+
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();

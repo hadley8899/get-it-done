@@ -44,10 +44,9 @@ class LoginService
             }
 
             $clientRepository = app(ClientRepository::class);
-            $clientRepository->createPersonalAccessClient(
-                null,
+            $clientRepository->createPersonalAccessGrantClient(
                 'Get It Done Personal Access Client',
-                config('app.url')
+                config('auth.guards.api.provider')
             );
 
             return $user->createToken('LaraPassport')->accessToken;
