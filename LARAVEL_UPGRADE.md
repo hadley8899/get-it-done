@@ -19,7 +19,7 @@ This means the real upgrade path is not just a Passport bump. It is a framework,
 
 Backend facts confirmed in this repo:
 
-- Framework: `laravel/framework ^11.0` (lock: `11.51.0`)
+- Framework: `laravel/framework ^12.0` (lock: `12.56.0`)
 - Auth: `laravel/passport ^12.0` (lock currently resolved to `12.x-dev`)
 - PHP constraint: `^8.3`
 - Other relevant packages:
@@ -211,11 +211,19 @@ Risk areas:
 
 ### Checklist
 
-- [ ] Update `laravel/framework` to `^12.0`
-- [ ] Update `phpunit/phpunit` to `^11.0`
-- [ ] Review Carbon 3 behavior and app usage
-- [ ] Review UUID behavior for models using UUID traits
-- [ ] Re-run backend tests and smoke verification
+- [x] Update `laravel/framework` to `^12.0`
+- [x] Update `phpunit/phpunit` to `^11.0`
+- [x] Review Carbon 3 behavior and app usage
+- [x] Review UUID behavior for models using UUID traits
+- [x] Re-run backend tests and smoke verification
+
+Status notes:
+
+- `composer update -W` resolved Laravel 12 and PHPUnit 11 in Docker without manual conflict overrides.
+- Smoke verification passed in Docker: `php artisan --version`, `php artisan about`, `php artisan route:list`, `php artisan optimize:clear`.
+- Full backend test suite passed on Laravel `12.56.0`: 58 passed.
+- Carbon usage was rechecked in workspace invite/date helper flows and is covered by passing feature tests.
+- No app usage of `HasUuids` trait was found; UUID behavior remains on existing custom UUID model pattern.
 
 Reference:
 

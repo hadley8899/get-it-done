@@ -2,13 +2,12 @@
 
 namespace Tests\Feature\Api\Auth;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Feature\Api\ApiTestCase;
 
 class ApiRouteProtectionTest extends ApiTestCase
 {
-    /**
-     * @dataProvider protectedRouteProvider
-     */
+    #[DataProvider('protectedRouteProvider')]
     public function test_protected_routes_return_401_without_token(string $method, string $uri): void
     {
         $response = $this
