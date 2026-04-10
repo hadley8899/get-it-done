@@ -42,8 +42,8 @@ class PasswordResetRequest extends Notification implements ShouldQueue
      */
     public function toMail($notifiable): MailMessage
     {
-        $url = env('APP_URL', 'localhost:4200/');
-        $url .= 'user/forgot-password-confirm/' . $this->token;
+        $baseUrl = env('FRONTEND_URL', 'http://localhost:5173');
+        $url = rtrim($baseUrl, '/') . '/user/forgot-password-confirm/' . $this->token;
 
         return (new MailMessage)
             ->line('You are receiving this email because we received a password reset request for your account.')

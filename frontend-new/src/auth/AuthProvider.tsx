@@ -10,6 +10,7 @@ import {
   login as loginRequest,
   logout as logoutRequest,
   me,
+  register as registerRequest,
   setStoredToken,
   setStoredUser,
 } from '@/services/authService'
@@ -52,6 +53,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setToken(response.token)
     await refreshUser()
     notifySuccess('Logged in successfully.')
+  }, [refreshUser])
+
+  const register = useCallback(async (name: string, email: string, password: string, confirmPassword: string) => {
+    const response = await registerRequest(name, email, password, confirmPassword)
+    setStoredToken(response.data.token)
+    setToken(response.data.token)
+    await refreshUser()
+    notifySuccess('Account created successfully.')
   }, [refreshUser])
 
   const logout = useCallback(async (options?: { skipRequest?: boolean }) => {
@@ -102,10 +111,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
       token,
       user,
       login,
+      register,
       logout,
       refreshUser,
     }),
-    [isInitializing, login, logout, refreshUser, token, user],
+    [isInitializing, login, logout, refreshUser, register, token, user],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

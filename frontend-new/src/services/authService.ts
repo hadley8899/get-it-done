@@ -1,5 +1,5 @@
 import { api, TOKEN_KEY } from '@/api/api'
-import type { LoggedInUser, LoginResponse, UserDetailsResponse } from '@/types/auth'
+import type { ForgotPasswordResponse, LoggedInUser, LoginResponse, RegisterResponse, UserDetailsResponse } from '@/types/auth'
 
 export const USER_STORAGE_KEY = 'userData'
 
@@ -12,9 +12,44 @@ export const login = async (email: string, password: string) => {
   return data
 }
 
+export const register = async (name: string, email: string, password: string, confirmPassword: string) => {
+  const formData = new FormData()
+  formData.append('name', name)
+  formData.append('email', email)
+  formData.append('password', password)
+  formData.append('c_password', confirmPassword)
+
+  const { data } = await api.post<RegisterResponse>('register', formData)
+  return data
+}
+
 export const me = async () => {
   const { data } = await api.get<UserDetailsResponse>('user/details')
   return data.data
+}
+
+export const requestPasswordReset = async (email: string) => {
+  const formData = new FormData()
+  formData.append('email', email)
+
+  const { data } = await api.post<ForgotPasswordResponse>('user/forgot-password', formData)
+  return data
+}
+
+export const validatePasswordResetToken = async (token: string) => {
+  const { data } = await api.get<ForgotPasswordResponse>(`user/forgot-password/find/${token}`)
+  return data
+}
+
+export const resetForgottenPassword = async (email: string, token: string, password: string, passwordConfirmation: string) => {
+  const formData = new FormData()
+  formData.append('email', email)
+  formData.append('token', token)
+  formData.append('password', password)
+  formData.append('password_confirmation', passwordConfirmation)
+
+  const { data } = await api.post<ForgotPasswordResponse>('user/forgot-password/reset', formData)
+  return data
 }
 
 export const logout = async () => {

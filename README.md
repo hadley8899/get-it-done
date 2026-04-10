@@ -21,6 +21,19 @@ To get started with our task management system, simply clone the repository and 
 2. Do a ```composer install``` inside the backend directory
 3. Create the database with ```php artisan migrate:fresh``` (The settings are found in .env file, If it doesn't exist create it from [file](backend/.env.example))
 
+### Backend tests (safe defaults)
+Tests are configured to use a dedicated `backend_test` database, not your main dev DB.
+
+1. Copy the testing environment template:
+   - `cp backend/.env.testing.example backend/.env.testing`
+2. Start services (if using Docker):
+   - `docker compose up -d`
+3. Run tests:
+   - from host: `cd backend && php artisan test`
+   - in container: `docker compose exec backend php artisan test`
+
+See `backend/README.md` for full backend test setup notes.
+
 ### Frontend
 1. ```cd frontend```
 2. ```npm install --legacy-peer-deps```

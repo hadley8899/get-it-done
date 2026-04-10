@@ -7,6 +7,7 @@ export type AuthContextValue = {
   token: string | null
   user: LoggedInUser | null
   login: (email: string, password: string) => Promise<void>
+  register: (name: string, email: string, password: string, confirmPassword: string) => Promise<void>
   logout: (options?: { skipRequest?: boolean }) => Promise<void>
   refreshUser: () => Promise<LoggedInUser | null>
 }

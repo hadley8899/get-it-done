@@ -6,6 +6,8 @@ use App\Exceptions\UserException;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Passport\ClientRepository;
+use RuntimeException;
 
 class LoginService
 {
@@ -29,6 +31,26 @@ class LoginService
             throw UserException::userNotFound();
         }
 
-        return response()->json(['token' => $user->createToken('LaraPassport')->accessToken]);
+        return response()->json(['token' => $this->createPassportToken($user)]);
+    }
+
+    private function createPassportToken($user): string
+    {
+        try {
+            return $user->createToken('LaraPassport')->accessToken;
+        } catch (RuntimeException $exception) {
+            if (!str_contains($exception->getMessage(), 'Personal access client not found')) {
+                throw $exception;
+            }
+
+            $clientRepository = app(ClientRepository::class);
+            $clientRepository->createPersonalAccessClient(
+                null,
+                'Get It Done Personal Access Client',
+                config('app.url')
+            );
+
+            return $user->createToken('LaraPassport')->accessToken;
+        }
     }
 }

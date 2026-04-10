@@ -8,7 +8,6 @@ use App\Http\Requests\KnowledgeBase\AddKnowledgebaseItemRequest;
 use App\Http\Requests\KnowledgeBase\UpdateKnowledgebaseItemRequest;
 use App\Http\Resources\Knowledgebase\KnowledgebaseItemCollection;
 use App\Http\Resources\Knowledgebase\KnowledgebaseItemResource;
-use App\Http\Resources\Knowledgebase\KnowledgebaseResource;
 use App\Models\Knowledgebase;
 use App\Models\KnowledgebaseCategory;
 use App\Models\KnowledgebaseItem;
@@ -33,7 +32,7 @@ class KnowledgebaseItemsController extends Controller
     public function item(Workspace $workspace, KnowledgebaseCategory $knowledgebaseCategory, Knowledgebase $knowledgebase, KnowledgebaseItem $knowledgebaseItem): JsonResponse
     {
         $knowledgebaseItem = (new KnowledgebaseItemsService())->fetchKnowledgebaseItem($workspace, $knowledgebaseCategory, $knowledgebase, $knowledgebaseItem);
-        return response()->json(new KnowledgebaseResource($knowledgebaseItem));
+        return response()->json(new KnowledgebaseItemResource($knowledgebaseItem));
     }
 
     /**

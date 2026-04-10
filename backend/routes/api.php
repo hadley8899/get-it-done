@@ -26,9 +26,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
+Route::get('email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verificationapi.verify');
+
+Route::prefix('user')->group(function () {
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::get('forgot-password/find/{token}', [AuthController::class, 'forgotPasswordFind']);
+    Route::post('forgot-password/reset', [AuthController::class, 'resetForgottenPassword']);
+});
 
 // Details for workspace invite, Needs to be public
-Route::get('workspace-members/details/{workspaceInvite:token}', [WorkspaceMembersController::class, 'details'])->name('workspace-members.details');
+Route::get('workspace-members/details/{workspaceInvite:uuid}', [WorkspaceMembersController::class, 'details'])->name('workspace-members.details');
 
 Route::middleware(['auth:api'])->group(function () {
 

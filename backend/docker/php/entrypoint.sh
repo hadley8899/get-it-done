@@ -15,10 +15,14 @@ if ! grep -q "^APP_KEY=base64:" .env; then
   php artisan key:generate --force
 fi
 
+php artisan migrate --force
+
 if [ ! -f storage/oauth-private.key ] || [ ! -f storage/oauth-public.key ]; then
-  php artisan passport:install --force
+  php artisan passport:keys --force
 fi
 
-php artisan migrate --force
+if ! php artisan tinker --execute="exit(\Laravel\Passport\PersonalAccessClient::query()->exists() ? 0 : 1);"; then
+  php artisan passport:client --personal --name="Get It Done Personal Access Client" --no-interaction
+fi
 
 exec php artisan serve --host=0.0.0.0 --port=8000
