@@ -1,8 +1,10 @@
 {
     "agents": [
+        "claude_code",
         "codex",
         "junie",
-        "copilot"
+        "copilot",
+        "phpstorm"
     ],
     "guidelines": true,
     "mcp": true,
@@ -11,5 +13,11 @@
     "skills": [
         "laravel-best-practices",
         "passport-development"
+    ],
+    "editors": [
+        "claude_code",
+        "codex",
+        "phpstorm",
+        "vscode"
     ]
 }

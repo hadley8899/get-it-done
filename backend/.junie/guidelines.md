@@ -172,6 +172,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
     - Exception handling is in `app/Exceptions/Handler.php`
     - Console commands and schedule registration is in `app/Console/Kernel.php`
     - Rate limits likely exist in `RouteServiceProvider` or `app/Http/Kernel.php`
+- When using Eloquent model casts, you must use `protected $casts = [];` and not the `casts()` method. The `casts()` method isn't available on models in Laravel 10.
 
 ### Database
 - When modifying a column, the migration must include all of the attributes that were previously defined on the column. Otherwise, they will be dropped and lost.
