@@ -26,6 +26,7 @@ class TaskWithCommentsResource extends JsonResource
             'description' => $this->description,
             'position' => $this->position,
             'comments' => TaskCommentResource::collection($this->comments),
+            'attachments' => TaskAttachmentResource::collection($this->attachments),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -55,6 +55,8 @@ class TaskController extends Controller
      */
     public function show(Task $task): JsonResponse
     {
+        $task->load(['comments.user', 'attachments']);
+
         return response()->json(new TaskWithCommentsResource($task));
     }
 

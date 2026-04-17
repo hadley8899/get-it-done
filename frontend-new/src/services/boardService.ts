@@ -218,6 +218,27 @@ export const deleteTaskComment = async (taskUuid: string, commentUuid: string) =
   await api.delete(`tasks/${taskUuid}/comments/${commentUuid}`)
 }
 
+export const uploadTaskAttachment = async (taskUuid: string, file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  const { data } = await api.post(`tasks/${taskUuid}/attachments`, formData)
+  return data
+}
+
+export const downloadTaskAttachmentContent = async (taskUuid: string, attachmentUuid: string) => {
+  const { data } = await api.get<Blob>(`tasks/${taskUuid}/attachments/${attachmentUuid}/content`, {
+    responseType: 'blob',
+    headers: {
+      'X-Skip-Error-Toast': '1',
+    },
+  })
+  return data
+}
+
+export const deleteTaskAttachment = async (taskUuid: string, attachmentUuid: string) => {
+  await api.delete(`tasks/${taskUuid}/attachments/${attachmentUuid}`)
+}
+
 // Drag-and-drop operations
 export const reorderBoardLists = async (
   workspaceUuid: string,

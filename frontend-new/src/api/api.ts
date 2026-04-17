@@ -4,6 +4,7 @@ import { notifyError } from '@/services/toastService'
 export const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
 export const TOKEN_KEY = 'loggedInUser'
 export const UNAUTHORIZED_EVENT = 'auth:unauthorized'
+const AUTH_EXPIRED_FLAG_KEY = 'authExpiredInFlight'
 
 const apiDebug = ['1', 'true', 'yes', 'on'].includes(
   (import.meta.env.VITE_API_DEBUG ?? (import.meta.env.DEV ? 'true' : 'false')).toLowerCase(),
@@ -62,12 +63,16 @@ api.interceptors.response.use(
   (error) => {
     if (error?.response?.status === 401) {
       const hadToken = Boolean(localStorage.getItem(TOKEN_KEY))
-      if (hadToken) {
+      const alreadyDispatched = sessionStorage.getItem(AUTH_EXPIRED_FLAG_KEY) === '1'
+      if (hadToken && !alreadyDispatched) {
+        sessionStorage.setItem(AUTH_EXPIRED_FLAG_KEY, '1')
         localStorage.removeItem(TOKEN_KEY)
         localStorage.removeItem('userData')
         window.dispatchEvent(new Event(UNAUTHORIZED_EVENT))
-        return Promise.reject(error)
       }
+
+      // 401s are handled centrally through UNAUTHORIZED_EVENT. Avoid duplicate toasts.
+      return Promise.reject(error)
     }
 
     const skipToast =

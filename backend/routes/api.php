@@ -9,6 +9,7 @@ use App\Http\Controllers\KnowledgebaseController;
 use App\Http\Controllers\KnowledgebaseItemsController;
 use App\Http\Controllers\TaskCommentController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TaskAttachmentController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMembersController;
 use Illuminate\Support\Facades\Route;
@@ -109,6 +110,12 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('', [TaskCommentController::class, 'store'])->name('tasks.comments.store');
             Route::put('{taskComment:uuid}', [TaskCommentController::class, 'update'])->name('tasks.comments.update');
             Route::delete('{taskComment:uuid}', [TaskCommentController::class, 'destroy'])->name('tasks.comments.destroy');
+        });
+
+        Route::prefix('attachments')->group(function () {
+            Route::post('', [TaskAttachmentController::class, 'store'])->name('tasks.attachments.store');
+            Route::get('{taskAttachment:uuid}/content', [TaskAttachmentController::class, 'content'])->name('tasks.attachments.content');
+            Route::delete('{taskAttachment:uuid}', [TaskAttachmentController::class, 'destroy'])->name('tasks.attachments.destroy');
         });
     });
 

@@ -33,11 +33,14 @@ import {
   updateBoard,
   createTask,
   deleteTask,
+  deleteTaskAttachment,
   fetchBoard,
   fetchBoardListsNoTasks,
   fetchBoardListsWithTasks,
   fetchBoards,
   fetchTaskDetails,
+  downloadTaskAttachmentContent,
+  uploadTaskAttachment,
   updateTaskComment,
   updateTask,
 } from '@/services/boardService'
@@ -71,6 +74,8 @@ export function BoardDetailsPage() {
   const [savingComment, setSavingComment] = useState(false)
   const [updatingComment, setUpdatingComment] = useState(false)
   const [deletingComment, setDeletingComment] = useState(false)
+  const [uploadingAttachment, setUploadingAttachment] = useState(false)
+  const [deletingAttachment, setDeletingAttachment] = useState(false)
   const [boardSettingsOpen, setBoardSettingsOpen] = useState(false)
   const [savingBoardSettings, setSavingBoardSettings] = useState(false)
   const [activeTaskDragOverlay, setActiveTaskDragOverlay] = useState<BoardTask | null>(null)
@@ -519,7 +524,52 @@ export function BoardDetailsPage() {
                 isCommentSaving={savingComment}
                 isCommentUpdating={updatingComment}
                 isCommentDeleting={deletingComment}
+                isAttachmentUploading={uploadingAttachment}
+                isAttachmentDeleting={deletingAttachment}
                 onCommentDraftChange={setCommentDraft}
+                onUploadAttachment={async (taskUuid, files) => {
+                  setUploadingAttachment(true)
+
+                  try {
+                    for (const file of files) {
+                      await uploadTaskAttachment(taskUuid, file)
+                    }
+                    const refreshedTask = await fetchTaskDetails(taskUuid)
+                    setActiveTask(refreshedTask)
+                    notifySuccess(
+                      files.length > 1
+                        ? `${files.length} attachments uploaded successfully.`
+                        : 'Attachment uploaded successfully.',
+                    )
+                  } catch {
+                    notifyError('Failed to upload attachment.')
+                    throw new Error('Attachment upload failed')
+                  } finally {
+                    setUploadingAttachment(false)
+                  }
+                }}
+                onDeleteAttachment={async (taskUuid, attachmentUuid) => {
+                  setDeletingAttachment(true)
+
+                  try {
+                    await deleteTaskAttachment(taskUuid, attachmentUuid)
+                    const refreshedTask = await fetchTaskDetails(taskUuid)
+                    setActiveTask(refreshedTask)
+                    notifySuccess('Attachment deleted successfully.')
+                  } catch {
+                    notifyError('Failed to delete attachment.')
+                    throw new Error('Attachment delete failed')
+                  } finally {
+                    setDeletingAttachment(false)
+                  }
+                }}
+                onGetAttachmentContent={async (taskUuid, attachmentUuid) => {
+                  try {
+                    return await downloadTaskAttachmentContent(taskUuid, attachmentUuid)
+                  } catch {
+                    throw new Error('Attachment content load failed')
+                  }
+                }}
                 onAddComment={async (taskUuid, comment) => {
                   setSavingComment(true)
 

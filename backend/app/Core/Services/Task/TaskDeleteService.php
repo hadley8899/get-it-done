@@ -40,6 +40,7 @@ class TaskDeleteService
             throw BoardException::noAccessToBoard();
         }
 
+        $task->attachments()->delete();
         $task->deleteOrFail();
 
         return true;

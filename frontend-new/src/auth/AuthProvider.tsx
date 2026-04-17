@@ -16,6 +16,8 @@ import {
 } from '@/services/authService'
 import { notifyError, notifySuccess } from '@/services/toastService'
 
+const AUTH_EXPIRED_FLAG_KEY = 'authExpiredInFlight'
+
 export function AuthProvider({ children }: PropsWithChildren) {
   const [token, setToken] = useState<string | null>(() => getStoredToken())
   const [user, setUser] = useState(() => getStoredUser())
@@ -32,6 +34,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     clearStoredToken()
     clearStoredUser()
+    sessionStorage.removeItem(AUTH_EXPIRED_FLAG_KEY)
     setToken(null)
     setUser(null)
   }, [token])
@@ -48,6 +51,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, [])
 
   const login = useCallback(async (email: string, password: string) => {
+    sessionStorage.removeItem(AUTH_EXPIRED_FLAG_KEY)
     const response = await loginRequest(email, password)
     setStoredToken(response.token)
     setToken(response.token)
@@ -56,6 +60,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, [refreshUser])
 
   const register = useCallback(async (name: string, email: string, password: string, confirmPassword: string) => {
+    sessionStorage.removeItem(AUTH_EXPIRED_FLAG_KEY)
     const response = await registerRequest(name, email, password, confirmPassword)
     setStoredToken(response.data.token)
     setToken(response.data.token)

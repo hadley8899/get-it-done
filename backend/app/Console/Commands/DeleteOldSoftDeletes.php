@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\Task;
+use App\Models\TaskAttachment;
 use App\Models\TaskComment;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -38,6 +39,7 @@ class DeleteOldSoftDeletes extends Command
         $models = [
             User::class,
             Task::class,
+            TaskAttachment::class,
             TaskComment::class,
             Board::class,
             BoardList::class,

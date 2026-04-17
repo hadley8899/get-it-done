@@ -5,10 +5,13 @@ namespace Tests\Feature\Api\Tasks;
 use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\Task;
+use App\Models\TaskAttachment;
 use App\Models\TaskComment;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Passport;
 use Tests\Feature\Api\ApiTestCase;
 
@@ -205,6 +208,113 @@ class TaskAndCommentFlowTest extends ApiTestCase
 
         $this->assertSoftDeleted('tasks', ['id' => $task->id]);
     }
-}
 
+    public function test_task_attachment_store_content_and_delete_flow(): void
+    {
+        Storage::fake('local');
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+
+        $workspace = Workspace::factory()->create(['user_id' => $user->id]);
+        $board = Board::factory()->create([
+            'workspace_id' => $workspace->id,
+            'user_id' => $user->id,
+        ]);
+        $boardList = BoardList::factory()->create(['board_id' => $board->id]);
+
+        $task = Task::factory()->create([
+            'board_list_id' => $boardList->id,
+            'user_id' => $user->id,
+        ]);
+
+        $uploadResponse = $this->postJson("/tasks/{$task->uuid}/attachments", [
+            'file' => UploadedFile::fake()->image('diagram.png', 200, 200),
+        ]);
+
+        $uploadResponse
+            ->assertStatus(201)
+            ->assertJsonPath('original_name', 'diagram.png')
+            ->assertJsonPath('is_image', true);
+
+        $attachmentUuid = (string) $uploadResponse->json('uuid');
+        $attachment = TaskAttachment::query()->where('uuid', $attachmentUuid)->firstOrFail();
+
+        Storage::disk('local')->assertExists($attachment->storage_path);
+
+        $showResponse = $this->getJson("/tasks/{$task->uuid}");
+        $showResponse
+            ->assertOk()
+            ->assertJsonPath('attachments.0.uuid', $attachmentUuid);
+
+        $contentResponse = $this->get("/tasks/{$task->uuid}/attachments/{$attachmentUuid}/content");
+        $contentResponse->assertStatus(200);
+        $this->assertStringContainsString('image/', (string) $contentResponse->headers->get('Content-Type'));
+
+        $deleteResponse = $this->deleteJson("/tasks/{$task->uuid}/attachments/{$attachmentUuid}");
+        $deleteResponse->assertStatus(204);
+
+        $this->assertSoftDeleted('task_attachments', ['id' => $attachment->id]);
+    }
+
+    public function test_task_attachment_upload_rejects_blocked_extension(): void
+    {
+        Storage::fake('local');
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+
+        $workspace = Workspace::factory()->create(['user_id' => $user->id]);
+        $board = Board::factory()->create([
+            'workspace_id' => $workspace->id,
+            'user_id' => $user->id,
+        ]);
+        $boardList = BoardList::factory()->create(['board_id' => $board->id]);
+
+        $task = Task::factory()->create([
+            'board_list_id' => $boardList->id,
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->postJson("/tasks/{$task->uuid}/attachments", [
+            'file' => UploadedFile::fake()->create('dangerous.exe', 20, 'application/octet-stream'),
+        ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['file']);
+    }
+
+    public function test_task_attachment_content_requires_workspace_access(): void
+    {
+        Storage::fake('local');
+
+        $owner = User::factory()->create();
+        Passport::actingAs($owner);
+
+        $workspace = Workspace::factory()->create(['user_id' => $owner->id]);
+        $board = Board::factory()->create([
+            'workspace_id' => $workspace->id,
+            'user_id' => $owner->id,
+        ]);
+        $boardList = BoardList::factory()->create(['board_id' => $board->id]);
+
+        $task = Task::factory()->create([
+            'board_list_id' => $boardList->id,
+            'user_id' => $owner->id,
+        ]);
+
+        $attachmentResponse = $this->postJson("/tasks/{$task->uuid}/attachments", [
+            'file' => UploadedFile::fake()->create('notes.txt', 10, 'text/plain'),
+        ])->assertStatus(201);
+
+        $attachmentUuid = (string) $attachmentResponse->json('uuid');
+
+        $outsider = User::factory()->create();
+        Passport::actingAs($outsider);
+
+        $response = $this->getJson("/tasks/{$task->uuid}/attachments/{$attachmentUuid}/content");
+        $response->assertStatus(422);
+    }
+}
 
