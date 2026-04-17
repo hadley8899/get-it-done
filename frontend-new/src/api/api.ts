@@ -70,12 +70,18 @@ api.interceptors.response.use(
       }
     }
 
+    const skipToast =
+      error?.config?.headers?.['X-Skip-Error-Toast'] === '1' ||
+      error?.config?.headers?.['x-skip-error-toast'] === '1'
+
     const message =
       (error?.response?.data?.message as string | undefined) ??
       (typeof error?.message === 'string' && error.message.trim() ? error.message : null) ??
       'Request failed.'
 
-    notifyError(message)
+    if (!skipToast) {
+      notifyError(message)
+    }
     return Promise.reject(error)
   },
 )

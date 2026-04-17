@@ -28,7 +28,11 @@ export const createBoard = async (
 }
 
 export const fetchBoard = async (workspaceUuid: string, boardUuid: string) => {
-  const { data } = await api.get<Board>(`boards/${workspaceUuid}/${boardUuid}`)
+  const { data } = await api.get<Board>(`boards/${workspaceUuid}/${boardUuid}`, {
+    headers: {
+      'X-Skip-Error-Toast': '1',
+    },
+  })
   return data
 }
 
@@ -40,9 +44,27 @@ export const updateBoard = async (
     description: string
     color?: string
     icon?: string
+    image?: File | null
   },
 ) => {
-  const { data } = await api.put<Board>(`boards/${workspaceUuid}/${boardUuid}`, payload)
+  const formData = new FormData()
+  formData.append('_method', 'PUT')
+  formData.append('name', payload.name)
+  formData.append('description', payload.description)
+
+  if (payload.color) {
+    formData.append('color', payload.color)
+  }
+
+  if (payload.icon) {
+    formData.append('icon', payload.icon)
+  }
+
+  if (payload.image) {
+    formData.append('image', payload.image)
+  }
+
+  const { data } = await api.post<Board>(`boards/${workspaceUuid}/${boardUuid}`, formData)
   return data
 }
 
@@ -114,6 +136,11 @@ export const reorderBoardTemplateItems = async (boardTemplateUuid: string, board
 
 export const fetchBoardListsWithTasks = async (workspaceUuid: string, boardUuid: string) => {
   const { data } = await api.get<BoardList[]>(`boards/${workspaceUuid}/${boardUuid}/boardLists`)
+  return data
+}
+
+export const fetchBoardListsNoTasks = async (workspaceUuid: string, boardUuid: string) => {
+  const { data } = await api.get<BoardList[]>(`boards/${workspaceUuid}/${boardUuid}/boardListsNoTasks`)
   return data
 }
 

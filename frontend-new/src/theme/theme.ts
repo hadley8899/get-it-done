@@ -1,31 +1,57 @@
 import { createTheme } from '@mui/material/styles'
 
-export const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#127e8f',
-      dark: '#0d5c6b',
-      light: '#4da3b0',
+export const createAppTheme = (mode: 'light' | 'dark') => createTheme({
+  palette: mode === 'dark'
+    ? {
+      mode: 'dark',
+      primary: {
+        main: '#37b5c9',
+        dark: '#238ca0',
+        light: '#67c6d4',
+      },
+      secondary: {
+        main: '#e08f5f',
+      },
+      success: {
+        main: '#39a56f',
+      },
+      warning: {
+        main: '#d39a4c',
+      },
+      background: {
+        default: '#10161f',
+        paper: '#1a2330',
+      },
+      text: {
+        primary: '#e6edf5',
+        secondary: '#b5c2d0',
+      },
+    }
+    : {
+      mode: 'light',
+      primary: {
+        main: '#127e8f',
+        dark: '#0d5c6b',
+        light: '#4da3b0',
+      },
+      secondary: {
+        main: '#c4682d',
+      },
+      success: {
+        main: '#2d8f5f',
+      },
+      warning: {
+        main: '#c77d24',
+      },
+      background: {
+        default: '#f7f5ef',
+        paper: '#fffdf8',
+      },
+      text: {
+        primary: '#132238',
+        secondary: '#526173',
+      },
     },
-    secondary: {
-      main: '#c4682d',
-    },
-    success: {
-      main: '#2d8f5f',
-    },
-    warning: {
-      main: '#c77d24',
-    },
-    background: {
-      default: '#f7f5ef',
-      paper: '#fffdf8',
-    },
-    text: {
-      primary: '#132238',
-      secondary: '#526173',
-    },
-  },
   shape: {
     borderRadius: 14,
   },
@@ -75,8 +101,8 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 18,
-          border: '1px solid rgba(19, 34, 56, 0.08)',
-          boxShadow: '0 18px 48px rgba(19, 34, 56, 0.08)',
+          border: mode === 'dark' ? '1px solid rgba(230, 237, 245, 0.12)' : '1px solid rgba(19, 34, 56, 0.08)',
+          boxShadow: mode === 'dark' ? '0 18px 48px rgba(0, 0, 0, 0.4)' : '0 18px 48px rgba(19, 34, 56, 0.08)',
         },
       },
     },
@@ -112,7 +138,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          backgroundColor: 'rgba(255, 253, 248, 0.9)',
+          backgroundColor: mode === 'dark' ? 'rgba(26, 35, 48, 0.95)' : 'rgba(255, 253, 248, 0.9)',
         },
       },
     },

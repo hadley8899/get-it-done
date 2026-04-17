@@ -3,7 +3,10 @@ import {
   AddRounded,
   AutoStoriesRounded,
   DashboardRounded,
+  DarkModeRounded,
+  ExpandMoreRounded,
   FolderRounded,
+  LightModeRounded,
   LogoutRounded,
   MenuRounded,
   RefreshRounded,
@@ -11,10 +14,10 @@ import {
   WorkspacesRounded,
 } from '@mui/icons-material'
 import {
+  Avatar,
   AppBar,
   Box,
   Button,
-  CircularProgress,
   Divider,
   Drawer,
   IconButton,
@@ -22,6 +25,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
   Stack,
   Toolbar,
   Typography,
@@ -30,8 +35,14 @@ import {
 import { useTheme } from '@mui/material/styles'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthContext'
+import { useColorMode } from '@/theme/colorMode'
 import { notifySuccess } from '@/services/toastService'
-import { fetchWorkspaces, getStoredActiveWorkspace, setStoredActiveWorkspace } from '@/services/workspaceService'
+import {
+  ACTIVE_WORKSPACE_CHANGED_EVENT,
+  fetchWorkspaces,
+  getStoredActiveWorkspace,
+  setStoredActiveWorkspace,
+} from '@/services/workspaceService'
 import type { Workspace } from '@/types/workspace'
 
 const navigationItems = [
@@ -46,14 +57,29 @@ const drawerWidth = 290
 
 export function AppShell() {
   const { user } = useAuth()
+  const { mode, toggleMode } = useColorMode()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
   const [activeWorkspaceUuid, setActiveWorkspaceUuid] = useState<string | null>(() => getStoredActiveWorkspace()?.uuid ?? null)
   const [loadingWorkspaces, setLoadingWorkspaces] = useState(true)
+  const [workspaceMenuAnchorEl, setWorkspaceMenuAnchorEl] = useState<HTMLElement | null>(null)
   const theme = useTheme()
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const location = useLocation()
   const navigate = useNavigate()
+  const activeWorkspace = useMemo(
+    () => workspaces.find((workspace) => workspace.uuid === activeWorkspaceUuid) ?? null,
+    [activeWorkspaceUuid, workspaces],
+  )
+  const avatarUrl = useMemo(() => {
+    if (!user?.avatar) {
+      return undefined
+    }
+
+    const base = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+    return `${base.replace(/\/$/, '')}/storage/${user.avatar}`
+  }, [user?.avatar])
 
   const pageTitle = useMemo(() => {
     if (location.pathname.startsWith('/boards')) return 'Boards'
@@ -63,6 +89,17 @@ export function AppShell() {
     if (location.pathname.startsWith('/tasks')) return 'Tasks'
     return 'Dashboard'
   }, [location.pathname])
+
+  useEffect(() => {
+    const handleWorkspaceChanged = () => {
+      setActiveWorkspaceUuid(getStoredActiveWorkspace()?.uuid ?? null)
+    }
+
+    window.addEventListener(ACTIVE_WORKSPACE_CHANGED_EVENT, handleWorkspaceChanged)
+    return () => {
+      window.removeEventListener(ACTIVE_WORKSPACE_CHANGED_EVENT, handleWorkspaceChanged)
+    }
+  }, [])
 
   useEffect(() => {
     let isMounted = true
@@ -161,50 +198,7 @@ export function AppShell() {
         })}
       </List>
 
-      <Divider sx={{ my: 3 }} />
-
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between', px: 1.5, pb: 1.5 }}>
-        <Typography variant="overline" color="text.secondary">
-          Workspaces
-        </Typography>
-        <Stack direction="row" spacing={0.5}>
-          <IconButton size="small" onClick={handleRefreshWorkspaces}>
-            <RefreshRounded fontSize="small" />
-          </IconButton>
-          <IconButton size="small" component={NavLink} to="/workspaces/create">
-            <AddRounded fontSize="small" />
-          </IconButton>
-        </Stack>
-      </Stack>
-
-      <Box sx={{ flexGrow: 1, overflowY: 'auto', px: 0.5 }}>
-        {loadingWorkspaces ? (
-          <Stack sx={{ py: 3, alignItems: 'center' }}>
-            <CircularProgress size={24} />
-          </Stack>
-        ) : (
-          <List sx={{ display: 'grid', gap: 0.5 }}>
-            {workspaces.map((workspace) => (
-              <ListItemButton
-                key={workspace.uuid}
-                onClick={() => handleSelectWorkspace(workspace)}
-                sx={{
-                  borderRadius: 2.5,
-                  bgcolor: workspace.uuid === activeWorkspaceUuid ? 'rgba(45, 143, 95, 0.12)' : 'transparent',
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 38 }}>
-                  <WorkspacesRounded fontSize="small" />
-                </ListItemIcon>
-                <ListItemText
-                  primary={workspace.name}
-                  secondary={workspace.uuid === activeWorkspaceUuid ? 'Active workspace' : undefined}
-                />
-              </ListItemButton>
-            ))}
-          </List>
-        )}
-      </Box>
+      <Box sx={{ flexGrow: 1 }} />
 
       <Divider sx={{ my: 2 }} />
 
@@ -254,29 +248,99 @@ export function AppShell() {
             </Typography>
           </Stack>
           <Box sx={{ flexGrow: 1 }} />
+          <Button
+            color="inherit"
+            variant="outlined"
+            size={isSmallScreen ? 'small' : 'medium'}
+            startIcon={isSmallScreen ? undefined : <WorkspacesRounded />}
+            endIcon={
+              <ExpandMoreRounded
+                sx={{
+                  transform: workspaceMenuAnchorEl ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 120ms ease',
+                }}
+              />
+            }
+            aria-haspopup="menu"
+            aria-expanded={Boolean(workspaceMenuAnchorEl)}
+            onClick={(event) => setWorkspaceMenuAnchorEl(event.currentTarget)}
+            sx={{
+              mr: 1,
+              minWidth: { xs: 0, sm: 220 },
+              maxWidth: { xs: 138, sm: 320 },
+              px: { xs: 1, sm: 1.5 },
+              justifyContent: 'flex-start',
+              borderColor: 'divider',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {isSmallScreen
+              ? (activeWorkspace?.name ?? 'Workspace')
+              : (activeWorkspace?.name ?? (loadingWorkspaces ? 'Loading workspaces...' : 'Select workspace'))}
+          </Button>
+          <IconButton
+            onClick={toggleMode}
+            aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            sx={{ mr: 0.5 }}
+          >
+            {mode === 'dark' ? <LightModeRounded /> : <DarkModeRounded />}
+          </IconButton>
           {user ? (
-            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', display: { xs: 'none', sm: 'flex' } }}>
               <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 600 }}>
                 {user.name}
               </Typography>
-              <Box
-                sx={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  bgcolor: 'secondary.main',
-                  color: 'common.white',
-                  display: 'grid',
-                  placeItems: 'center',
-                  fontWeight: 700,
-                }}
-              >
+              <Avatar src={avatarUrl} sx={{ width: 36, height: 36 }}>
                 {user.name.charAt(0).toUpperCase()}
-              </Box>
+              </Avatar>
             </Stack>
           ) : null}
         </Toolbar>
       </AppBar>
+
+      <Menu
+        anchorEl={workspaceMenuAnchorEl}
+        open={Boolean(workspaceMenuAnchorEl)}
+        onClose={() => setWorkspaceMenuAnchorEl(null)}
+      >
+        <MenuItem
+          onClick={() => {
+            setWorkspaceMenuAnchorEl(null)
+            void handleRefreshWorkspaces()
+          }}
+        >
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <RefreshRounded fontSize="small" />
+            <span>Refresh</span>
+          </Stack>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setWorkspaceMenuAnchorEl(null)
+            navigate('/workspaces/create')
+          }}
+        >
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <AddRounded fontSize="small" />
+            <span>New workspace</span>
+          </Stack>
+        </MenuItem>
+        <Divider />
+        {workspaces.map((workspace) => (
+          <MenuItem
+            key={workspace.uuid}
+            selected={workspace.uuid === activeWorkspaceUuid}
+            onClick={() => {
+              handleSelectWorkspace(workspace)
+              setWorkspaceMenuAnchorEl(null)
+            }}
+          >
+            {workspace.name}
+          </MenuItem>
+        ))}
+      </Menu>
 
       <Box component="nav" sx={{ width: { lg: drawerWidth }, flexShrink: { lg: 0 } }}>
         <Drawer

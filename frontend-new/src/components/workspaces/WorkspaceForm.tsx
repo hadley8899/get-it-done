@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 
 type WorkspaceFormValues = {
   name: string
-  description: string
+  description?: string
 }
 
 export function WorkspaceForm({
@@ -40,7 +40,7 @@ export function WorkspaceForm({
         minRows={4}
         error={Boolean(errors.description)}
         helperText={errors.description?.message}
-        {...register('description', { required: 'Description is required' })}
+        {...register('description')}
       />
       <Button type="submit" variant="contained" disabled={!isValid || isSubmitting}>
         {isSubmitting ? 'Saving...' : submitLabel}

@@ -1,19 +1,19 @@
 import { Stack } from '@mui/material'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { EmptyState } from '@/components/EmptyState'
 import { FormCard } from '@/components/FormCard'
 import { PageHeader } from '@/components/PageHeader'
 import { KnowledgebaseCategoryForm } from '@/components/knowledgebase/KnowledgebaseCategoryForm'
+import { useActiveWorkspace } from '@/hooks/useActiveWorkspace'
 import { notifyError, notifySuccess } from '@/services/toastService'
 import { fetchKnowledgebaseCategory, updateKnowledgebaseCategory } from '@/services/knowledgebaseService'
-import { getStoredActiveWorkspace } from '@/services/workspaceService'
 import type { KnowledgebaseCategory } from '@/types/knowledgebase'
 
 export function UpdateKnowledgebaseCategoryPage() {
   const { uuid = '' } = useParams()
   const navigate = useNavigate()
-  const activeWorkspace = useMemo(() => getStoredActiveWorkspace(), [])
+  const activeWorkspace = useActiveWorkspace()
   const [category, setCategory] = useState<KnowledgebaseCategory | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -22,6 +22,8 @@ export function UpdateKnowledgebaseCategoryPage() {
     let isMounted = true
 
     async function loadCategory() {
+      setLoading(true)
+
       if (!activeWorkspace?.uuid || !uuid) {
         setLoading(false)
         return
@@ -52,7 +54,7 @@ export function UpdateKnowledgebaseCategoryPage() {
     return (
       <EmptyState
         title="No active workspace"
-        description="Select a workspace from the sidebar before updating a knowledgebase category."
+        description="Select a workspace from the top bar before updating a knowledgebase category."
         actionLabel="Go to workspaces"
         onAction={() => navigate('/workspaces')}
       />

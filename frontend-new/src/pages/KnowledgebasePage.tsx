@@ -1,18 +1,18 @@
 import { Button, Grid, Stack } from '@mui/material'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { EmptyState } from '@/components/EmptyState'
 import { KnowledgebaseCategoryCard } from '@/components/knowledgebase/KnowledgebaseCategoryCard'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionCard } from '@/components/SectionCard'
+import { useActiveWorkspace } from '@/hooks/useActiveWorkspace'
 import { notifyError, notifySuccess } from '@/services/toastService'
 import { deleteKnowledgebaseCategory, fetchKnowledgebaseCategories } from '@/services/knowledgebaseService'
-import { getStoredActiveWorkspace } from '@/services/workspaceService'
 import type { KnowledgebaseCategory } from '@/types/knowledgebase'
 
 export function KnowledgebasePage() {
-  const activeWorkspace = useMemo(() => getStoredActiveWorkspace(), [])
+  const activeWorkspace = useActiveWorkspace()
   const [categories, setCategories] = useState<KnowledgebaseCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [categoryToDelete, setCategoryToDelete] = useState<KnowledgebaseCategory | null>(null)
@@ -22,7 +22,10 @@ export function KnowledgebasePage() {
     let isMounted = true
 
     async function loadCategories() {
+      setLoading(true)
+
       if (!activeWorkspace?.uuid) {
+        setCategories([])
         setLoading(false)
         return
       }
@@ -65,7 +68,7 @@ export function KnowledgebasePage() {
         {!activeWorkspace?.uuid ? (
           <EmptyState
             title="No active workspace"
-            description="Select a workspace from the sidebar before using the knowledgebase."
+            description="Select a workspace from the top bar before using the knowledgebase."
           />
         ) : loading ? (
           <EmptyState title="Loading categories" description="Fetching knowledgebase categories from the Laravel API." />

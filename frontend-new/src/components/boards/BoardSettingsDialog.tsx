@@ -11,6 +11,7 @@ import type { Board, BoardList } from '@/types/board'
 type BoardSettingsValues = {
   name: string
   description: string
+  image?: FileList
 }
 
 type ListDraft = {
@@ -94,7 +95,7 @@ export function BoardSettingsDialog({
   isSaving?: boolean
   isDeletingBoard?: boolean
   onClose: () => void
-  onSubmit: (values: BoardSettingsValues) => Promise<void> | void
+  onSubmit: (values: { name: string; description: string; image?: File | null }) => Promise<void> | void
   onCreateList: (name: string) => Promise<void>
   onRenameList: (listUuid: string, name: string) => Promise<void>
   onDeleteList: (listUuid: string) => Promise<void>
@@ -205,7 +206,11 @@ export function BoardSettingsDialog({
           spacing={2.5}
           sx={{ pt: 1 }}
           onSubmit={handleSubmit(async (values) => {
-            await onSubmit(values)
+            await onSubmit({
+              name: values.name,
+              description: values.description,
+              image: values.image?.[0] ?? null,
+            })
           })}
         >
           <TextField
@@ -221,6 +226,14 @@ export function BoardSettingsDialog({
             minRows={4}
             disabled={!canEditBoardDetails || isSaving}
             {...register('description')}
+          />
+          <TextField
+            type="file"
+            slotProps={{ inputLabel: { shrink: true } }}
+            label="Board image"
+            disabled={!canEditBoardDetails || isSaving}
+            helperText="Upload a new image to replace the current board image."
+            {...register('image')}
           />
 
           {!canEditBoardDetails ? (

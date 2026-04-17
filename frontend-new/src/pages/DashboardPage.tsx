@@ -5,13 +5,14 @@ import { PageHeader } from '@/components/PageHeader'
 import { SectionCard } from '@/components/SectionCard'
 import { StatCard } from '@/components/StatCard'
 import { StatusBanner } from '@/components/StatusBanner'
-import { fetchWorkspaceInvites, fetchWorkspaces, getStoredActiveWorkspace } from '@/services/workspaceService'
+import { useActiveWorkspace } from '@/hooks/useActiveWorkspace'
+import { fetchWorkspaceInvites, fetchWorkspaces } from '@/services/workspaceService'
 
 export function DashboardPage() {
   const { user } = useAuth()
+  const activeWorkspace = useActiveWorkspace()
   const [workspaceCount, setWorkspaceCount] = useState(0)
   const [inviteCount, setInviteCount] = useState(0)
-  const [activeWorkspaceName, setActiveWorkspaceName] = useState('None')
 
   useEffect(() => {
     let isMounted = true
@@ -25,7 +26,6 @@ export function DashboardPage() {
 
       setWorkspaceCount(workspaces.length)
       setInviteCount(invites.length)
-      setActiveWorkspaceName(getStoredActiveWorkspace()?.name ?? 'None')
     }
 
     void loadSummary()
@@ -59,7 +59,7 @@ export function DashboardPage() {
           <StatCard label="Invites" value={String(inviteCount)} tone="secondary" caption="Pending workspace invites from the API." />
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <StatCard label="Active workspace" value={activeWorkspaceName} tone="warning" caption="Persisted locally for cross-page use." />
+          <StatCard label="Active workspace" value={activeWorkspace?.name ?? 'None'} tone="warning" caption="Persisted locally for cross-page use." />
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <StatCard

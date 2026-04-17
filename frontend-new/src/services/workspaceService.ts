@@ -2,6 +2,7 @@ import { api } from '@/api/api'
 import type { Workspace, WorkspaceInvite, WorkspaceListResponse, WorkspaceMember } from '@/types/workspace'
 
 const ACTIVE_WORKSPACE_KEY = 'activeWorkspace'
+export const ACTIVE_WORKSPACE_CHANGED_EVENT = 'workspace:active-changed'
 
 export const fetchWorkspaces = async () => {
   const { data } = await api.get<WorkspaceListResponse>('workspaces')
@@ -13,12 +14,12 @@ export const fetchWorkspace = async (uuid: string) => {
   return data
 }
 
-export const createWorkspace = async (payload: { name: string; description: string }) => {
+export const createWorkspace = async (payload: { name: string; description?: string }) => {
   const { data } = await api.post<Workspace>('workspaces', payload)
   return data
 }
 
-export const updateWorkspace = async (uuid: string, payload: { name: string; description: string }) => {
+export const updateWorkspace = async (uuid: string, payload: { name: string; description?: string }) => {
   const { data } = await api.put<Workspace>(`workspaces/${uuid}`, payload)
   return data
 }
@@ -74,8 +75,24 @@ export const getStoredActiveWorkspace = (): Workspace | null => {
 export const setStoredActiveWorkspace = (workspace: Workspace | null) => {
   if (!workspace) {
     localStorage.removeItem(ACTIVE_WORKSPACE_KEY)
+    window.dispatchEvent(new Event(ACTIVE_WORKSPACE_CHANGED_EVENT))
     return
   }
 
   localStorage.setItem(ACTIVE_WORKSPACE_KEY, JSON.stringify(workspace))
+  window.dispatchEvent(new Event(ACTIVE_WORKSPACE_CHANGED_EVENT))
+}
+
+export const subscribeToActiveWorkspace = (onStoreChange: () => void) => {
+  const handleChange = () => {
+    onStoreChange()
+  }
+
+  window.addEventListener(ACTIVE_WORKSPACE_CHANGED_EVENT, handleChange)
+  window.addEventListener('storage', handleChange)
+
+  return () => {
+    window.removeEventListener(ACTIVE_WORKSPACE_CHANGED_EVENT, handleChange)
+    window.removeEventListener('storage', handleChange)
+  }
 }

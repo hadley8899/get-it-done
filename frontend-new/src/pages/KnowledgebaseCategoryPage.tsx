@@ -14,10 +14,12 @@ import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionCard } from '@/components/SectionCard'
+import { KnowledgebaseItemViewerDialog } from '@/components/knowledgebase/KnowledgebaseItemViewerDialog'
 import { KnowledgebaseCategoryForm } from '@/components/knowledgebase/KnowledgebaseCategoryForm'
 import { KnowledgebaseDialog } from '@/components/knowledgebase/KnowledgebaseDialog'
 import { KnowledgebaseItemsTable } from '@/components/knowledgebase/KnowledgebaseItemsTable'
 import { KnowledgebaseItemDialog } from '@/components/knowledgebase/KnowledgebaseItemDialog'
+import { useActiveWorkspace } from '@/hooks/useActiveWorkspace'
 import { notifyError, notifySuccess } from '@/services/toastService'
 import {
   createKnowledgebaseCategory,
@@ -33,13 +35,12 @@ import {
   updateKnowledgebase,
   updateKnowledgebaseItem,
 } from '@/services/knowledgebaseService'
-import { getStoredActiveWorkspace } from '@/services/workspaceService'
 import type { Knowledgebase, KnowledgebaseCategory, KnowledgebaseItem } from '@/types/knowledgebase'
 
 export function KnowledgebaseCategoryPage() {
   const { uuid = '' } = useParams()
   const navigate = useNavigate()
-  const activeWorkspace = useMemo(() => getStoredActiveWorkspace(), [])
+  const activeWorkspace = useActiveWorkspace()
   const [category, setCategory] = useState<KnowledgebaseCategory | null>(null)
   const [childCategories, setChildCategories] = useState<KnowledgebaseCategory[]>([])
   const [knowledgebases, setKnowledgebases] = useState<Knowledgebase[]>([])
@@ -57,6 +58,7 @@ export function KnowledgebaseCategoryPage() {
   const [savingItem, setSavingItem] = useState(false)
   const [knowledgebaseToDelete, setKnowledgebaseToDelete] = useState<Knowledgebase | null>(null)
   const [itemToDelete, setItemToDelete] = useState<KnowledgebaseItem | null>(null)
+  const [viewerItem, setViewerItem] = useState<KnowledgebaseItem | null>(null)
   const [deletingKnowledgebaseUuid, setDeletingKnowledgebaseUuid] = useState<string | null>(null)
   const [deletingItemUuid, setDeletingItemUuid] = useState<string | null>(null)
   const [knowledgebaseSearch, setKnowledgebaseSearch] = useState('')
@@ -95,7 +97,14 @@ export function KnowledgebaseCategoryPage() {
   }, [activeWorkspace?.uuid, uuid])
 
   const loadPage = useCallback(async () => {
+    setLoading(true)
+
     if (!activeWorkspace?.uuid || !uuid) {
+      setCategory(null)
+      setChildCategories([])
+      setKnowledgebases([])
+      setKnowledgebaseItems([])
+      setActiveKnowledgebaseUuid(null)
       setLoading(false)
       return
     }
@@ -134,7 +143,7 @@ export function KnowledgebaseCategoryPage() {
     return (
       <EmptyState
         title="No active workspace"
-        description="Select a workspace from the sidebar before opening the knowledgebase."
+        description="Select a workspace from the top bar before opening the knowledgebase."
         actionLabel="Go to workspaces"
         onAction={() => navigate('/workspaces')}
       />
@@ -308,8 +317,7 @@ export function KnowledgebaseCategoryPage() {
               <KnowledgebaseItemsTable
                 items={filteredKnowledgebaseItems}
                 onSelect={(item) => {
-                  setEditingItem(item)
-                  setItemDialogOpen(true)
+                  setViewerItem(item)
                 }}
               />
             </Stack>
@@ -419,6 +427,21 @@ export function KnowledgebaseCategoryPage() {
           } finally {
             setSavingItem(false)
           }
+        }}
+      />
+
+      <KnowledgebaseItemViewerDialog
+        item={viewerItem}
+        open={viewerItem !== null}
+        onClose={() => setViewerItem(null)}
+        onEdit={(item) => {
+          setViewerItem(null)
+          setEditingItem(item)
+          setItemDialogOpen(true)
+        }}
+        onDelete={(item) => {
+          setViewerItem(null)
+          setItemToDelete(item)
         }}
       />
 

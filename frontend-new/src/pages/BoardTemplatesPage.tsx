@@ -298,7 +298,7 @@ export function BoardTemplatesPage() {
             })}>
               <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.25}>
                 <TextField label="Item name" size="small" sx={{ flex: 1 }} {...registerItem('name', { required: true })} />
-                <TextField label="Item description" size="small" sx={{ flex: 2 }} {...registerItem('description', { required: true })} />
+                <TextField label="Item description" size="small" sx={{ flex: 2 }} {...registerItem('description')} />
                 <Button type="submit" variant="outlined" disabled={!isItemValid || savingItems}>
                   Add item
                 </Button>
@@ -381,7 +381,7 @@ export function BoardTemplatesPage() {
             }
           })}>
             <TextField label="Item name" {...registerEditItem('name', { required: true })} />
-            <TextField label="Description" multiline minRows={3} {...registerEditItem('description', { required: true })} />
+            <TextField label="Description" multiline minRows={3} {...registerEditItem('description')} />
             <DialogActions sx={{ px: 0 }}>
               <Button onClick={() => setEditingItem(null)} disabled={savingItems}>Cancel</Button>
               <Button type="submit" variant="contained" disabled={!isEditItemValid || savingItems}>Save</Button>
@@ -425,7 +425,7 @@ export function BoardTemplatesPage() {
       <ConfirmDialog
         open={Boolean(deleteItemTarget)}
         title="Delete template item?"
-        description={deleteItemTarget ? `Delete "${deleteItemTarget.name}" from this template?` : ''}
+        description={deleteItemTarget ? `Delete "${deleteItemTarget.name}" in the selected template?` : ''}
         confirmLabel="Delete item"
         confirmColor="error"
         isLoading={savingItems}

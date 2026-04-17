@@ -29,7 +29,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            $apiDomain = $this->normalizeApiDomain(env('API_URL'));
+            $apiDomain = $this->normalizeApiDomain(config('app.api_url'));
             $apiRoutes = Route::middleware('api');
 
             if (!empty($apiDomain)) {
@@ -62,7 +62,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(300)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { getStoredUser } from '@/services/authService'
@@ -23,6 +23,8 @@ type TaskFormValues = {
   description: string
   hours_worked: string
   assigned_to: string
+  workspace_uuid: string
+  board_uuid: string
   board_list: string
 }
 
@@ -31,7 +33,14 @@ export function TaskDialog({
   task,
   boardLists,
   workspaceMembers,
+  workspaceOptions,
+  boardOptionsByWorkspace,
+  boardListOptionsByBoard,
+  initialWorkspaceUuid,
+  initialBoardUuid,
   initialBoardListUuid,
+  onWorkspaceChange,
+  onBoardChange,
   isSaving = false,
   isDeleting = false,
   commentDraft = '',
@@ -50,7 +59,14 @@ export function TaskDialog({
   task: TaskDetails | null
   boardLists: BoardList[]
   workspaceMembers: WorkspaceMember[]
+  workspaceOptions: { uuid: string; name: string }[]
+  boardOptionsByWorkspace: Record<string, { uuid: string; name: string }[]>
+  boardListOptionsByBoard: Record<string, { uuid: string; name: string }[]>
+  initialWorkspaceUuid?: string | null
+  initialBoardUuid?: string | null
   initialBoardListUuid?: string | null
+  onWorkspaceChange?: (workspaceUuid: string) => Promise<void> | void
+  onBoardChange?: (workspaceUuid: string, boardUuid: string) => Promise<void> | void
   isSaving?: boolean
   isDeleting?: boolean
   commentDraft?: string
@@ -63,6 +79,8 @@ export function TaskDialog({
     description: string
     hours_worked: number | null
     assigned_to: string
+    workspace_uuid: string
+    board_uuid: string
     board_list: string
   }) => Promise<void> | void
   onDelete: (taskUuid: string) => Promise<void> | void
@@ -81,6 +99,8 @@ export function TaskDialog({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isValid },
   } = useForm<TaskFormValues>({
     defaultValues: {
@@ -88,21 +108,51 @@ export function TaskDialog({
       description: '',
       hours_worked: '0',
       assigned_to: '',
+      workspace_uuid: initialWorkspaceUuid ?? '',
+      board_uuid: initialBoardUuid ?? '',
       board_list: initialBoardListUuid ?? '',
     },
     mode: 'onChange',
   })
+
+  const selectedWorkspaceUuid = watch('workspace_uuid')
+  const selectedBoardUuid = watch('board_uuid')
+  const selectedBoardListUuid = watch('board_list')
+
+  const boardOptions = useMemo(
+    () => (selectedWorkspaceUuid ? boardOptionsByWorkspace[selectedWorkspaceUuid] ?? [] : []),
+    [boardOptionsByWorkspace, selectedWorkspaceUuid],
+  )
+
+  const boardListOptions = useMemo(() => {
+    if (selectedBoardUuid && boardListOptionsByBoard[selectedBoardUuid]) {
+      return boardListOptionsByBoard[selectedBoardUuid]
+    }
+    return boardLists.map((entry) => ({ uuid: entry.uuid, name: entry.name }))
+  }, [boardListOptionsByBoard, boardLists, selectedBoardUuid])
 
   useEffect(() => {
     if (!open) {
       return
     }
 
-    const availableBoardListUuids = new Set(boardLists.map((entry) => entry.uuid))
+    const initialWorkspace = initialWorkspaceUuid ?? ''
+    const initialBoardOptions = initialWorkspace ? boardOptionsByWorkspace[initialWorkspace] ?? [] : []
+    const initialBoardUuids = new Set(initialBoardOptions.map((entry) => entry.uuid))
+    const initialBoard =
+      initialBoardUuid && initialBoardUuids.has(initialBoardUuid)
+        ? initialBoardUuid
+        : initialBoardOptions[0]?.uuid ?? ''
+    const initialBoardListOptions = initialBoard
+      ? boardListOptionsByBoard[initialBoard] ?? []
+      : boardLists.map((entry) => ({ uuid: entry.uuid, name: entry.name }))
+    const availableBoardListUuids = new Set(initialBoardListOptions.map((entry) => entry.uuid))
     const availableMemberUuids = new Set(workspaceMembers.map((entry) => entry.user.uuid))
 
-    const preferredBoardList = task?.board_list ?? initialBoardListUuid ?? boardLists[0]?.uuid ?? ''
-    const resolvedBoardList = availableBoardListUuids.has(preferredBoardList) ? preferredBoardList : boardLists[0]?.uuid ?? ''
+    const preferredBoardList = task?.board_list ?? initialBoardListUuid ?? initialBoardListOptions[0]?.uuid ?? ''
+    const resolvedBoardList = availableBoardListUuids.has(preferredBoardList)
+      ? preferredBoardList
+      : initialBoardListOptions[0]?.uuid ?? ''
 
     const preferredAssignedTo = task?.assigned_to?.uuid ?? ''
     const resolvedAssignedTo = preferredAssignedTo && availableMemberUuids.has(preferredAssignedTo) ? preferredAssignedTo : ''
@@ -112,9 +162,75 @@ export function TaskDialog({
       description: task?.description ?? '',
       hours_worked: typeof task?.hours_worked === 'number' ? String(task.hours_worked) : '0',
       assigned_to: resolvedAssignedTo,
+      workspace_uuid: initialWorkspace,
+      board_uuid: initialBoard,
       board_list: resolvedBoardList,
     })
-  }, [boardLists, initialBoardListUuid, open, reset, task, workspaceMembers])
+  }, [
+    boardListOptionsByBoard,
+    boardLists,
+    boardOptionsByWorkspace,
+    initialBoardListUuid,
+    initialBoardUuid,
+    initialWorkspaceUuid,
+    open,
+    reset,
+    task,
+    workspaceMembers,
+  ])
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    const workspaceIsValid =
+      selectedWorkspaceUuid !== '' &&
+      workspaceOptions.some((workspace) => workspace.uuid === selectedWorkspaceUuid)
+
+    if (!workspaceIsValid) {
+      const fallbackWorkspace = workspaceOptions[0]?.uuid ?? ''
+      if (fallbackWorkspace !== selectedWorkspaceUuid) {
+        setValue('workspace_uuid', fallbackWorkspace, { shouldValidate: true })
+      }
+      return
+    }
+
+    const nextBoardOptions = boardOptionsByWorkspace[selectedWorkspaceUuid] ?? []
+    const boardIsValid = nextBoardOptions.some((boardOption) => boardOption.uuid === selectedBoardUuid)
+
+    if (!boardIsValid) {
+      const fallbackBoard = nextBoardOptions[0]?.uuid ?? ''
+      if (fallbackBoard !== selectedBoardUuid) {
+        setValue('board_uuid', fallbackBoard, { shouldValidate: true })
+      }
+
+      const fallbackBoardLists = fallbackBoard
+        ? boardListOptionsByBoard[fallbackBoard] ?? []
+        : []
+      const fallbackBoardList = fallbackBoardLists[0]?.uuid ?? ''
+      setValue('board_list', fallbackBoardList, { shouldValidate: true })
+      return
+    }
+
+    const nextBoardListOptions = selectedBoardUuid
+      ? boardListOptionsByBoard[selectedBoardUuid] ?? []
+      : []
+    const boardListIsValid = nextBoardListOptions.some((listOption) => listOption.uuid === selectedBoardListUuid)
+
+    if (!boardListIsValid) {
+      setValue('board_list', nextBoardListOptions[0]?.uuid ?? '', { shouldValidate: true })
+    }
+  }, [
+    boardListOptionsByBoard,
+    boardOptionsByWorkspace,
+    open,
+    selectedBoardUuid,
+    selectedBoardListUuid,
+    selectedWorkspaceUuid,
+    setValue,
+    workspaceOptions,
+  ])
 
   return (
     <Dialog open={open} onClose={isSaving || isDeleting ? undefined : onClose} fullWidth maxWidth="md">
@@ -130,6 +246,8 @@ export function TaskDialog({
               description: values.description,
               hours_worked: values.hours_worked === '' ? null : Number(values.hours_worked),
               assigned_to: values.assigned_to,
+              workspace_uuid: values.workspace_uuid,
+              board_uuid: values.board_uuid,
               board_list: values.board_list,
             })
           })}
@@ -148,6 +266,65 @@ export function TaskDialog({
             {...register('hours_worked')}
           />
           <Controller
+            name="workspace_uuid"
+            control={control}
+            rules={{ required: 'Workspace is required' }}
+            render={({ field, fieldState }) => (
+              <TextField
+                select
+                label="Workspace"
+                value={workspaceOptions.some((workspace) => workspace.uuid === field.value) ? field.value : ''}
+                onChange={(event) => {
+                  field.onChange(event.target.value)
+                  const nextBoards = boardOptionsByWorkspace[event.target.value] ?? []
+                  const nextBoard = nextBoards[0]?.uuid ?? ''
+                  setValue('board_uuid', nextBoard, { shouldValidate: true })
+                  setValue('board_list', (boardListOptionsByBoard[nextBoard] ?? [])[0]?.uuid ?? '', { shouldValidate: true })
+                  void onWorkspaceChange?.(event.target.value)
+                }}
+                onBlur={field.onBlur}
+                inputRef={field.ref}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+              >
+                {workspaceOptions.map((workspace) => (
+                  <MenuItem key={workspace.uuid} value={workspace.uuid}>
+                    {workspace.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+          <Controller
+            name="board_uuid"
+            control={control}
+            rules={{ required: 'Board is required' }}
+            render={({ field, fieldState }) => (
+              <TextField
+                select
+                label="Board"
+                value={boardOptions.some((boardOption) => boardOption.uuid === field.value) ? field.value : ''}
+                onChange={(event) => {
+                  field.onChange(event.target.value)
+                  setValue('board_list', (boardListOptionsByBoard[event.target.value] ?? [])[0]?.uuid ?? '', { shouldValidate: true })
+                  if (selectedWorkspaceUuid) {
+                    void onBoardChange?.(selectedWorkspaceUuid, event.target.value)
+                  }
+                }}
+                onBlur={field.onBlur}
+                inputRef={field.ref}
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+              >
+                {boardOptions.map((boardOption) => (
+                  <MenuItem key={boardOption.uuid} value={boardOption.uuid}>
+                    {boardOption.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+          <Controller
             name="board_list"
             control={control}
             rules={{ required: 'Task list is required' }}
@@ -155,14 +332,14 @@ export function TaskDialog({
               <TextField
                 select
                 label="Task list"
-                value={field.value ?? ''}
+                value={boardListOptions.some((list) => list.uuid === field.value) ? field.value : ''}
                 onChange={field.onChange}
                 onBlur={field.onBlur}
                 inputRef={field.ref}
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
               >
-                {boardLists.map((list) => (
+                {boardListOptions.map((list) => (
                   <MenuItem key={list.uuid} value={list.uuid}>
                     {list.name}
                   </MenuItem>

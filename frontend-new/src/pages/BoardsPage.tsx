@@ -1,27 +1,30 @@
 import { Button, Grid, Stack } from '@mui/material'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { BoardCard } from '@/components/boards/BoardCard'
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionCard } from '@/components/SectionCard'
 import { StatCard } from '@/components/StatCard'
+import { useActiveWorkspace } from '@/hooks/useActiveWorkspace'
 import { notifyError } from '@/services/toastService'
 import { fetchBoards } from '@/services/boardService'
-import { getStoredActiveWorkspace } from '@/services/workspaceService'
 import type { Board } from '@/types/board'
 
 export function BoardsPage() {
   const navigate = useNavigate()
   const [boards, setBoards] = useState<Board[]>([])
   const [loading, setLoading] = useState(true)
-  const activeWorkspace = useMemo(() => getStoredActiveWorkspace(), [])
+  const activeWorkspace = useActiveWorkspace()
 
   useEffect(() => {
     let isMounted = true
 
     async function loadBoards() {
+      setLoading(true)
+
       if (!activeWorkspace?.uuid) {
+        setBoards([])
         setLoading(false)
         return
       }
@@ -88,7 +91,7 @@ export function BoardsPage() {
         {!activeWorkspace?.uuid ? (
           <EmptyState
             title="No active workspace"
-            description="Select a workspace from the sidebar before working with boards."
+            description="Select a workspace from the top bar before working with boards."
             actionLabel="Go to workspaces"
             onAction={() => navigate('/workspaces')}
           />
