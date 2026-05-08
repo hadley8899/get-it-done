@@ -120,6 +120,7 @@ export function TaskDialog({
   const [editingCommentUuid, setEditingCommentUuid] = useState<string | null>(null)
   const [editingCommentValue, setEditingCommentValue] = useState('')
   const [commentToDeleteUuid, setCommentToDeleteUuid] = useState<string | null>(null)
+  const [taskDeleteConfirmOpen, setTaskDeleteConfirmOpen] = useState(false)
   const [attachmentInputKey, setAttachmentInputKey] = useState(0)
   const [previewUrls, setPreviewUrls] = useState<Record<string, string>>({})
   const {
@@ -191,6 +192,7 @@ export function TaskDialog({
     setEditingCommentUuid(null)
     setEditingCommentValue('')
     setCommentToDeleteUuid(null)
+    setTaskDeleteConfirmOpen(false)
 
     const initialWorkspace = initialWorkspaceUuid ?? ''
     const initialBoardOptions = initialWorkspace ? boardOptionsByWorkspace[initialWorkspace] ?? [] : []
@@ -431,7 +433,7 @@ export function TaskDialog({
                   <Button
                     color="error"
                     onClick={() => {
-                      void onDelete(task.uuid)
+                      setTaskDeleteConfirmOpen(true)
                     }}
                     disabled={isSaving || isDeleting}
                     sx={{ mr: 'auto' }}
@@ -630,7 +632,7 @@ export function TaskDialog({
                   <Button
                     color="error"
                     onClick={() => {
-                      void onDelete(task.uuid)
+                      setTaskDeleteConfirmOpen(true)
                     }}
                     disabled={isSaving || isDeleting}
                     sx={{ mr: 'auto' }}
@@ -868,6 +870,32 @@ export function TaskDialog({
 
         </Stack>
       </DialogContent>
+
+      <ConfirmDialog
+        open={taskDeleteConfirmOpen}
+        title="Delete task?"
+        description="This task will be permanently deleted."
+        confirmLabel="Delete task"
+        confirmColor="error"
+        isLoading={isDeleting}
+        onClose={() => {
+          if (!isDeleting) {
+            setTaskDeleteConfirmOpen(false)
+          }
+        }}
+        onConfirm={async () => {
+          if (!task?.uuid) {
+            return
+          }
+
+          try {
+            await onDelete(task.uuid)
+            setTaskDeleteConfirmOpen(false)
+          } catch {
+            // Parent handler already surfaces the error toast.
+          }
+        }}
+      />
 
       <ConfirmDialog
         open={Boolean(commentToDeleteUuid)}
