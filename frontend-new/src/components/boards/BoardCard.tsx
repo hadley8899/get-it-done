@@ -13,6 +13,7 @@ export function BoardCard({ board }: { board: Board }) {
       <CardContent
         sx={{
           p: 3,
+          pb: 2,
           backgroundImage: imageUrl ? `linear-gradient(rgba(15, 22, 35, 0.45), rgba(15, 22, 35, 0.45)), url(${imageUrl})` : 'none',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -28,7 +29,7 @@ export function BoardCard({ board }: { board: Board }) {
           </Typography>
         </Stack>
       </CardContent>
-      <CardActions sx={{ px: 3, pb: 3, pt: 0 }}>
+      <CardActions sx={{ px: 3, pb: 3, pt: 1.5 }}>
         <Button component={RouterLink} to={`/boards/${board.uuid}`} variant="contained">
           Open board
         </Button>
